@@ -3,15 +3,124 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact Us</title>
+    <title>iMOB Racing Online</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css" />
 </head>
 <body>
-    <header class="header">
-        <h1>Contact Us</h1>
+    <header class="header" id="home">
+        <div class="video-overlay">
+            <video autoplay muted loop class="background-video">
+                <source src="path/to/featured-video.mp4" type="video/mp4">
+            </video>
+        </div>
+        <div class="header-content">
+            <h1 class="header-title">Welcome to iMOB Racing</h1>
+            <p class="header-subtitle">Feel the Thrill of Racing</p>
+            <a href="#about" class="cta-button">Learn More</a>
+        </div>
     </header>
 
-    <section class="contact-section">
+    <nav class="navbar">
+        <ul>
+            <li><a href="#home">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#team">Team</a></li>
+            <li><a href="#ai">AI Integration</a></li>
+            <li><a href="#events">Events</a></li>
+            <li><a href="#media">Media</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <section id="about" class="about-section parallax">
+        <h2>About Us</h2>
+        <p>iMOB Racing thrives to be the biggest team in the racing industry. We are a group of racecar modders and enthusiasts primarily focused on time attack racing, but we also engage in 4x4, rally, drifting, off-road, street bikes, dirt bikes, and crosskarts. We are 100% built, not bought, modifying and customizing any vehicle. Our co-founders, Anthony Yorba and Tony Langston, lead the team with technical expertise and artistic vision. Our top driver, Chris Statler, embodies our racing spirit, while our youngest member, Daniel Bertholf, excels in drifting. We aim to build our brand with exciting race footage, informative repair videos, and behind-the-scenes content. We plan to offer giveaways and forums for discussions, event dates, and buy/sell opportunities.</p>
+    </section>
+
+    <section id="team" class="team-section">
+        <h2>Meet the Team</h2>
+        <div class="team-grid">
+            <div class="team-card">
+                <img src="https://imobracingonline.com/images/member1.jpg" alt="Anthony Yorba">
+                <h3>Anthony Yorba</h3>
+                <p>Co-founder, ASE Certified Technician</p>
+                <video controls class="driver-video">
+                    <source src="path/to/member1-video.mp4" type="video/mp4">
+                </video>
+            </div>
+            <div class="team-card">
+                <img src="https://imobracingonline.com/images/member2.jpg" alt="Tony Langston">
+                <h3>Tony Langston</h3>
+                <p>Co-founder, Visual Artist</p>
+                <video controls class="driver-video">
+                    <source src="path/to/member2-video.mp4" type="video/mp4">
+                </video>
+            </div>
+            <div class="team-card">
+                <img src="https://imobracingonline.com/images/member3.jpg" alt="Chris Statler">
+                <h3>Chris Statler</h3>
+                <p>Top Driver</p>
+                <video controls class="driver-video">
+                    <source src="path/to/member3-video.mp4" type="video/mp4">
+                </video>
+            </div>
+            <div class="team-card">
+                <img src="https://imobracingonline.com/images/member4.jpg" alt="Daniel Bertholf">
+                <h3>Daniel Bertholf</h3>
+                <p>Resident Drift Car Driver</p>
+                <video controls class="driver-video">
+                    <source src="path/to/member4-video.mp4" type="video/mp4">
+                </video>
+            </div>
+        </div>
+    </section>
+
+    <section id="ai" class="ai-section parallax">
+        <h2>AI Integration</h2>
+        <div class="ai-content">
+            <p>Discover how we embrace AI to enhance our racing strategies, improve vehicle performance, and provide better insights. Our AI-driven analytics help us make data-informed decisions and stay ahead of the competition.</p>
+            <div class="ai-visualization">
+                <img src="path/to/ai-visualization.jpg" alt="AI Visualization">
+            </div>
+        </div>
+    </section>
+
+    <section id="events" class="events-section parallax">
+        <h2>Upcoming Events</h2>
+        <ul class="events-list">
+            <li>
+                <h3>Race Event 1</h3>
+                <p>Date: January 15, 2024</p>
+                <p>Location: Track A</p>
+            </li>
+            <li>
+                <h3>Race Event 2</h3>
+                <p>Date: February 20, 2024</p>
+                <p>Location: Track B</p>
+            </li>
+        </ul>
+    </section>
+
+    <section id="media" class="media-section">
+        <h2>Media Gallery</h2>
+        <div class="media-carousel">
+            <div class="carousel-item">
+                <iframe width="250" height="140" src="https://www.youtube.com/embed/VIDEO_ID_1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+            <div class="carousel-item">
+                <iframe width="250" height="140" src="https://www.youtube.com/embed/VIDEO_ID_2" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+            <div class="carousel-item">
+                <iframe width="250" height="140" src="https://www.youtube.com/embed/VIDEO_ID_3" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+            <!-- Add more carousel items as needed -->
+        </div>
+    </section>
+
+    <section id="contact" class="contact-section">
         <h2>Contact Us</h2>
         <form name="contact" method="POST" data-netlify="true">
             <label for="name">Name:</label>
@@ -36,5 +145,9 @@
         <p>&copy; 2024 iMOB Racing. All rights reserved.</p>
         <p>Contact: info@imobracingonline.com | Phone: (123) 456-7890</p>
     </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
+    <script src="scripts.js"></script>
 </body>
 </html>
