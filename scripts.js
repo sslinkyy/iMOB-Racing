@@ -32,28 +32,55 @@ document.addEventListener('DOMContentLoaded', () => {
         observer.observe(section);
     });
 
-    // Slick carousel configuration for YouTube videos
-    $('.media-carousel').slick({
-        infinite: true,
-        slidesToShow: 3,
-        slidesToScroll: 1,
-        autoplay: true,
-        autoplaySpeed: 2000,
-        arrows: true,
-        dots: true,
-        responsive: [
-            {
-                breakpoint: 768,
-                settings: {
-                    slidesToShow: 2
+    // YouTube Data API Key
+    const API_KEY = 'AIzaSyDaCJQhs3fz-k7hg-j0NQWj0S1r7ZEvThs';
+    const CHANNEL_ID = 'imobracing';
+    const MAX_RESULTS = 10;
+
+    // Fetch YouTube videos
+    function fetchYouTubeVideos() {
+        $.get(`https://www.googleapis.com/youtube/v3/search?key=${API_KEY}&channelId=${CHANNEL_ID}&part=snippet,id&order=date&maxResults=${MAX_RESULTS}`, function(data) {
+            let videoItems = '';
+            data.items.forEach(item => {
+                if (item.id.kind === "youtube#video") {
+                    videoItems += `
+                        <div class="carousel-item">
+                            <iframe width="250" height="140" src="https://www.youtube.com/embed/${item.id.videoId}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        </div>
+                    `;
                 }
-            },
-            {
-                breakpoint: 480,
-                settings: {
-                    slidesToShow: 1
+            });
+            $('.media-carousel').html(videoItems);
+            initializeCarousel();
+        });
+    }
+
+    // Initialize Slick carousel
+    function initializeCarousel() {
+        $('.media-carousel').slick({
+            infinite: true,
+            slidesToShow: 3,
+            slidesToScroll: 1,
+            autoplay: true,
+            autoplaySpeed: 2000,
+            arrows: true,
+            dots: true,
+            responsive: [
+                {
+                    breakpoint: 768,
+                    settings: {
+                        slidesToShow: 2
+                    }
+                },
+                {
+                    breakpoint: 480,
+                    settings: {
+                        slidesToShow: 1
+                    }
                 }
-            }
-        ]
-    });
+            ]
+        });
+    }
+
+    fetchYouTubeVideos();
 });
