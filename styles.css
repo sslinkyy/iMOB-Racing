@@ -1,5 +1,4 @@
-/* styles.css */
-
+/* General styles */
 body, html {
     margin: 0;
     padding: 0;
@@ -8,6 +7,16 @@ body, html {
     color: #fff;
 }
 
+a {
+    color: orange;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Header styles */
 .header {
     height: 100vh;
     position: relative;
@@ -64,6 +73,7 @@ body, html {
     background-color: #e43e00;
 }
 
+/* Navbar styles */
 .navbar {
     background-color: #111;
     color: white;
@@ -86,6 +96,7 @@ body, html {
     text-decoration: none;
 }
 
+/* Section styles */
 .about-section, .team-section, .events-section, .media-section, .contact-section, .ai-section, .integration-section {
     padding: 2em;
     background: #111;
@@ -116,13 +127,14 @@ body, html {
     margin-bottom: 1em;
 }
 
-.team-grid, .media-grid {
+/* Team section styles */
+.team-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 1em;
 }
 
-.team-card, .media-card {
+.team-card {
     background: #222;
     padding: 1em;
     border-radius: 5px;
@@ -131,10 +143,36 @@ body, html {
     transition: transform 0.3s;
 }
 
-.team-card:hover, .media-card:hover {
+.team-card:hover {
     transform: translateY(-10px);
 }
 
+.team-card img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
+}
+
+.team-card h3 {
+    margin-top: 0.5em;
+}
+
+.team-card p {
+    margin: 0.5em 0;
+}
+
+/* Integration section styles */
+.integration-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 2em;
+}
+
+.facebook-integration, .poll-integration {
+    flex: 1;
+}
+
+/* Events section styles */
 .events-list {
     list-style: none;
     padding: 0;
@@ -148,6 +186,7 @@ body, html {
     margin-bottom: 1em;
 }
 
+/* Media section styles */
 .media-carousel {
     display: flex;
     overflow: hidden;
@@ -167,6 +206,7 @@ body, html {
     transform: scale(1.05);
 }
 
+/* Contact section styles */
 .contact-section form {
     display: flex;
     flex-direction: column;
@@ -199,6 +239,19 @@ body, html {
     background-color: #e43e00;
 }
 
+/* Forums section styles */
+.forums-section {
+    padding: 50px 20px;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.8);
+}
+
+.forums-section h2 {
+    font-size: 2.5em;
+    margin-bottom: 20px;
+}
+
+/* Footer styles */
 .footer {
     background: #111;
     padding: 1em;
@@ -219,14 +272,4 @@ body, html {
 
 .social-media a:hover {
     color: #ff4500;
-}
-
-.integration-container {
-    display: flex;
-    justify-content: space-between;
-    gap: 2em;
-}
-
-.facebook-integration, .poll-integration {
-    flex: 1;
 }
