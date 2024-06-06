@@ -532,3 +532,16 @@ Copy code
 .cta-button:hover {
     background-color: #e43e00;
 }
+.integration-container {
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-start;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.fb-page, .poll-section {
+    flex: 1;
+    min-width: 300px;
+    max-width: 600px;
+}
