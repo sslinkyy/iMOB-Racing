@@ -253,3 +253,282 @@ body, html {
 .social-media a:hover {
     color: #ff4500;
 }
+
+To use a YouTube video as a background, you can use a library like YouTube Background by Laurent Levesque. This library allows you to embed a YouTube video as a background video easily. Here’s how you can do it:
+
+Include the YouTube Background Library:
+
+You need to include the library in your HTML.
+Initialize the YouTube Background:
+
+Initialize the YouTube background video with the desired video ID.
+Steps to Integrate the YouTube Background Video
+Include the YouTube Background Library:
+Add the following script tag to your index.html to include the YouTube Background library:
+
+html
+Copy code
+<head>
+    ...
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.rawgit.com/labnol/files/master/yt.js"></script>
+    ...
+</head>
+Initialize the YouTube Background:
+Replace the background video section in your HTML with the YouTube background video initialization:
+
+Updated index.html
+html
+Copy code
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iMOB Racing Online</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.rawgit.com/labnol/files/master/yt.js"></script>
+</head>
+<body>
+    <div id="fb-root"></div>
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v20.0" nonce="JEf7oT5N"></script>
+
+    <header class="header" id="home">
+        <div id="youtube-background" data-yt-url="https://www.youtube.com/watch?v=RPGg_y2FHNs"></div>
+        <div class="header-content">
+            <h1 class="header-title">Welcome to iMOB Racing</h1>
+            <p class="header-subtitle">Feel the Thrill of Racing</p>
+            <a href="#about" class="cta-button">Learn More</a>
+        </div>
+    </header>
+
+    <nav class="navbar">
+        <ul>
+            <li><a href="#home">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#team">Team</a></li>
+            <li><a href="#ai">AI Integration</a></li>
+            <li><a href="#events">Events</a></li>
+            <li><a href="#media">Media</a></li>
+            <li><a href="#contact">Contact</a></li>
+            <li><a href="#forums">Forums</a></li>
+        </ul>
+    </nav>
+
+    <section id="about" class="about-section parallax">
+        <h2>About Us</h2>
+        <div class="about-content">
+            <p>iMOB Racing thrives to be the biggest team in the racing industry. We are a group of racecar modders and enthusiasts primarily focused on time attack racing, but we also engage in 4x4, rally, drifting, off-road, street bikes, dirt bikes, and crosskarts. We are 100% built, not bought, modifying and customizing any vehicle. Our co-founders, Anthony Yorba and Tony Langston, lead the team with technical expertise and artistic vision. Our top driver, Chris Statler, embodies our racing spirit, while our youngest member, Daniel Bertholf, excels in drifting. We aim to build our brand with exciting race footage, informative repair videos, and behind-the-scenes content. We plan to offer giveaways and forums for discussions, event dates, and buy/sell opportunities.</p>
+            <div class="integration-container">
+                <!-- Facebook Page Plugin -->
+                <div class="fb-page" data-href="https://www.facebook.com/imobracing" data-tabs="timeline, events" data-width="" data-height="" data-small-header="true" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="false">
+                    <blockquote cite="https://www.facebook.com/imobracing" class="fb-xfbml-parse-ignore"><a href="https://www.facebook.com/imobracing">IMOB Racing</a></blockquote>
+                </div>
+                <!-- Poll Section -->
+                <div class="poll-section">
+                    <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSfZqtnqgL2im8K7Ih6hCjqLrEZ-frZzTMMlJLbMCMg4u8MxaA/viewform?usp=sf_link" width="640" height="480" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="team" class="team-section">
+        <h2>Meet the Team</h2>
+        <div class="team-grid">
+            <div class="team-card">
+                <img src="https://imobracingonline.com/images/member1.jpg" alt="Anthony Yorba">
+                <h3>Anthony Yorba</h3>
+                <p>Co-founder, ASE Certified Technician</p>
+                <video controls class="driver-video">
+                    <source src="path/to/member1-video.mp4" type="video/mp4">
+                </video>
+            </div>
+            <div class="team-card">
+                <img src="https://imobracingonline.com/images/member2.jpg" alt="Tony Langston">
+                <h3>Tony Langston</h3>
+                <p>Co-founder, Visual Artist</p>
+                <video controls class="driver-video">
+                    <source src="path/to/member2-video.mp4" type="video/mp4">
+                </video>
+            </div>
+            <div class="team-card">
+                <img src="https://imobracingonline.com/images/member3.jpg" alt="Chris Statler">
+                <h3>Chris Statler</h3>
+                <p>Top Driver</p>
+                <video controls class="driver-video">
+                    <source src="path/to/member3-video.mp4" type="video/mp4">
+                </video>
+            </div>
+            <div class="team-card">
+                <img src="https://imobracingonline.com/images/member4.jpg" alt="Daniel Bertholf">
+                <h3>Daniel Bertholf</h3>
+                <p>Resident Drift Car Driver</p>
+                <video controls class="driver-video">
+                    <source src="path/to/member4-video.mp4" type="video/mp4">
+                </video>
+            </div>
+        </div>
+    </section>
+
+    <section id="ai" class="ai-section parallax">
+        <h2>AI Integration</h2>
+        <div class="ai-content">
+            <p>Discover how we embrace AI to enhance our racing strategies, improve vehicle performance, and provide better insights. Our AI-driven analytics help us make data-informed decisions and stay ahead of the competition.</p>
+            <div class="ai-visualization">
+                <img src="path/to/ai-visualization.jpg" alt="AI Visualization">
+            </div>
+        </div>
+    </section>
+
+    <section id="events" class="events-section parallax">
+        <h2>Upcoming Events</h2>
+        <ul class="events-list">
+            <li>
+                <h3>Race Event 1</h3>
+                <p>Date: January 15, 2024</p>
+                <p>Location: Track A</p>
+            </li>
+            <li>
+                <h3>Race Event 2</h3>
+                <p>Date: February 20, 2024</p>
+                <p>Location: Track B</p>
+            </li>
+        </ul>
+    </section>
+
+    <section id="media" class="media-section">
+        <h2>Media Gallery</h2>
+        <div class="media-carousel"></div>
+    </section>
+
+    <section id="forums" class="forums-section">
+        <h2>Forums</h2>
+        <div id="disqus_thread"></div>
+        <script>
+            /**
+            *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT 
+            *  THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR 
+            *  PLATFORM OR CMS.
+            *  
+            *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: 
+            *  https://disqus.com/admin/universalcode/#configuration-variables
+            */
+            var disqus_config = function () {
+                this.page.url = window.location.href;  // Replace PAGE_URL with your page's canonical URL variable
+                this.page.identifier = window.location.href; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+            };
+            (function() {  // DON'T EDIT BELOW THIS LINE
+                var d = document, s = d.createElement('script');
+                s.src = 'https://imobracing.disqus.com/embed.js';  // Replace YOUR_DISQUS_SHORTNAME with your Disqus shortname
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </section>
+
+    <section id="contact" class="contact-section">
+        <h2>Contact Us</h2>
+        <form name="contact" method="POST" data-netlify="true">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+            <label for="message">Message:</label>
+            <textarea id="message" name="message" required></textarea>
+            <button type="submit">Send Message</button>
+        </form>
+        <p>Phone: (123) 456-7890</p>
+        <p>Email: info@imobracingonline.com</p>
+    </section>
+
+    <footer class="footer">
+        <div class="social-media">
+            <a href="https://www.facebook.com/iMobRacing" target="_blank"><i class="fab fa-facebook"></i></a>
+            <a href="https://twitter.com/iMobRacing" target="_blank"><i class="fab fa-twitter"></i></a>
+            <a href="https://instagram.com/iMobRacing" target="_blank"><i class="fab fa-instagram"></i></a>
+            <a href="https://youtube.com/iMobRacing" target="_blank"><i class="fab fa-youtube"></i></a>
+        </div>
+        <p>&copy; 2024 iMOB Racing. All rights reserved.</p>
+        <p>Contact: info@imobracingonline.com | Phone: (123) 456-7890</p>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
+    <script src="scripts.js"></script>
+    <script id="dsq-count-scr" src="//imobracing.disqus.com/count.js" async></script>
+</body>
+</html>
+Explanation
+Include jQuery and YouTube Background Library:
+
+jQuery and the YouTube Background library are included in the <head> section.
+YouTube Background Initialization:
+
+The #youtube-background div is used to initialize the YouTube background video.
+The data-yt-url attribute contains the URL of the YouTube video you want to use as the background.
+CSS Adjustments:
+
+You might need to adjust the CSS to ensure the background video covers the full header section.
+Additional CSS Adjustments
+To ensure the background video covers the entire header section and looks good, you might need to add some CSS. Add the following CSS to your styles.css file:
+
+css
+Copy code
+#youtube-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+}
+
+.header {
+    position: relative;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    overflow: hidden;
+}
+
+.header-content {
+    position: relative;
+    z-index: 2;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+}
+
+.header-title {
+    font-size: 4em;
+    animation: kinetic 2s infinite alternate;
+}
+
+@keyframes kinetic {
+    0% { transform: scale(1); }
+    100% { transform: scale(1.05); }
+}
+
+.header-subtitle {
+    font-size: 1.5em;
+    margin: 0.5em 0;
+}
+
+.cta-button {
+    padding: 0.5em 1em;
+    background-color: #ff4500;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.cta-button:hover {
+    background-color: #e43e00;
+}
