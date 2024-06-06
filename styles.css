@@ -141,10 +141,20 @@ body, html {
 
 .team-card iframe {
     width: 100%;
-    height: 315px;
+    height: 0;
+    padding-bottom: 56.25%;
     border: none;
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(255, 69, 0, 0.7);
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.team-card {
+    position: relative;
+    padding-top: 56.25%;
+    overflow: hidden;
 }
 
 .driver-video {
