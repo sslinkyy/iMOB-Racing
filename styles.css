@@ -6,9 +6,11 @@ body, html {
     font-family: Arial, sans-serif;
     background-color: #000;
     color: #fff;
+    height: 100%;
+    overflow-x: hidden;
 }
 
-#youtube-background {
+#youtube-iframe {
     position: absolute;
     top: 0;
     left: 0;
