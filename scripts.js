@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const navLinks = document.querySelectorAll('.navbar a');
     const sections = document.querySelectorAll('section');
 
+    // Smooth scrolling for navigation links
     navLinks.forEach(link => {
         link.addEventListener('click', function(e) {
             e.preventDefault();
@@ -17,6 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // Intersection Observer for fading in sections
     const observer = new IntersectionObserver(entries => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -30,6 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
         observer.observe(section);
     });
 
+    // Slick carousel configuration for YouTube videos
     $('.media-carousel').slick({
         infinite: true,
         slidesToShow: 3,
