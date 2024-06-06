@@ -33,8 +33,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // YouTube Data API Key
-    const API_KEY = 'AIzaSyDaCJQhs3fz-k7hg-j0NQWj0S1r7ZEvThs';
-    const CHANNEL_ID = 'imobracing';
+    const API_KEY = AIzaSyDaCJQhs3fz-k7hg-j0NQWj0S1r7ZEvThs;
+    const CHANNEL_ID = imobracing;
     const MAX_RESULTS = 10;
 
     // Fetch YouTube videos
