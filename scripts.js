@@ -1,4 +1,8 @@
 // scripts.js
+//   const API_KEY = 'AIzaSyDaCJQhs3fz-k7hg-j0NQWj0S1r7ZEvThs';
+//   const CHANNEL_ID = 'UCbvXNK-13KBK_yZuZ5YeLZw';
+
+// scripts.js
 
 document.addEventListener('DOMContentLoaded', () => {
     const navLinks = document.querySelectorAll('.navbar a');
@@ -45,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (item.id.kind === "youtube#video") {
                     videoItems += `
                         <div class="carousel-item">
-                            <iframe width="250" height="140" src="https://www.youtube.com/embed/${item.id.videoId}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            <iframe src="https://www.youtube.com/embed/${item.id.videoId}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                         </div>
                     `;
                 }
@@ -59,13 +63,19 @@ document.addEventListener('DOMContentLoaded', () => {
     function initializeCarousel() {
         $('.media-carousel').slick({
             infinite: true,
-            slidesToShow: 3,
+            slidesToShow: 5,
             slidesToScroll: 1,
             autoplay: true,
             autoplaySpeed: 2000,
             arrows: true,
             dots: true,
             responsive: [
+                {
+                    breakpoint: 1024,
+                    settings: {
+                        slidesToShow: 3
+                    }
+                },
                 {
                     breakpoint: 768,
                     settings: {
