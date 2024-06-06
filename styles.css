@@ -4,7 +4,7 @@ body, html {
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
-    background-color: #000;
+    background-color: transparent; /* Changed from black to transparent */
     color: #fff;
     height: 100%;
     overflow-x: hidden;
@@ -28,6 +28,7 @@ body, html {
     align-items: center;
     text-align: center;
     overflow: hidden;
+    background-color: transparent; /* Ensure header is transparent */
 }
 
 .header-content {
