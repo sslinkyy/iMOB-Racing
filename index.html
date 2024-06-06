@@ -35,6 +35,7 @@
             <li><a href="#events">Events</a></li>
             <li><a href="#media">Media</a></li>
             <li><a href="#contact">Contact</a></li>
+            <li><a href="#forums">Forums</a></li>
         </ul>
     </nav>
 
@@ -86,19 +87,28 @@
         </div>
     </section>
 
+    <section id="ai" class="ai-section parallax">
+        <h2>AI Integration</h2>
+        <div class="ai-content">
+            <p>Discover how we embrace AI to enhance our racing strategies, improve vehicle performance, and provide better insights. Our AI-driven analytics help us make data-informed decisions and stay ahead of the competition.</p>
+            <div class="ai-visualization">
+                <img src="path/to/ai-visualization.jpg" alt="AI Visualization">
+            </div>
+        </div>
+    </section>
 
     <section id="events" class="events-section parallax">
         <h2>Upcoming Events</h2>
         <ul class="events-list">
             <li>
-                <h3>TT Event 3</h3>
-                <p>Date: June 22, 2024</p>
-                <p>Location: Thunderhill, Willows, Ca</p>
+                <h3>Race Event 1</h3>
+                <p>Date: January 15, 2024</p>
+                <p>Location: Track A</p>
             </li>
             <li>
-                <h3>TT Event 4</h3>
+                <h3>Race Event 2</h3>
                 <p>Date: February 20, 2024</p>
-                <p>Location: Thunderhill, Willows, Ca</p>
+                <p>Location: Track B</p>
             </li>
         </ul>
     </section>
@@ -106,6 +116,32 @@
     <section id="media" class="media-section">
         <h2>Media Gallery</h2>
         <div class="media-carousel"></div>
+    </section>
+
+    <section id="forums" class="forums-section">
+        <h2>Forums</h2>
+        <div id="disqus_thread"></div>
+        <script>
+            /**
+            *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT 
+            *  THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR 
+            *  PLATFORM OR CMS.
+            *  
+            *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: 
+            *  https://disqus.com/admin/universalcode/#configuration-variables
+            */
+            var disqus_config = function () {
+                this.page.url = window.location.href;  // Replace PAGE_URL with your page's canonical URL variable
+                this.page.identifier = window.location.href; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+            };
+            (function() {  // DON'T EDIT BELOW THIS LINE
+                var d = document, s = d.createElement('script');
+                s.src = 'https://imobracing.disqus.com/embed.js';  // Replace YOUR_DISQUS_SHORTNAME with your Disqus shortname
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
     </section>
 
     <section id="contact" class="contact-section">
@@ -119,8 +155,8 @@
             <textarea id="message" name="message" required></textarea>
             <button type="submit">Send Message</button>
         </form>
-        <p>Phone: (530) 420-5850</p>
-        <p>Email: support@imobracingonline.com</p>
+        <p>Phone: (123) 456-7890</p>
+        <p>Email: info@imobracingonline.com</p>
     </section>
 
     <footer class="footer">
@@ -131,11 +167,12 @@
             <a href="https://youtube.com/iMobRacing" target="_blank"><i class="fab fa-youtube"></i></a>
         </div>
         <p>&copy; 2024 iMOB Racing. All rights reserved.</p>
-        <p>Contact: support@imobracingonline.com | Phone: (530) 420-5850</p>
+        <p>Contact: info@imobracingonline.com | Phone: (123) 456-7890</p>
     </footer>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
     <script src="scripts.js"></script>
+    <script id="dsq-count-scr" src="//imobracing.disqus.com/count.js" async></script>
 </body>
 </html>
