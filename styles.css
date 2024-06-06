@@ -1,11 +1,53 @@
+/* General styles */
 body, html {
     margin: 0;
     padding: 0;
-    height: 100%;
     font-family: Arial, sans-serif;
-    background: black;
+    color: white;
+    background-color: black;
 }
 
+a {
+    color: orange;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Header styles */
+.header {
+    position: relative;
+    text-align: center;
+    padding: 100px 20px;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.header h1 {
+    font-size: 3em;
+    margin: 0;
+}
+
+.header p {
+    font-size: 1.2em;
+}
+
+.header .learn-more {
+    display: inline-block;
+    padding: 10px 20px;
+    border: 2px solid orange;
+    color: orange;
+    background: transparent;
+    margin-top: 20px;
+}
+
+.header .learn-more:hover {
+    background: orange;
+    color: black;
+}
+
+/* Video Background */
 .video-background {
     position: fixed;
     top: 0;
@@ -19,76 +61,187 @@ body, html {
 .video-background iframe {
     width: 100%;
     height: 100%;
+    pointer-events: none;
 }
 
-.header {
-    text-align: center;
-    color: white;
-    padding: 50px;
-}
-
-.header .learn-more {
-    background: orange;
-    color: white;
-    padding: 10px 20px;
-    text-decoration: none;
-    border-radius: 5px;
-}
-
+/* Social Media and Poll Integration */
 .social-poll-container {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
+    align-items: flex-start;
     padding: 20px;
-}
-
-.poll-container {
-    width: 48%;
+    background: rgba(0, 0, 0, 0.8);
 }
 
 .fb-page {
-    width: 48%;
+    width: 45%;
 }
 
-.team-section, .ai-section, .events-section, .media-section, .contact-section, .forums-section {
-    padding: 20px;
-    color: white;
+.poll-container {
+    width: 45%;
+}
+
+/* Team Section */
+.team-section {
+    padding: 50px 20px;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.8);
+}
+
+.team-section h2 {
+    font-size: 2.5em;
+    margin-bottom: 20px;
 }
 
 .team-container {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
+    flex-wrap: wrap;
 }
 
 .team-member {
-    width: 24%;
+    width: 45%;
+    margin: 20px 0;
     text-align: center;
 }
 
-.footer {
+.team-member h3 {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+
+.team-member iframe {
+    width: 100%;
+    height: 315px;
+}
+
+/* AI Integration Section */
+.ai-section {
+    padding: 50px 20px;
     text-align: center;
-    padding: 10px;
-    background: #333;
-    color: white;
+    background: rgba(0, 0, 0, 0.8);
+}
+
+.ai-section h2 {
+    font-size: 2.5em;
+    margin-bottom: 20px;
+}
+
+.ai-section p {
+    font-size: 1.2em;
+    margin-bottom: 20px;
+}
+
+.ai-section img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Events Section */
+.events-section {
+    padding: 50px 20px;
+    background: rgba(0, 0, 0, 0.8);
+}
+
+.events-section h2 {
+    font-size: 2.5em;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.events-section .event {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Media Section */
+.media-section {
+    padding: 50px 20px;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.8);
+}
+
+.media-section h2 {
+    font-size: 2.5em;
+    margin-bottom: 20px;
+}
+
+.carousel {
+    display: flex;
+    overflow-x: scroll;
+}
+
+.carousel iframe {
+    margin-right: 20px;
+}
+
+/* Contact Section */
+.contact-section {
+    padding: 50px 20px;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.8);
+}
+
+.contact-section h2 {
+    font-size: 2.5em;
+    margin-bottom: 20px;
 }
 
 .contact-section form {
-    display: flex;
-    flex-direction: column;
+    display: inline-block;
+    text-align: left;
+    max-width: 500px;
+    width: 100%;
 }
 
-.contact-section form input, .contact-section form textarea {
-    margin: 10px 0;
-    padding: 10px;
+.contact-section label {
+    display: block;
+    margin-bottom: 5px;
 }
 
-.contact-section form button {
-    background: orange;
-    color: white;
+.contact-section input,
+.contact-section textarea {
+    width: 100%;
     padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.contact-section button {
+    display: inline-block;
+    padding: 10px 20px;
     border: none;
+    background: orange;
+    color: black;
     cursor: pointer;
+    font-size: 1em;
 }
 
-.contact-section form button:hover {
+.contact-section button:hover {
     background: darkorange;
+}
+
+.contact-section p {
+    margin-top: 10px;
+}
+
+/* Forums Section */
+.forums-section {
+    padding: 50px 20px;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.8);
+}
+
+.forums-section h2 {
+    font-size: 2.5em;
+    margin-bottom: 20px;
+}
+
+/* Footer */
+.footer {
+    text-align: center;
+    padding: 20px;
+    background: black;
+    color: white;
 }
