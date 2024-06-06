@@ -86,7 +86,7 @@ body, html {
     text-decoration: none;
 }
 
-.about-section, .team-section, .events-section, .media-section, .contact-section, .ai-section, .integration-section, .forums-section {
+.about-section, .team-section, .events-section, .media-section, .contact-section, .ai-section, .integration-section {
     padding: 2em;
     background: #111;
     transition: opacity 1s ease-in-out;
@@ -161,6 +161,7 @@ body, html {
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(255, 69, 0, 0.7);
     transition: transform 0.3s;
+    margin: 0 10px;
 }
 
 .carousel-item:hover {
