@@ -61,7 +61,7 @@
                 <img src="https://imobracingonline.com/images/member1.jpg" alt="Anthony Yorba">
                 <h3>Anthony Yorba</h3>
                 <p>Co-founder, ASE Certified Technician</p>
-                <iframe width="560" height="315" src="https://www.youtube.com/watch?v=dfNYz6cQ8LI&t=94s&ab_channel=iMOBRacing" frameborder="0" allowfullscreen></iframe>
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/VIDEO_ID_1" frameborder="0" allowfullscreen></iframe>
             </div>
             <div class="team-card">
                 <img src="https://imobracingonline.com/images/member2.jpg" alt="Tony Langston">
@@ -120,12 +120,13 @@
         <div id="disqus_thread"></div>
         <script>
             var disqus_config = function () {
-                this.page.url = window.location.href;  
-                this.page.identifier = window.location.href; 
+                this.page.url = window.location.href;
+                this.page.identifier = window.location.pathname;
             };
-            (function() {  
+
+            (function() {
                 var d = document, s = d.createElement('script');
-                s.src = 'https://imobracing.disqus.com/embed.js';  
+                s.src = 'https://imobracing.disqus.com/embed.js';
                 s.setAttribute('data-timestamp', +new Date());
                 (d.head || d.body).appendChild(s);
             })();
@@ -135,7 +136,7 @@
 
     <section id="contact" class="contact-section">
         <h2>Contact Us</h2>
-        <form name="contact" method="POST" data-netlify="true">
+        <form action="submit_form.php" method="post">
             <label for="name">Name:</label>
             <input type="text" id="name" name="name" required>
             <label for="email">Email:</label>
@@ -162,6 +163,5 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
     <script src="scripts.js"></script>
-    <script id="dsq-count-scr" src="//imobracing.disqus.com/count.js" async></script>
 </body>
 </html>
