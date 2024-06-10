@@ -37,7 +37,11 @@
 
     <section id="about" class="about-section parallax">
         <h2>About Us</h2>
-        <p>At iMOB Racing, our ambition is to become the premier team in the racing industry. Comprising dedicated racecar modders and enthusiasts, we specialize in time attack racing while also participating in 4x4, rally, drifting, off-road, street bikes, dirt bikes, and crosskarts. We pride ourselves on being 100% built, not bought, with a commitment to modifying and customizing any vehicle. Our co-founders, Anthony Yorba and Tony Langston, drive the team with their technical expertise and artistic vision. Leading the charge on the track, our top driver, Chris Statler, epitomizes our racing spirit, while our youngest member, Daniel Bertholf, stands out in the drifting scene. We are dedicated to expanding our brand through dynamic race footage, informative repair videos, and exclusive behind-the-scenes content. Additionally, we offer engaging giveaways and forums for discussions, event updates, and buy/sell opportunities.</p>
+        <p>At iMOB Racing, our ambition is to become the premier team in the racing industry. Comprising dedicated racecar modders and enthusiasts, we specialize in time attack racing while also participating in 4x4, rally, drifting, off-road, street bikes, dirt bikes, and crosskarts. We pride ourselves on being 100% built, not bought, with a commitment to modifying and customizing any vehicle.
+
+        Our co-founders, Anthony Yorba and Tony Langston, drive the team with their technical expertise and artistic vision. Leading the charge on the track, our top driver, Chris Statler, epitomizes our racing spirit, while our youngest member, Daniel Bertholf, stands out in the drifting scene.
+
+        We are dedicated to expanding our brand through dynamic race footage, informative repair videos, and exclusive behind-the-scenes content. Additionally, we offer engaging giveaways and forums for discussions, event updates, and buy/sell opportunities.</p>
     </section>
 
     <section id="team" class="team-section">
@@ -118,24 +122,19 @@
     </section>
 
     <section id="contact" class="contact-section">
-    <h2>Contact Us</h2>
-    <form name="contact" method="POST" data-netlify="true">
-        <input type="hidden" name="form-name" value="contact">
-        <label for="name">Name:</label>
-        <input type="text" id="name" name="name" required>
-        
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required>
-        
-        <label for="message">Message:</label>
-        <textarea id="message" name="message" required></textarea>
-        
-        <button type="submit">Send Message</button>
-    </form>
-    <p>Phone: (530) 420-5850</p>
-    <p>Email: info@imobracingonline.com</p>
-</section>
-
+        <h2>Contact Us</h2>
+        <form name="contact" method="POST" data-netlify="true">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+            <label for="message">Message:</label>
+            <textarea id="message" name="message" required></textarea>
+            <button type="submit">Send Message</button>
+        </form>
+        <p>Phone: (530) 420-5850</p>
+        <p>Email: info@imobracingonline.com</p>
+    </section>
 
     <section id="forums" class="forums-section">
         <h2>Forums</h2>
@@ -150,9 +149,14 @@
                 var d = document, s = d.createElement('script');
                 s.src = 'https://imobracing.disqus.com/embed.js';
                 s.setAttribute('data-timestamp', +new Date());
-                (d.head || d.body).appendChild(s);
+                (d.head or d.body).appendChild(s);
             })();
         </script>
+    </section>
+
+    <section id="calendar" class="calendar-section">
+        <h2>Event Calendar</h2>
+        <iframe src="https://calendar.google.com/calendar/embed?src=imobracing%40gmail.com&ctz=America%2FLos_Angeles" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe>
     </section>
 
     <footer class="footer">
