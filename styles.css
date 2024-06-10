@@ -133,7 +133,15 @@ body, html {
     transform: translateY(-10px);
 }
 
+.events-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 2em;
+}
+
 .events-list {
+    flex: 1;
     list-style: none;
     padding: 0;
     margin: 0;
@@ -145,6 +153,14 @@ body, html {
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(255, 69, 0, 0.7);
     margin-bottom: 1em;
+}
+
+.calendar-container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
 }
 
 .media-carousel {
@@ -222,6 +238,7 @@ body, html {
 
 .integration-container {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     gap: 2em;
 }
@@ -230,19 +247,12 @@ body, html {
     flex: 1;
 }
 
-.events-container {
-    display: flex;
-    justify-content: space-between;
-    gap: 2em;
-}
+@media (max-width: 768px) {
+    .events-container {
+        flex-direction: column;
+    }
 
-.events-list {
-    flex: 1;
-}
-
-.calendar-container {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    .calendar-container {
+        width: 100%;
+    }
 }
