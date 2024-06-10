@@ -100,18 +100,23 @@
 
     <section id="events" class="events-section parallax">
         <h2>Upcoming Events</h2>
-        <ul class="events-list">
-            <li>
-                <h3>TT Event 3</h3>
-                <p>Date: June 22, 2024</p>
-                <p>Location: Thunderhill, Willows, Ca</p>
-            </li>
-            <li>
-                <h3>TT Event 4</h3>
-                <p>Date: September 20, 2024</p>
-                <p>Location: Thunderhill, Willows, Ca</p>
-            </li>
-        </ul>
+        <div class="events-container">
+            <ul class="events-list">
+                <li>
+                    <h3>TT Event 3</h3>
+                    <p>Date: June 22, 2024</p>
+                    <p>Location: Thunderhill, Willows, Ca</p>
+                </li>
+                <li>
+                    <h3>TT Event 4</h3>
+                    <p>Date: September 20, 2024</p>
+                    <p>Location: Thunderhill, Willows, Ca</p>
+                </li>
+            </ul>
+            <div class="calendar-container">
+                <iframe src="https://calendar.google.com/calendar/embed?src=your_calendar_id@group.calendar.google.com&ctz=Your/Timezone" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe>
+            </div>
+        </div>
     </section>
 
     <section id="media" class="media-section">
@@ -149,14 +154,9 @@
                 var d = document, s = d.createElement('script');
                 s.src = 'https://imobracing.disqus.com/embed.js';
                 s.setAttribute('data-timestamp', +new Date());
-                (d.head or d.body).appendChild(s);
+                (d.head || d.body).appendChild(s);
             })();
         </script>
-    </section>
-
-    <section id="calendar" class="calendar-section">
-        <h2>Event Calendar</h2>
-        <iframe src="https://calendar.google.com/calendar/embed?src=imobracing%40gmail.com&ctz=America%2FLos_Angeles" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe>
     </section>
 
     <footer class="footer">
