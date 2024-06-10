@@ -118,19 +118,24 @@
     </section>
 
     <section id="contact" class="contact-section">
-        <h2>Contact Us</h2>
-        <form action="submit_form.php" method="post" netlify>
-            <label for="name">Name:</label>
-            <input type="text" id="name" name="name" required>
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required>
-            <label for="message">Message:</label>
-            <textarea id="message" name="message" required></textarea>
-            <button type="submit">Send Message</button>
-        </form>
-        <p>Phone: (530) 420-5850</p>
-        <p>Email: info@imobracingonline.com</p>
-    </section>
+    <h2>Contact Us</h2>
+    <form name="contact" method="POST" data-netlify="true">
+        <input type="hidden" name="form-name" value="contact">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required>
+        
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+        
+        <label for="message">Message:</label>
+        <textarea id="message" name="message" required></textarea>
+        
+        <button type="submit">Send Message</button>
+    </form>
+    <p>Phone: (530) 420-5850</p>
+    <p>Email: info@imobracingonline.com</p>
+</section>
+
 
     <section id="forums" class="forums-section">
         <h2>Forums</h2>
