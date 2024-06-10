@@ -37,8 +37,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // YouTube Data API Key
-    const API_KEY = 'AIzaSyDaCJQhs3fz-k7hg-j0NQWj0S1r7ZEvThs';
-    const CHANNEL_ID = 'UCbvXNK-13KBK_yZuZ5YeLZw';
+    const API_KEY = 'AIzaSyDaCJQhs3fz-k7hg-j0NQWj0S1r7ZEvThs'; // Replace with your actual YouTube API key
+    const CHANNEL_ID = 'UCbvXNK-13KBK_yZuZ5YeLZw'; // Replace with your actual channel ID
     const MAX_RESULTS = 10;
 
     // Fetch YouTube videos
@@ -57,8 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
             $('.media-carousel').html(videoItems);
             initializeCarousel();
         }).fail(function(jqXHR, textStatus, errorThrown) {
-            console.error('Error fetching YouTube videos:', textStatus, errorThrown);
-            $('.media-carousel').html('<p>Failed to load videos. Please try again later.</p>');
+            console.error('YouTube API Error: ', textStatus, errorThrown);
         });
     }
 
@@ -95,8 +94,5 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Initialize the media carousel on document ready
-    $(document).ready(function(){
-        fetchYouTubeVideos();
-    });
+    fetchYouTubeVideos();
 });
