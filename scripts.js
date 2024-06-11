@@ -103,6 +103,13 @@ document.addEventListener('DOMContentLoaded', () => {
         this.page.identifier = CONFIG.DISQUS_PAGE_IDENTIFIER;
     };
 
+    // Initialize Google Calendar
+    function initializeCalendar() {
+        const calendarIframe = document.getElementById('google-calendar');
+        calendarIframe.src = `https://calendar.google.com/calendar/embed?src=${CONFIG.GOOGLE_CALENDAR_ID}&ctz=America%2FLos_Angeles`;
+    }
+
     fetchYouTubeVideos();
     loadDisqus();
+    initializeCalendar();
 });
