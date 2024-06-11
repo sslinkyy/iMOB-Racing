@@ -79,15 +79,16 @@
     <h2>Social Media & Polls</h2>
     <div class="integration-container">
         <div class="facebook-integration">
-            <div class="fb-page" data-href="https://www.facebook.com/imobracing" data-tabs="timeline, events" data-width="500" data-height="" data-small-header="true" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="false">
-                <blockquote cite="https://www.facebook.com/imobracing" class="fb-xfbml-parse-ignore"><a href="https://www.facebook.com/imobracing">IMOB Racing</a></blockquote>
+            <div class="fb-page" data-href="${CONFIG.FACEBOOK_PAGE_URL}" data-tabs="timeline, events" data-width="500" data-height="" data-small-header="true" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="false">
+                <blockquote cite="${CONFIG.FACEBOOK_PAGE_URL}" class="fb-xfbml-parse-ignore"><a href="${CONFIG.FACEBOOK_PAGE_URL}">IMOB Racing</a></blockquote>
             </div>
         </div>
         <div class="poll-integration">
-            <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSfZqtnqgL2im8K7Ih6hCjqLrEZ-frZzTMMlJLbMCMg4u8MxaA/viewform?usp=sf_link" width="100%" height="auto" frameborder="0" marginheight="0" marginwidth="0" style="border:0; overflow:hidden;" scrolling="no">Loading…</iframe>
+            <iframe src="${CONFIG.GOOGLE_FORM_URL}" width="100%" height="auto" frameborder="0" marginheight="0" marginwidth="0" style="border:0; overflow:hidden;" scrolling="no">Loading…</iframe>
         </div>
     </div>
 </section>
+
 
     <section id="ai" class="ai-section parallax">
         <h2>AI Integration</h2>
