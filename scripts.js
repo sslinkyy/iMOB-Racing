@@ -2,8 +2,6 @@
 //   const API_KEY = 'AIzaSyDaCJQhs3fz-k7hg-j0NQWj0S1r7ZEvThs';
 //   const CHANNEL_ID = 'UCbvXNK-13KBK_yZuZ5YeLZw';
 
-// scripts.js
-
 document.addEventListener('DOMContentLoaded', () => {
     const navLinks = document.querySelectorAll('.navbar a');
     const sections = document.querySelectorAll('section');
@@ -36,9 +34,14 @@ document.addEventListener('DOMContentLoaded', () => {
         observer.observe(section);
     });
 
+    // YouTube Data API Key
+    const API_KEY = CONFIG.YOUTUBE_API_KEY;
+    const CHANNEL_ID = CONFIG.YOUTUBE_CHANNEL_ID;
+    const MAX_RESULTS = 10;
+
     // Fetch YouTube videos
     function fetchYouTubeVideos() {
-        $.get(`https://www.googleapis.com/youtube/v3/search?key=${CONFIG.YOUTUBE_API_KEY}&channelId=${CONFIG.YOUTUBE_CHANNEL_ID}&part=snippet,id&order=date&maxResults=10`, function(data) {
+        $.get(`https://www.googleapis.com/youtube/v3/search?key=${API_KEY}&channelId=${CHANNEL_ID}&part=snippet,id&order=date&maxResults=${MAX_RESULTS}`, function(data) {
             let videoItems = '';
             data.items.forEach(item => {
                 if (item.id.kind === "youtube#video") {
@@ -89,4 +92,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Load YouTube videos
     fetchYouTubeVideos();
+
+    // Initialize Disqus
+    var disqus_config = function () {
+        this.page.url = CONFIG.DISQUS_PAGE_URL;
+        this.page.identifier = CONFIG.DISQUS_PAGE_IDENTIFIER;
+    };
+    (function () {
+        var d = document, s = d.createElement('script');
+        s.src = 'https://' + CONFIG.DISQUS_SHORTNAME + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+
+    // Google Calendar integration
+    document.getElementById('google-calendar').src = `https://calendar.google.com/calendar/embed?src=${CONFIG.GOOGLE_CALENDAR_ID}&ctz=America/Los_Angeles`;
 });
