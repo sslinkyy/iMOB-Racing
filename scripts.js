@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Fetch YouTube videos
     function fetchYouTubeVideos() {
-        $.get(`https://www.googleapis.com/youtube/v3/search?key=${CONFIG.YOUTUBE_API_KEY}&channelId=${CONFIG.CHANNEL_ID}&part=snippet,id&order=date&maxResults=${MAX_RESULTS}`, function(data) {
+        $.get(`https://www.googleapis.com/youtube/v3/search?key=${CONFIG.YOUTUBE_API_KEY}&channelId=${CONFIG.CHANNEL_ID}&part=snippet,id&order=date&maxResults=10`, function(data) {
             let videoItems = '';
             data.items.forEach(item => {
                 if (item.id.kind === "youtube#video") {
@@ -74,13 +74,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 },
                 {
-                    breakpoint:768,
+                    breakpoint: 768,
                     settings: {
                         slidesToShow: 2
                     }
                 },
                 {
-                    breakpoint:480,
+                    breakpoint: 480,
                     settings: {
                         slidesToShow: 1
                     }
@@ -89,5 +89,20 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Load Disqus
+    function loadDisqus() {
+        var d = document, s = d.createElement('script');
+        s.src = `https://${CONFIG.DISQUS_SHORTNAME}.disqus.com/embed.js`;
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    }
+
+    // Initialize Disqus configuration
+    window.disqus_config = function () {
+        this.page.url = CONFIG.DISQUS_PAGE_URL;
+        this.page.identifier = CONFIG.DISQUS_PAGE_IDENTIFIER;
+    };
+
     fetchYouTubeVideos();
+    loadDisqus();
 });
