@@ -145,24 +145,11 @@
     <section id="forums" class="forums-section">
         <h2>Forums</h2>
         <div id="disqus_thread"></div>
-        <script>
-            var disqus_config = function () {
-                this.page.url = PAGE_URL;
-                this.page.identifier = PAGE_IDENTIFIER;
-            };
-
-            (function() {
-                var d = document, s = d.createElement('script');
-                s.src = 'https://imobracing.disqus.com/embed.js';
-                s.setAttribute('data-timestamp', +new Date());
-                (d.head || d.body).appendChild(s);
-            })();
-        </script>
     </section>
 
-    <footer class="footer">
+   <footer class="footer">
         <div class="social-media">
-            <a href="https://www.facebook.com/iMobRacing" target="_blank"><i class="fab fa-facebook"></i></a>
+            <a href="${CONFIG.FACEBOOK_PAGE_URL}" target="_blank"><i class="fab fa-facebook"></i></a>
             <a href="https://twitter.com/iMobRacing" target="_blank"><i class="fab fa-twitter"></i></a>
             <a href="https://instagram.com/iMobRacing" target="_blank"><i class="fab fa-instagram"></i></a>
             <a href="https://youtube.com/iMobRacing" target="_blank"><i class="fab fa-youtube"></i></a>
