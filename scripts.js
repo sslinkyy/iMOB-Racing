@@ -2,7 +2,7 @@
 //   const API_KEY = 'AIzaSyDaCJQhs3fz-k7hg-j0NQWj0S1r7ZEvThs';
 //   const CHANNEL_ID = 'UCbvXNK-13KBK_yZuZ5YeLZw';
 
-document.addEventListener('DOMContentLoaded', () => {
+ddocument.addEventListener('DOMContentLoaded', () => {
     const navLinks = document.querySelectorAll('.navbar a');
     const sections = document.querySelectorAll('section');
 
@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
         observer.observe(section);
     });
 
-    // YouTube Data API Key
+    // YouTube Data API Key and Channel ID from config.js
     const API_KEY = CONFIG.YOUTUBE_API_KEY;
     const CHANNEL_ID = CONFIG.YOUTUBE_CHANNEL_ID;
     const MAX_RESULTS = 10;
@@ -90,21 +90,37 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Load YouTube videos
-    fetchYouTubeVideos();
+    // Initialize YouTube background
+    $('#youtube-background').youtube_background();
 
-    // Initialize Disqus
-    var disqus_config = function () {
-        this.page.url = CONFIG.DISQUS_PAGE_URL;
-        this.page.identifier = CONFIG.DISQUS_PAGE_IDENTIFIER;
+    // Load Facebook page
+    const facebookPageUrl = CONFIG.FACEBOOK_PAGE_URL;
+    $('.fb-page').attr('data-href', facebookPageUrl);
+
+    // Load Google Form URL
+    const googleFormUrl = CONFIG.GOOGLE_FORM_URL;
+    $('.poll-integration iframe').attr('src', googleFormUrl);
+
+    // Load Google Calendar
+    const googleCalendarId = CONFIG.GOOGLE_CALENDAR_ID;
+    $('#google-calendar').attr('src', `https://calendar.google.com/calendar/embed?src=${googleCalendarId}&ctz=America%2FLos_Angeles`);
+
+    // Load Disqus
+    const disqusShortname = CONFIG.DISQUS_SHORTNAME;
+    const disqusPageUrl = CONFIG.DISQUS_PAGE_URL;
+    const disqusPageIdentifier = CONFIG.DISQUS_PAGE_IDENTIFIER;
+
+    window.disqus_config = function () {
+        this.page.url = disqusPageUrl;
+        this.page.identifier = disqusPageIdentifier;
     };
-    (function () {
+
+    (function() {
         var d = document, s = d.createElement('script');
-        s.src = 'https://' + CONFIG.DISQUS_SHORTNAME + '.disqus.com/embed.js';
+        s.src = 'https://' + disqusShortname + '.disqus.com/embed.js';
         s.setAttribute('data-timestamp', +new Date());
         (d.head || d.body).appendChild(s);
     })();
 
-    // Google Calendar integration
-    document.getElementById('google-calendar').src = `https://calendar.google.com/calendar/embed?src=${CONFIG.GOOGLE_CALENDAR_ID}&ctz=America/Los_Angeles`;
+    fetchYouTubeVideos();
 });
