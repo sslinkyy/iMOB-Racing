@@ -1,0 +1,5 @@
+// config.js
+const CONFIG = {
+    YOUTUBE_API_KEY: 'YOUR_YOUTUBE_API_KEY',
+    CHANNEL_ID: 'UCbvXNK-13KBK_yZuZ5YeLZw'
+};
