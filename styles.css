@@ -1,5 +1,4 @@
-/* Add your custom CSS styles here */
-
+/* General Styles */
 body, html {
     margin: 0;
     padding: 0;
@@ -8,37 +7,67 @@ body, html {
     color: #fff;
 }
 
+/* Header Styles */
 .header {
-    position: relative;
-    width: 100%;
     height: 100vh;
-    overflow: hidden;
+    position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
-    color: white;
     text-align: center;
+    overflow: hidden;
 }
 
 #youtube-iframe {
     position: absolute;
-    top: 50%;
-    left: 50%;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
-    transform: translate(-50%, -50%);
-    z-index: -1;
+    z-index: 1;
+    opacity: 0.7;
+    pointer-events: none;
 }
 
 .header-content {
     position: relative;
-    z-index: 1;
+    z-index: 2;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+}
+
+.header-title {
+    font-size: 4em;
+    animation: kinetic 2s infinite alternate;
+}
+
+@keyframes kinetic {
+    0% { transform: scale(1); }
+    100% { transform: scale(1.05); }
+}
+
+.header-subtitle {
+    font-size: 1.5em;
+    margin: 0.5em 0;
+}
+
+.cta-button {
+    padding: 0.5em 1em;
+    background-color: #ff4500;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.cta-button:hover {
+    background-color: #e43e00;
 }
 
 .navbar {
-    background: #000;
-    padding: 10px;
-    text-align: center;
+    background-color: #111;
+    color: white;
+    padding: 1em;
     position: sticky;
     top: 0;
     z-index: 3;
@@ -46,70 +75,21 @@ body, html {
 
 .navbar ul {
     list-style: none;
-    padding: 0;
     margin: 0;
+    padding: 0;
     display: flex;
-    justify-content: center;
+    justify-content: space-around;
 }
 
-.navbar ul li {
-    margin: 0 15px;
-}
-
-.navbar ul li a {
+.navbar a {
     color: white;
     text-decoration: none;
-    font-weight: bold;
 }
 
-.section {
-    padding: 60px 20px;
-}
-
-.about-section,
-.team-section,
-.integration-section,
-.ai-section,
-.events-section,
-.media-section,
-.contact-section,
-.forums-section {
-    padding: 60px 20px;
+.about-section, .team-section, .events-section, .media-section, .contact-section, .ai-section, .integration-section {
+    padding: 2em;
+    background: #111;
     transition: opacity 1s ease-in-out;
-}
-
-.team-grid {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-}
-
-.team-card {
-    background: #fff;
-    margin: 10px;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 250px;
-    text-align: center;
-}
-
-.team-card img {
-    width: 100%;
-    border-radius: 10px;
-}
-
-.footer {
-    background: #000;
-    color: white;
-    text-align: center;
-    padding: 20px 0;
-}
-
-.footer .social-media a {
-    color: white;
-    margin: 0 10px;
-    text-decoration: none;
 }
 
 .parallax {
@@ -118,35 +98,167 @@ body, html {
     background-position: center;
 }
 
-.integration-container {
+.about-section {
+    background-image: url('path/to/about-background.jpg');
+}
+
+.ai-section {
+    background-image: url('path/to/ai-background.jpg');
+}
+
+.events-section {
+    background-image: url('path/to/events-background.jpg');
+}
+
+.section-title {
+    text-align: center;
+    font-size: 2.5em;
+    margin-bottom: 1em;
+}
+
+.team-grid, .media-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1em;
+}
+
+.team-card, .media-card {
+    background: #222;
+    padding: 1em;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(255, 69, 0, 0.7);
+    text-align: center;
+    transition: transform 0.3s;
+}
+
+.team-card:hover, .media-card:hover {
+    transform: translateY(-10px);
+}
+
+.events-container {
     display: flex;
-    justify-content: space-around;
     flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 2em;
+}
+
+.events-list {
+    flex: 1;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.events-list li {
+    background: #222;
+    padding: 1em;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(255, 69, 0, 0.7);
+    margin-bottom: 1em;
 }
 
 .calendar-container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 100%;
-    max-width: 600px;
-    margin: 20px auto;
+}
+
+.media-carousel {
+    display: flex;
+    overflow: hidden;
+    padding: 1em 0;
+}
+
+.carousel-item {
+    flex: 0 0 auto;
+    width: 250px;
+    background: #222;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(255, 69, 0, 0.7);
+    transition: transform 0.3s;
+}
+
+.carousel-item:hover {
+    transform: scale(1.05);
+}
+
+.contact-section form {
+    display: flex;
+    flex-direction: column;
+}
+
+.contact-section label {
+    margin-top: 1em;
+}
+
+.contact-section input, .contact-section textarea {
+    padding: 0.5em;
+    margin-top: 0.5em;
+    border: none;
+    border-radius: 5px;
+    background: #333;
+    color: #fff;
+}
+
+.contact-section button {
+    margin-top: 1em;
+    padding: 0.5em 1em;
+    background-color: #ff4500;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.contact-section button:hover {
+    background-color: #e43e00;
+}
+
+.footer {
+    background: #111;
+    padding: 1em;
+    text-align: center;
+    color: #fff;
+}
+
+.social-media {
+    margin: 1em 0;
+}
+
+.social-media a {
+    color: white;
+    margin: 0 0.5em;
+    font-size: 1.5em;
+    transition: color 0.3s;
+}
+
+.social-media a:hover {
+    color: #ff4500;
+}
+
+.integration-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 2em;
+}
+
+.facebook-integration, .poll-integration {
+    flex: 1;
 }
 
 @media (max-width: 768px) {
-    .integration-container {
+    .events-container {
         flex-direction: column;
-        align-items: center;
     }
 
-    .team-grid {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    #youtube-iframe {
+    .calendar-container {
         width: 100%;
-        height: auto;
     }
-}
 
-.media-carousel img {
-    width: 100%;
+    .poll-integration iframe {
+        width: 100%;
+    }
 }
