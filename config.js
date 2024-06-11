@@ -7,4 +7,5 @@ const CONFIG = {
     DISQUS_SHORTNAME: 'imobracing',
     DISQUS_PAGE_URL: 'https://imobracingonline.com',
     DISQUS_PAGE_IDENTIFIER: 'imobracing-forums'
+    GOOGLE_CALENDAR_ID: 'imobracing@gmail.com'
 };
