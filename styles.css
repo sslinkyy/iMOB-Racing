@@ -1,29 +1,31 @@
-body {
+/* Add your custom CSS styles here */
+
+body, html {
     margin: 0;
+    padding: 0;
     font-family: Arial, sans-serif;
-    background-color: #000;
-    color: #fff;
 }
 
 .header {
     position: relative;
-    text-align: center;
-    color: white;
-}
-
-.video-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
     width: 100%;
-    height: 100%;
+    height: 100vh;
     overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    text-align: center;
 }
 
 #youtube-iframe {
+    position: absolute;
+    top: 50%;
+    left: 50%;
     width: 100%;
     height: 100%;
-    pointer-events: none;
+    transform: translate(-50%, -50%);
+    z-index: -1;
 }
 
 .header-content {
@@ -31,67 +33,43 @@ body {
     z-index: 1;
 }
 
-.header-title {
-    font-size: 4em;
-    margin-top: 20%;
-}
-
-.header-subtitle {
-    font-size: 2em;
-    margin-bottom: 20px;
-}
-
-.cta-button {
-    padding: 10px 20px;
-    background-color: #ff5722;
-    color: #fff;
-    text-decoration: none;
-    border-radius: 5px;
-}
-
 .navbar {
-    display: flex;
-    justify-content: center;
-    background-color: #333;
+    background: #000;
     padding: 10px;
-    position: fixed;
-    width: 100%;
-    top: 0;
-    z-index: 100;
+    text-align: center;
 }
 
 .navbar ul {
-    list-style-type: none;
-    margin: 0;
+    list-style: none;
     padding: 0;
+    margin: 0;
     display: flex;
+    justify-content: center;
 }
 
-.navbar li {
-    margin: 0 10px;
+.navbar ul li {
+    margin: 0 15px;
 }
 
-.navbar a {
-    color: #fff;
+.navbar ul li a {
+    color: white;
     text-decoration: none;
-    padding: 10px 20px;
-    border-radius: 5px;
+    font-weight: bold;
 }
 
-.navbar a:hover {
-    background-color: #ff5722;
+.section {
+    padding: 60px 20px;
 }
 
-.parallax {
-    background-attachment: fixed;
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
-}
-
-.about-section, .team-section, .integration-section, .ai-section, .events-section, .media-section, .contact-section, .forums-section {
-    padding: 50px 0;
-    text-align: center;
+.about-section,
+.team-section,
+.integration-section,
+.ai-section,
+.events-section,
+.media-section,
+.contact-section,
+.forums-section {
+    padding: 60px 20px;
 }
 
 .team-grid {
@@ -101,102 +79,68 @@ body {
 }
 
 .team-card {
+    background: #fff;
     margin: 10px;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 250px;
     text-align: center;
 }
 
 .team-card img {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
+    width: 100%;
+    border-radius: 10px;
+}
+
+.footer {
+    background: #000;
+    color: white;
+    text-align: center;
+    padding: 20px 0;
+}
+
+.footer .social-media a {
+    color: white;
+    margin: 0 10px;
+    text-decoration: none;
+}
+
+.parallax {
+    background-attachment: fixed;
+    background-size: cover;
+    background-position: center;
 }
 
 .integration-container {
     display: flex;
-    justify-content: center;
+    justify-content: space-around;
     flex-wrap: wrap;
 }
 
-.integration-container > div {
-    margin: 20px;
+.calendar-container {
     width: 100%;
-    max-width: 500px;
-}
-
-.media-carousel {
-    margin-top: 20px;
-}
-
-.events-list {
-    list-style: none;
-    padding: 0;
-}
-
-.events-list li {
-    margin: 10px 0;
-}
-
-.contact-section form {
     max-width: 600px;
-    margin: 0 auto;
-    text-align: left;
-}
-
-.contact-section label {
-    display: block;
-    margin: 10px 0 5px;
-}
-
-.contact-section input, .contact-section textarea {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
-    border: none;
-    border-radius: 5px;
-}
-
-.contact-section button {
-    display: inline-block;
-    padding: 10px 20px;
-    background-color: #ff5722;
-    color: #fff;
-    text-decoration: none;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.footer {
-    background-color: #333;
-    padding: 20px;
-    text-align: center;
-}
-
-.social-media a {
-    color: #fff;
-    margin: 0 10px;
-    font-size: 1.5em;
-    text-decoration: none;
-}
-
-.social-media a:hover {
-    color: #ff5722;
+    margin: 20px auto;
 }
 
 @media (max-width: 768px) {
     .integration-container {
         flex-direction: column;
+        align-items: center;
     }
 
-    .integration-container > div {
-        width: 100%;
-    }
-
-    .navbar ul {
+    .team-grid {
         flex-direction: column;
+        align-items: center;
     }
 
-    .navbar li {
-        margin: 5px 0;
+    #youtube-iframe {
+        width: 100%;
+        height: auto;
     }
+}
+
+.media-carousel img {
+    width: 100%;
 }
