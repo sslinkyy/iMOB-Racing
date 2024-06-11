@@ -36,14 +36,9 @@ document.addEventListener('DOMContentLoaded', () => {
         observer.observe(section);
     });
 
-    // YouTube Data API Key
-    const API_KEY = 'AIzaSyDaCJQhs3fz-k7hg-j0NQWj0S1r7ZEvThs'; // Replace with your actual YouTube API key
-    const CHANNEL_ID = 'UCbvXNK-13KBK_yZuZ5YeLZw'; // Replace with your actual channel ID
-    const MAX_RESULTS = 10;
-
     // Fetch YouTube videos
     function fetchYouTubeVideos() {
-        $.get(`https://www.googleapis.com/youtube/v3/search?key=${API_KEY}&channelId=${CHANNEL_ID}&part=snippet,id&order=date&maxResults=${MAX_RESULTS}`, function(data) {
+        $.get(`https://www.googleapis.com/youtube/v3/search?key=${CONFIG.YOUTUBE_API_KEY}&channelId=${CONFIG.CHANNEL_ID}&part=snippet,id&order=date&maxResults=${MAX_RESULTS}`, function(data) {
             let videoItems = '';
             data.items.forEach(item => {
                 if (item.id.kind === "youtube#video") {
@@ -79,13 +74,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 },
                 {
-                    breakpoint: 768,
+                    breakpoint:768,
                     settings: {
                         slidesToShow: 2
                     }
                 },
                 {
-                    breakpoint: 480,
+                    breakpoint:480,
                     settings: {
                         slidesToShow: 1
                     }
