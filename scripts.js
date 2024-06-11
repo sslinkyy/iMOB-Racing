@@ -1,7 +1,6 @@
 // scripts.js
 //   const API_KEY = 'AIzaSyDaCJQhs3fz-k7hg-j0NQWj0S1r7ZEvThs';
 //   const CHANNEL_ID = 'UCbvXNK-13KBK_yZuZ5YeLZw';
-
 // scripts.js
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -43,19 +42,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Fetch YouTube videos
     function fetchYouTubeVideos() {
-        $.get(`https://www.googleapis.com/youtube/v3/search?key=${API_KEY}&channelId=${CHANNEL_ID}&part=snippet,id&order=date&maxResults=${MAX_RESULTS}`, function(data) {
-            let videoItems = '';
-            data.items.forEach(item => {
-                if (item.id.kind === "youtube#video") {
-                    videoItems += `
-                        <div class="carousel-item">
-                            <iframe src="https://www.youtube.com/embed/${item.id.videoId}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                        </div>
-                    `;
-                }
-            });
-            $('.media-carousel').html(videoItems);
-            initializeCarousel();
+        const url = `https://www.googleapis.com/youtube/v3/search?key=${API_KEY}&channelId=${CHANNEL_ID}&part=snippet,id&order=date&maxResults=${MAX_RESULTS}`;
+        
+        $.ajax({
+            url: url,
+            type: 'GET',
+            success: function(data) {
+                let videoItems = '';
+                data.items.forEach(item => {
+                    if (item.id.kind === "youtube#video") {
+                        videoItems += `
+                            <div class="carousel-item">
+                                <iframe src="https://www.youtube.com/embed/${item.id.videoId}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            </div>
+                        `;
+                    }
+                });
+                $('.media-carousel').html(videoItems);
+                initializeCarousel();
+            },
+            error: function(err) {
+                console.error('Error fetching YouTube videos:', err);
+                $('.media-carousel').html('<p>Error loading videos. Please try again later.</p>');
+            }
         });
     }
 
@@ -117,4 +126,3 @@ document.addEventListener('DOMContentLoaded', () => {
         $('#youtube-background').youtube_background();
     });
 });
-
