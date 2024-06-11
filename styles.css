@@ -73,17 +73,63 @@ body, html {
     z-index: 3;
 }
 
-.navbar ul {
+.navbar-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.navbar-toggle {
+    display: none;
+    font-size: 1.5em;
+    cursor: pointer;
+}
+
+.navbar .logo {
+    font-size: 1.5em;
+    color: white;
+    text-decoration: none;
+}
+
+.main-nav {
     list-style: none;
     margin: 0;
     padding: 0;
     display: flex;
     justify-content: space-around;
+    width: 100%;
 }
 
-.navbar a {
+.main-nav .nav-links {
     color: white;
     text-decoration: none;
+    padding: 0.5em 1em;
+}
+
+@media (max-width: 768px) {
+    .navbar-toggle {
+        display: block;
+    }
+
+    .main-nav {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        background-color: #111;
+        position: absolute;
+        top: 3.5em; /* Adjust based on your navbar height */
+        left: 0;
+    }
+
+    .main-nav .nav-links {
+        text-align: center;
+        padding: 1em;
+        width: 100%;
+    }
+
+    .main-nav.active {
+        display: flex;
+    }
 }
 
 .about-section, .team-section, .events-section, .media-section, .contact-section, .ai-section, .integration-section {
