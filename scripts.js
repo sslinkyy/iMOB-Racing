@@ -4,6 +4,8 @@
 
 // scripts.js
 
+// scripts.js
+
 document.addEventListener('DOMContentLoaded', () => {
     const navLinks = document.querySelectorAll('.navbar a');
     const sections = document.querySelectorAll('section');
@@ -38,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Fetch YouTube videos
     function fetchYouTubeVideos() {
-        $.get(`https://www.googleapis.com/youtube/v3/search?key=${CONFIG.YOUTUBE_API_KEY}&channelId=${CONFIG.CHANNEL_ID}&part=snippet,id&order=date&maxResults=10`, function(data) {
+        $.get(`https://www.googleapis.com/youtube/v3/search?key=${CONFIG.YOUTUBE_API_KEY}&channelId=${CONFIG.YOUTUBE_CHANNEL_ID}&part=snippet,id&order=date&maxResults=10`, function(data) {
             let videoItems = '';
             data.items.forEach(item => {
                 if (item.id.kind === "youtube#video") {
@@ -51,8 +53,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             $('.media-carousel').html(videoItems);
             initializeCarousel();
-        }).fail(function(jqXHR, textStatus, errorThrown) {
-            console.error('YouTube API Error: ', textStatus, errorThrown);
         });
     }
 
@@ -89,27 +89,43 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Load Disqus
-    function loadDisqus() {
-        var d = document, s = d.createElement('script');
-        s.src = `https://${CONFIG.DISQUS_SHORTNAME}.disqus.com/embed.js`;
-        s.setAttribute('data-timestamp', +new Date());
-        (d.head || d.body).appendChild(s);
-    }
-
-    // Initialize Disqus configuration
-    window.disqus_config = function () {
-        this.page.url = CONFIG.DISQUS_PAGE_URL;
-        this.page.identifier = CONFIG.DISQUS_PAGE_IDENTIFIER;
-    };
-
     // Initialize Google Calendar
-    function initializeCalendar() {
+    function initializeGoogleCalendar() {
+        const calendarId = CONFIG.GOOGLE_CALENDAR_ID;
         const calendarIframe = document.getElementById('google-calendar');
-        calendarIframe.src = `https://calendar.google.com/calendar/embed?src=${CONFIG.GOOGLE_CALENDAR_ID}&ctz=America%2FLos_Angeles`;
+        calendarIframe.src = `https://calendar.google.com/calendar/embed?src=${calendarId}&ctz=America/Los_Angeles`;
     }
+
+    $(document).ready(function(){
+        // Initialize the media carousel
+        $('.media-carousel').slick({
+            infinite: true,
+            slidesToShow: 5,
+            slidesToScroll: 1,
+            autoplay: true,
+            autoplaySpeed: 2000,
+            arrows: true,
+            dots: true,
+            responsive: [
+                {
+                    breakpoint: 768,
+                    settings: {
+                        slidesToShow: 2
+                    }
+                },
+                {
+                    breakpoint: 480,
+                    settings: {
+                        slidesToShow: 1
+                    }
+                }
+            ]
+        });
+
+        // Initialize YouTube background
+        $('#youtube-background').youtube_background();
+    });
 
     fetchYouTubeVideos();
-    loadDisqus();
-    initializeCalendar();
+    initializeGoogleCalendar();
 });
