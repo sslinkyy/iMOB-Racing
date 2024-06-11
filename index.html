@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Force desktop width on mobile -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>iMOB Racing Online</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
@@ -13,7 +13,7 @@
 <body>
     <header class="header" id="home">
         <div id="fb-root"></div>
-        <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v20.0"></script>
+        <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v20.0" nonce="JEf7oT5N"></script>
         <div class="video-overlay">
             <iframe id="youtube-iframe" src="https://www.youtube.com/embed/RPGg_y2FHNs?autoplay=1&mute=1&loop=1&playlist=RPGg_y2FHNs"></iframe>
         </div>
@@ -40,9 +40,9 @@
         <h2>About Us</h2>
         <p>At iMOB Racing, our ambition is to become the premier team in the racing industry. Comprising dedicated racecar modders and enthusiasts, we specialize in time attack racing while also participating in 4x4, rally, drifting, off-road, street bikes, dirt bikes, and crosskarts. We pride ourselves on being 100% built, not bought, with a commitment to modifying and customizing any vehicle.
 
-        Our co-founders, Anthony Yorba and Tony Langston, drive the team with their technical expertise and artistic vision. Leading the charge on the track, our top driver, Chris Statler, epitomizes our racing spirit, while our youngest member, Daniel Bertholf, stands out in the drifting scene.
+Our co-founders, Anthony Yorba and Tony Langston, drive the team with their technical expertise and artistic vision. Leading the charge on the track, our top driver, Chris Statler, epitomizes our racing spirit, while our youngest member, Daniel Bertholf, stands out in the drifting scene.
 
-        We are dedicated to expanding our brand through dynamic race footage, informative repair videos, and exclusive behind-the-scenes content. Additionally, we offer engaging giveaways and forums for discussions, event updates, and buy/sell opportunities.</p>
+We are dedicated to expanding our brand through dynamic race footage, informative repair videos, and exclusive behind-the-scenes content. Additionally, we offer engaging giveaways and forums for discussions, event updates, and buy/sell opportunities.</p>
     </section>
 
     <section id="team" class="team-section">
@@ -76,19 +76,18 @@
     </section>
 
     <section id="integration" class="integration-section">
-    <h2>Social Media & Polls</h2>
-    <div class="integration-container">
-        <div class="facebook-integration">
-            <div class="fb-page" data-href="${CONFIG.FACEBOOK_PAGE_URL}" data-tabs="timeline, events" data-width="500" data-height="" data-small-header="true" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="false">
-                <blockquote cite="${CONFIG.FACEBOOK_PAGE_URL}" class="fb-xfbml-parse-ignore"><a href="${CONFIG.FACEBOOK_PAGE_URL}">IMOB Racing</a></blockquote>
+        <h2>Social Media & Polls</h2>
+        <div class="integration-container">
+            <div class="facebook-integration">
+                <div class="fb-page" data-href="${CONFIG.FACEBOOK_PAGE_URL}" data-tabs="timeline, events" data-width="" data-height="" data-small-header="true" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="false">
+                    <blockquote cite="${CONFIG.FACEBOOK_PAGE_URL}" class="fb-xfbml-parse-ignore"><a href="${CONFIG.FACEBOOK_PAGE_URL}">IMOB Racing</a></blockquote>
+                </div>
+            </div>
+            <div class="poll-integration">
+                <iframe src="${CONFIG.GOOGLE_FORM_URL}" width="600" height="400" frameborder="0" marginheight="0" marginwidth="0" style="width: 100%; height: 100%;">Loading…</iframe>
             </div>
         </div>
-        <div class="poll-integration">
-            <iframe src="${CONFIG.GOOGLE_FORM_URL}" width="100%" height="auto" frameborder="0" marginheight="0" marginwidth="0" style="border:0; overflow:hidden;" scrolling="no">Loading…</iframe>
-        </div>
-    </div>
-</section>
-
+    </section>
 
     <section id="ai" class="ai-section parallax">
         <h2>AI Integration</h2>
@@ -102,23 +101,19 @@
 
     <section id="events" class="events-section parallax">
         <h2>Upcoming Events</h2>
-        <div class="events-container">
-            <ul class="events-list">
-                <li>
-                    <h3>TT Event 3</h3>
-                    <p>Date: June 22, 2024</p>
-                    <p>Location: Thunderhill, Willows, Ca</p>
-                </li>
-                <li>
-                    <h3>TT Event 4</h3>
-                    <p>Date: September 20, 2024</p>
-                    <p>Location: Thunderhill, Willows, Ca</p>
-                </li>
-            </ul>
-            <div class="calendar-container">
-                <iframe src="https://calendar.google.com/calendar/embed?src=imobracing%40gmail.com&ctz=America%2FLos_Angeles" style="border: 0" width="50%" height="600" frameborder="0" scrolling="no"></iframe>
-            </div>
-        </div>
+        <ul class="events-list">
+            <li>
+                <h3>TT Event 3</h3>
+                <p>Date: June 22, 2024</p>
+                <p>Location: Thunderhill, Willows, Ca</p>
+            </li>
+            <li>
+                <h3>TT Event 4</h3>
+                <p>Date: September 20, 2024</p>
+                <p>Location: Thunderhill, Willows, Ca</p>
+            </li>
+        </ul>
+        <iframe id="google-calendar" style="width: 100%; height: 600px;" frameborder="0" scrolling="no"></iframe>
     </section>
 
     <section id="media" class="media-section">
@@ -146,11 +141,24 @@
     <section id="forums" class="forums-section">
         <h2>Forums</h2>
         <div id="disqus_thread"></div>
+        <script>
+            var disqus_config = function () {
+                this.page.url = CONFIG.DISQUS_PAGE_URL;
+                this.page.identifier = CONFIG.DISQUS_PAGE_IDENTIFIER;
+            };
+
+            (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://imobracing.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
     </section>
 
-   <footer class="footer">
+    <footer class="footer">
         <div class="social-media">
-            <a href="${CONFIG.FACEBOOK_PAGE_URL}" target="_blank"><i class="fab fa-facebook"></i></a>
+            <a href="https://www.facebook.com/iMobRacing" target="_blank"><i class="fab fa-facebook"></i></a>
             <a href="https://twitter.com/iMobRacing" target="_blank"><i class="fab fa-twitter"></i></a>
             <a href="https://instagram.com/iMobRacing" target="_blank"><i class="fab fa-instagram"></i></a>
             <a href="https://youtube.com/iMobRacing" target="_blank"><i class="fab fa-youtube"></i></a>
