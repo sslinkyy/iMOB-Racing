@@ -1,7 +1,3 @@
-// scripts.js
-//   const API_KEY = 'AIzaSyDaCJQhs3fz-k7hg-j0NQWj0S1r7ZEvThs';
-//   const CHANNEL_ID = 'UCbvXNK-13KBK_yZuZ5YeLZw';
-
 document.addEventListener('DOMContentLoaded', () => {
     const navLinks = document.querySelectorAll('.navbar a');
     const sections = document.querySelectorAll('section');
@@ -34,9 +30,14 @@ document.addEventListener('DOMContentLoaded', () => {
         observer.observe(section);
     });
 
+    // YouTube Data API Key
+    const API_KEY = CONFIG.YOUTUBE_API_KEY;
+    const CHANNEL_ID = CONFIG.YOUTUBE_CHANNEL_ID;
+    const MAX_RESULTS = 10;
+
     // Fetch YouTube videos
     function fetchYouTubeVideos() {
-        $.get(`https://www.googleapis.com/youtube/v3/search?key=${CONFIG.YOUTUBE_API_KEY}&channelId=${CONFIG.YOUTUBE_CHANNEL_ID}&part=snippet,id&order=date&maxResults=10`, function(data) {
+        $.get(`https://www.googleapis.com/youtube/v3/search?key=${API_KEY}&channelId=${CHANNEL_ID}&part=snippet,id&order=date&maxResults=${MAX_RESULTS}`, function(data) {
             let videoItems = '';
             data.items.forEach(item => {
                 if (item.id.kind === "youtube#video") {
@@ -85,33 +86,28 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Initialize YouTube background
-    $('#youtube-background').youtube_background();
-
-    // Initialize Facebook integration
-    (function(d, s, id) {
-        var js, fjs = d.getElementsByTagName(s)[0];
-        if (d.getElementById(id)) return;
-        js = d.createElement(s); js.id = id;
-        js.src = "https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.2";
-        fjs.parentNode.insertBefore(js, fjs);
-    }(document, 'script', 'facebook-jssdk'));
-
-    // Initialize Disqus
-    var disqus_config = function () {
+    // Disqus configuration
+    const disqus_config = function () {
         this.page.url = CONFIG.DISQUS_PAGE_URL;
         this.page.identifier = CONFIG.DISQUS_PAGE_IDENTIFIER;
     };
 
     (function() {
-        var d = document, s = d.createElement('script');
-        s.src = 'https://' + CONFIG.DISQUS_SHORTNAME + '.disqus.com/embed.js';
+        const d = document, s = d.createElement('script');
+        s.src = `https://${CONFIG.DISQUS_SHORTNAME}.disqus.com/embed.js`;
         s.setAttribute('data-timestamp', +new Date());
         (d.head || d.body).appendChild(s);
     })();
 
-    // Initialize Google Calendar
-    $('#google-calendar').attr('src', `https://calendar.google.com/calendar/embed?src=${CONFIG.GOOGLE_CALENDAR_ID}&ctz=America%2FLos_Angeles`);
+    // Load Google Calendar
+    const googleCalendarSrc = `https://calendar.google.com/calendar/embed?src=${CONFIG.GOOGLE_CALENDAR_ID}&ctz=America%2FLos_Angeles`;
+    document.getElementById('google-calendar').src = googleCalendarSrc;
 
-    fetchYouTubeVideos();
+    $(document).ready(function(){
+        // Initialize the media carousel
+        fetchYouTubeVideos();
+
+        // Initialize YouTube background
+        $('#youtube-background').youtube_background();
+    });
 });
