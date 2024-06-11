@@ -2,7 +2,7 @@
 //   const API_KEY = 'AIzaSyDaCJQhs3fz-k7hg-j0NQWj0S1r7ZEvThs';
 //   const CHANNEL_ID = 'UCbvXNK-13KBK_yZuZ5YeLZw';
 
-ddocument.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', () => {
     const navLinks = document.querySelectorAll('.navbar a');
     const sections = document.querySelectorAll('section');
 
