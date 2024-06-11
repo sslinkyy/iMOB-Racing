@@ -1,4 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
+    const navToggle = document.getElementById('js-navbar-toggle');
+    const menu = document.getElementById('js-menu');
+
+    navToggle.addEventListener('click', () => {
+        menu.classList.toggle('active');
+    });
+
     const navLinks = document.querySelectorAll('.navbar a');
     const sections = document.querySelectorAll('section');
 
@@ -13,6 +20,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 top: targetSection.offsetTop - document.querySelector('.navbar').offsetHeight,
                 behavior: 'smooth'
             });
+
+            // Close the menu on mobile after clicking a link
+            if (menu.classList.contains('active')) {
+                menu.classList.remove('active');
+            }
         });
     });
 
