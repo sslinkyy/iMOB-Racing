@@ -505,6 +505,12 @@ h1, h2, h3, h4, h5, h6 {
     }
 }
 
+/* Responsive Image Styles */
+.responsive-image {
+    max-width: 100%;
+    height: auto;
+}
+
 /* Loading Spinner */
 .loading-spinner {
     position: fixed;
