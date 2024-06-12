@@ -20,6 +20,8 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&family=Roboto:wght@400;500;700&display=swap">
 </head>
 <body>
+    <div id="fb-root"></div>
+<script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v10.0" nonce="YOUR_NONCE"></script>
     <div class="loading-spinner" id="loading-spinner">
         <div class="spinner"></div>
     </div>
@@ -127,18 +129,28 @@
     </section>
 
     <section id="integration" class="integration-section">
-        <h2>Social Media & Polls</h2>
-        <div class="integration-container">
-            <div class="facebook-integration">
-                <div class="fb-page" data-href="https://www.facebook.com/imobracing" data-tabs="timeline, events" data-width="400" data-height="500" data-small-header="true" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="false">
-                    <blockquote cite="https://www.facebook.com/imobracing" class="fb-xfbml-parse-ignore"><a href="https://www.facebook.com/imobracing">IMOB Racing</a></blockquote>
-                </div>
-            </div>
-            <div class="poll-integration">
-                <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSfZqtnqgL2im8K7Ih6hCjqLrEZ-frZzTMMlJLbMCMg4u8MxaA/viewform?usp=sf_link" width="400" height="500" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
+    <h2>Social Media & Polls</h2>
+    <div class="integration-container">
+        <div class="facebook-integration">
+            <div class="fb-page" 
+                 data-href="https://www.facebook.com/imobracing" 
+                 data-tabs="timeline, events" 
+                 data-width="400" 
+                 data-height="500" 
+                 data-small-header="true" 
+                 data-adapt-container-width="true" 
+                 data-hide-cover="false" 
+                 data-show-facepile="false">
+                <blockquote cite="https://www.facebook.com/imobracing" class="fb-xfbml-parse-ignore">
+                    <a href="https://www.facebook.com/imobracing">IMOB Racing</a>
+                </blockquote>
             </div>
         </div>
-    </section>
+        <div class="poll-integration">
+            <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSfZqtnqgL2im8K7Ih6hCjqLrEZ-frZzTMMlJLbMCMg4u8MxaA/viewform?usp=sf_link" width="400" height="500" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
+        </div>
+    </div>
+</section>
 
     <section id="ai" class="ai-section parallax" data-aos="fade-up">
         <h2>AI Integration</h2>
