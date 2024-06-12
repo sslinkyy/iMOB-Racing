@@ -115,11 +115,30 @@ document.addEventListener('DOMContentLoaded', () => {
     const googleCalendarSrc = `https://calendar.google.com/calendar/embed?src=${CONFIG.GOOGLE_CALENDAR_ID}&ctz=America%2FLos_Angeles`;
     document.getElementById('google-calendar').src = googleCalendarSrc;
 
-    $(document).ready(function(){
-        // Initialize the media carousel
-        fetchYouTubeVideos();
+    // Initialize AOS
+    AOS.init();
 
-        // Initialize YouTube background
-        $('#youtube-background').youtube_background();
+    // Initialize the media carousel
+    fetchYouTubeVideos();
+    initializeCarousel();
+
+    // Initialize testimonials carousel
+    initializeTestimonialsCarousel();
+
+    // Lazy load images
+    const lazyImages = document.querySelectorAll('img.lazy');
+    const lazyObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const img = entry.target;
+                img.src = img.dataset.src;
+                img.classList.remove('lazy');
+                lazyObserver.unobserve(img);
+            }
+        });
+    });
+
+    lazyImages.forEach(img => {
+        lazyObserver.observe(img);
     });
 });
