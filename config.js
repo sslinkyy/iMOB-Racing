@@ -15,4 +15,5 @@ const CONFIG = {
         storageBucket: "imob-racing-website.appspot.com",
         messagingSenderId: "580908835958",
         appId: "1:580908835958:web:a7bb3f6a4b52d8f8c28c1a",
+    GOOGLE_CLIENT_ID: '580908835958-labitokmi7ivmvm0ha1muth5a45smnni.apps.googleusercontent.com',
 };
