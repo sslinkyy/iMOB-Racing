@@ -75,6 +75,29 @@ h1, h2, h3, h4, h5, h6 {
     transform: scale(1.05);
 }
 
+.subscribe-button {
+    background-color: #32cd32;
+}
+
+.subscribe-button:hover {
+    background-color: #2eb82e;
+}
+
+.social-proof {
+    margin-top: 1em;
+    font-size: 1em;
+    color: #ff4500;
+    display: flex;
+    justify-content: center;
+    gap: 2em;
+}
+
+.social-proof p {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+}
+
 .navbar {
     background-color: #111;
     color: white;
@@ -143,7 +166,7 @@ h1, h2, h3, h4, h5, h6 {
     }
 }
 
-.about-section, .team-section, .events-section, .media-section, .contact-section, .ai-section, .integration-section, .testimonials-section {
+.about-section, .team-section, .events-section, .media-section, .contact-section, .ai-section, .integration-section, .testimonials-section, .faq-section {
     padding: 2em;
     background: #111;
     transition: opacity 1s ease-in-out;
@@ -190,6 +213,18 @@ h1, h2, h3, h4, h5, h6 {
 
 .team-card:hover, .media-card:hover {
     transform: translateY(-10px);
+}
+
+.about-content {
+    display: flex;
+    align-items: center;
+    gap: 1em;
+    margin-bottom: 1em;
+}
+
+.about-icon {
+    font-size: 2em;
+    color: #ff4500;
 }
 
 .events-container {
@@ -358,4 +393,78 @@ h1, h2, h3, h4, h5, h6 {
     padding: 2em;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(255, 69, 0, 0.7);
+}
+
+.faq-section {
+    padding: 2em;
+    background: #111;
+    color: #fff;
+    text-align: left;
+}
+
+.faq-item {
+    margin-bottom: 1em;
+}
+
+.faq-item h3 {
+    font-size: 1.5em;
+    color: #ff4500;
+}
+
+.faq-item p {
+    margin-top: 0.5em;
+}
+
+.back-to-top {
+    position: fixed;
+    bottom: 2em;
+    right: 2em;
+    background: #ff4500;
+    color: #fff;
+    padding: 1em;
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
+    display: none;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.back-to-top:hover {
+    background-color: #e43e00;
+    transform: scale(1.1);
+}
+
+@media (max-width: 768px) {
+    .back-to-top {
+        bottom: 1em;
+        right: 1em;
+    }
+}
+
+/* Loading Spinner */
+.loading-spinner {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.spinner {
+    border: 8px solid #f3f3f3;
+    border-top: 8px solid #ff4500;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
