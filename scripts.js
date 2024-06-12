@@ -143,6 +143,8 @@ document.addEventListener('DOMContentLoaded', () => {
         (d.head || d.body).appendChild(s);
     })();
 
+    const GOOGLE_CALENDAR_ID = CONFIG.GOOGLE_CALENDAR_ID;
+
     // Load Google Calendar
      const googleCalendarSrc = `https://calendar.google.com/calendar/embed?src=GOOGLE_CALENDAR_ID&ctz=America%2FLos_Angeles`;
     document.getElementById('google-calendar').src = googleCalendarSrc;
