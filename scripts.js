@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Fetch YouTube videos
     function fetchYouTubeVideos() {
-        $.get(`https://www.googleapis.com/youtube/v3/search?key=${API_KEY}&channelId=${CHANNEL_ID}&part=snippet,id&order=date&maxResults=${MAX_RESULTS}`, function(data) {
+        return $.get(`https://www.googleapis.com/youtube/v3/search?key=${API_KEY}&channelId=${CHANNEL_ID}&part=snippet,id&order=date&maxResults=${MAX_RESULTS}`, function(data) {
             let videoItems = '';
             data.items.forEach(item => {
                 if (item.id.kind === "youtube#video") {
@@ -69,6 +69,8 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             $('.media-carousel').html(videoItems);
             initializeCarousel();
+        }).fail(function(error) {
+            console.error('Error fetching YouTube videos:', error);
         });
     }
 
@@ -141,16 +143,17 @@ document.addEventListener('DOMContentLoaded', () => {
         (d.head || d.body).appendChild(s);
     })();
 
+    const GOOGLE_CALENDAR_ID = CONFIG.GOOGLE_CALENDAR_ID;
+
     // Load Google Calendar
-    const googleCalendarSrc = `https://calendar.google.com/calendar/embed?src=${CONFIG.GOOGLE_CALENDAR_ID}&ctz=America%2FLos_Angeles`;
+     const googleCalendarSrc = `https://calendar.google.com/calendar/embed?src=${config.GOOGLE_CALENDAR_ID}&ctz=America%2FLos_Angeles`;
     document.getElementById('google-calendar').src = googleCalendarSrc;
 
     // Initialize AOS
     AOS.init();
 
     // Initialize the media carousel
-    fetchYouTubeVideos();
-    initializeCarousel();
+    fetchYouTubeVideos().then(initializeCarousel);
 
     // Initialize Spotlight carousel
     initializeSpotlightCarousel();

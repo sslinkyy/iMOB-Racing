@@ -20,6 +20,8 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&family=Roboto:wght@400;500;700&display=swap">
 </head>
 <body>
+    <div id="fb-root"></div>
+<script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v10.0" nonce="YOUR_NONCE"></script>
     <div class="loading-spinner" id="loading-spinner">
         <div class="spinner"></div>
     </div>
@@ -44,7 +46,7 @@
 
     <nav class="navbar">
         <div class="navbar-container">
-            <span class="navbar-toggle" id="js-navbar-toggle">
+            <span class="navbar-toggle" id="js-navbar-toggle" aria-label="Toggle navigation">
                 <i class="fas fa-bars"></i>
             </span>
             <a href="index.html" class="logo">iMOB Racing</a>
@@ -127,18 +129,28 @@
     </section>
 
     <section id="integration" class="integration-section">
-        <h2>Social Media & Polls</h2>
-        <div class="integration-container">
-            <div class="facebook-integration">
-                <div class="fb-page" data-href="https://www.facebook.com/imobracing" data-tabs="timeline, events" data-width="400" data-height="500" data-small-header="true" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="false">
-                    <blockquote cite="https://www.facebook.com/imobracing" class="fb-xfbml-parse-ignore"><a href="https://www.facebook.com/imobracing">IMOB Racing</a></blockquote>
-                </div>
-            </div>
-            <div class="poll-integration">
-                <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSfZqtnqgL2im8K7Ih6hCjqLrEZ-frZzTMMlJLbMCMg4u8MxaA/viewform?usp=sf_link" width="400" height="500" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
+    <h2>Social Media & Polls</h2>
+    <div class="integration-container">
+        <div class="facebook-integration">
+            <div class="fb-page" 
+                 data-href="https://www.facebook.com/imobracing" 
+                 data-tabs="timeline, events" 
+                 data-width="400" 
+                 data-height="500" 
+                 data-small-header="true" 
+                 data-adapt-container-width="true" 
+                 data-hide-cover="false" 
+                 data-show-facepile="false">
+                <blockquote cite="https://www.facebook.com/imobracing" class="fb-xfbml-parse-ignore">
+                    <a href="https://www.facebook.com/imobracing">IMOB Racing</a>
+                </blockquote>
             </div>
         </div>
-    </section>
+        <div class="poll-integration">
+            <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSfZqtnqgL2im8K7Ih6hCjqLrEZ-frZzTMMlJLbMCMg4u8MxaA/viewform?usp=sf_link" width="400" height="500" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
+        </div>
+    </div>
+</section>
 
     <section id="ai" class="ai-section parallax" data-aos="fade-up">
         <h2>AI Integration</h2>
@@ -150,10 +162,11 @@
         </div>
     </section>
 
-    <section id="events" class="events-section parallax" data-aos="fade-up">
-        <h2>Upcoming Events</h2>
-        <div class="events-container">
-            <ul class="events-list">
+  <section id="events" class="events-section parallax" data-aos="fade-up">
+    <h2>Upcoming Events</h2>
+    <div class="events-container">
+        <div class="events-list">
+            <ul>
                 <li>
                     <h3>TT Event 3</h3>
                     <p>Date: June 22, 2024</p>
@@ -165,11 +178,13 @@
                     <p>Location: Thunderhill, Willows, Ca</p>
                 </li>
             </ul>
-            <div class="calendar-container">
+        </div>
+        <div class="calendar-container">
                 <iframe id="google-calendar" src="" width="100%" height="300" frameborder="0" scrolling="no"></iframe>
             </div>
-        </div>
-    </section>
+    </div>
+</section>
+
 
     <section id="media" class="media-section" data-aos="fade-up">
         <h2>Media Gallery</h2>
@@ -237,23 +252,19 @@
 
     <footer class="footer">
         <div class="social-media">
-            <a href="https://www.facebook.com/iMobRacing" target="_blank"><i class="fab fa-facebook"></i></a>
-            <a href="https://twitter.com/iMobRacing" target="_blank"><i class="fab fa-twitter"></i></a>
-            <a href="https://instagram.com/iMobRacing" target="_blank"><i class="fab fa-instagram"></i></a>
-            <a href="https://youtube.com/iMobRacing" target="_blank"><i class="fab fa-youtube"></i></a>
+            <a href="https://www.facebook.com/iMobRacing" target="_blank" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+            <a href="https://twitter.com/iMobRacing" target="_blank" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+            <a href="https://instagram.com/iMobRacing" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="https://youtube.com/iMobRacing" target="_blank" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
         </div>
         <p>&copy; 2024 iMOB Racing. All rights reserved.</p>
         <p>Contact: info@imobracingonline.com | Phone: (530) 420-5850</p>
     </footer>
 
-    <!-- Facebook SDK -->
-    <div id="fb-root"></div>
-    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v10.0"></script>
-    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" async></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js" async></script>
     <script src="https://cdn.jsdelivr.net/npm/aos@2.3.1/dist/aos.js"></script>
     <script src="config.js"></script>
-    <script src="scripts.js"></script>
+    <script src="scripts.js" defer></script>
 </body>
 </html>
