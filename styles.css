@@ -325,7 +325,7 @@ h1, h2, h3, h4, h5, h6 {
     transform: scale(1.05);
 }
 
-.spotlight-carousel {
+.spotlight-carousel, .testimonials-carousel {
     display: flex;
     overflow: hidden;
     padding: 1em 0;
@@ -333,7 +333,7 @@ h1, h2, h3, h4, h5, h6 {
     justify-content: center;
 }
 
-.spotlight-item {
+.spotlight-item, .testimonial-item {
     flex: 0 0 auto;
     width: calc(100% - 20px); /* Adjust width for mobile view */
     max-width: 300px;
@@ -345,20 +345,20 @@ h1, h2, h3, h4, h5, h6 {
     margin: 0 10px; /* Ensure proper spacing */
 }
 
-.spotlight-item:hover {
+.spotlight-item:hover, .testimonial-item:hover {
     transform: scale(1.05);
 }
 
-.spotlight-item img {
+.spotlight-item img, .testimonial-item img {
     width: 100%;
     border-radius: 10px;
 }
 
-.spotlight-item h3 {
+.spotlight-item h3, .testimonial-item h3 {
     margin: 0.5em 0;
 }
 
-.spotlight-item p {
+.spotlight-item p, .testimonial-item p {
     font-size: 0.9em;
     color: #ccc;
 }
@@ -446,19 +446,6 @@ h1, h2, h3, h4, h5, h6 {
     background: #111;
     color: #fff;
     text-align: center;
-}
-
-.testimonials-carousel {
-    display: flex;
-    justify-content: center;
-    gap: 2em;
-}
-
-.testimonial-item {
-    background: #222;
-    padding: 2em;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(255, 69, 0, 0.7);
 }
 
 .faq-section {
