@@ -146,7 +146,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const GOOGLE_CALENDAR_ID = CONFIG.GOOGLE_CALENDAR_ID;
 
     // Load Google Calendar
-     const googleCalendarSrc = `https://calendar.google.com/calendar/embed?src=${CONFIG.GOOGLE_CALENDAR_ID}&ctz=America%2FLos_Angeles`;
+     const googleCalendarSrc = `https://calendar.google.com/calendar/embed?src=${config.GOOGLE_CALENDAR_ID}&ctz=America%2FLos_Angeles`;
     document.getElementById('google-calendar').src = googleCalendarSrc;
 
     // Initialize AOS
