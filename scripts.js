@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Fetch YouTube videos
     function fetchYouTubeVideos() {
-        $.get(`https://www.googleapis.com/youtube/v3/search?key=${API_KEY}&channelId=${CHANNEL_ID}&part=snippet,id&order=date&maxResults=${MAX_RESULTS}`, function(data) {
+        return $.get(`https://www.googleapis.com/youtube/v3/search?key=${API_KEY}&channelId=${CHANNEL_ID}&part=snippet,id&order=date&maxResults=${MAX_RESULTS}`, function(data) {
             let videoItems = '';
             data.items.forEach(item => {
                 if (item.id.kind === "youtube#video") {
@@ -69,6 +69,8 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             $('.media-carousel').html(videoItems);
             initializeCarousel();
+        }).fail(function(error) {
+            console.error('Error fetching YouTube videos:', error);
         });
     }
 
@@ -149,8 +151,7 @@ document.addEventListener('DOMContentLoaded', () => {
     AOS.init();
 
     // Initialize the media carousel
-    fetchYouTubeVideos();
-    initializeCarousel();
+    fetchYouTubeVideos().then(initializeCarousel);
 
     // Initialize Spotlight carousel
     initializeSpotlightCarousel();
