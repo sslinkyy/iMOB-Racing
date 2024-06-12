@@ -166,7 +166,7 @@ h1, h2, h3, h4, h5, h6 {
     }
 }
 
-.about-section, .team-section, .events-section, .media-section, .contact-section, .ai-section, .integration-section, .testimonials-section, .faq-section, .spotlight-section {
+.about-section, .team-section, .events-section, .media-section, .contact-section, .ai-section, .integration-section, .testimonials-section, .faq-section, .spotlight-section, .mission-section, .social-media-section {
     padding: 2em;
     background: #111;
     transition: opacity 1s ease-in-out;
@@ -391,6 +391,30 @@ h1, h2, h3, h4, h5, h6 {
 
 .contact-section button:hover {
     background-color: #e43e00;
+}
+
+.mission-section {
+    background: #111;
+    padding: 2em;
+    color: #fff;
+    text-align: left;
+}
+
+.social-media-section {
+    background: #111;
+    padding: 2em;
+    text-align: center;
+}
+
+.social-media-links a {
+    color: white;
+    margin: 0 1em;
+    font-size: 2em;
+    transition: color 0.3s;
+}
+
+.social-media-links a:hover {
+    color: #ff4500;
 }
 
 .footer {
