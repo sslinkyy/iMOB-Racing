@@ -10,18 +10,20 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.1/dist/aos.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&family=Roboto:wght@400;500;700&display=swap">
 </head>
 <body>
     <header class="header" id="home">
-        <div id="fb-root"></div>
-        <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v10.0"></script>
         <div class="video-overlay">
             <iframe id="youtube-iframe" src="https://www.youtube.com/embed/RPGg_y2FHNs?autoplay=1&mute=1&loop=1&playlist=RPGg_y2FHNs" title="Welcome Video" aria-label="Welcome Video"></iframe>
         </div>
         <div class="header-content">
-            <h1 class="header-title">Welcome to iMOB Racing</h1>
-            <p class="header-subtitle">Feel the Thrill of Racing</p>
-            <a href="#about" class="cta-button" aria-label="Learn more about iMOB Racing">Learn More</a>
+            <div class="header-overlay">
+                <h1 class="header-title">Welcome to iMOB Racing</h1>
+                <p class="header-subtitle">Feel the Thrill of Racing</p>
+                <a href="#about" class="cta-button" aria-label="Learn more about iMOB Racing">Learn More</a>
+            </div>
         </div>
     </header>
 
@@ -43,14 +45,14 @@
         </div>
     </nav>
 
-    <section id="about" class="about-section parallax">
+    <section id="about" class="about-section parallax" data-aos="fade-up">
         <h2>About Us</h2>
         <p>At iMOB Racing, our ambition is to become the premier team in the racing industry. Comprising dedicated racecar modders and enthusiasts, we specialize in time attack racing while also participating in 4x4, rally, drifting, off-road, street bikes, dirt bikes, and crosskarts. We pride ourselves on being 100% built, not bought, with a commitment to modifying and customizing any vehicle.</p>
         <p>Our co-founders, Anthony Yorba and Tony Langston, drive the team with their technical expertise and artistic vision. Leading the charge on the track, our top driver, Chris Statler, epitomizes our racing spirit, while our youngest member, Daniel Bertholf, stands out in the drifting scene.</p>
         <p>We are dedicated to expanding our brand through dynamic race footage, informative repair videos, and exclusive behind-the-scenes content. Additionally, we offer engaging giveaways and forums for discussions, event updates, and buy/sell opportunities.</p>
     </section>
 
-    <section id="team" class="team-section">
+    <section id="team" class="team-section" data-aos="fade-up">
         <h2>Meet the Team</h2>
         <div class="team-grid">
             <div class="team-card">
@@ -94,7 +96,7 @@
         </div>
     </section>
 
-    <section id="ai" class="ai-section parallax">
+    <section id="ai" class="ai-section parallax" data-aos="fade-up">
         <h2>AI Integration</h2>
         <div class="ai-content">
             <p>Discover how we embrace AI to enhance our racing strategies, improve vehicle performance, and provide better insights. Our AI-driven analytics help us make data-informed decisions and stay ahead of the competition.</p>
@@ -104,7 +106,7 @@
         </div>
     </section>
 
-    <section id="events" class="events-section parallax">
+    <section id="events" class="events-section parallax" data-aos="fade-up">
         <h2>Upcoming Events</h2>
         <div class="events-container">
             <ul class="events-list">
@@ -125,14 +127,14 @@
         </div>
     </section>
 
-    <section id="media" class="media-section">
+    <section id="media" class="media-section" data-aos="fade-up">
         <h2>Media Gallery</h2>
         <div class="media-carousel">
             <!-- Media carousel will be populated by JavaScript -->
         </div>
     </section>
 
-    <section id="contact" class="contact-section">
+    <section id="contact" class="contact-section" data-aos="fade-up">
         <h2>Contact Us</h2>
         <form name="contact" method="POST" data-netlify="true">
             <p>
@@ -152,9 +154,23 @@
         <p>Email: info@imobracingonline.com</p>
     </section>
 
-    <section id="forums" class="forums-section">
+    <section id="forums" class="forums-section" data-aos="fade-up">
         <h2>Forums</h2>
         <div id="disqus_thread"></div>
+    </section>
+
+    <section id="testimonials" class="testimonials-section" data-aos="fade-up">
+        <h2>What Our Fans Say</h2>
+        <div class="testimonials-carousel">
+            <div class="testimonial-item">
+                <p>"iMOB Racing is the best! Their events are thrilling and the team is so professional."</p>
+                <h3>- John Doe</h3>
+            </div>
+            <div class="testimonial-item">
+                <p>"I've been a fan for years. Their dedication and passion for racing are unmatched."</p>
+                <h3>- Jane Smith</h3>
+            </div>
+        </div>
     </section>
 
     <footer class="footer">
@@ -170,6 +186,7 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" async></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js" async></script>
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.1/dist/aos.js"></script>
     <script src="config.js"></script>
     <script src="scripts.js"></script>
 </body>
