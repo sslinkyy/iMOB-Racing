@@ -2,9 +2,13 @@
 body, html {
     margin: 0;
     padding: 0;
-    font-family: Arial, sans-serif;
+    font-family: 'Roboto', sans-serif;
     background-color: #000;
     color: #fff;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Oswald', sans-serif;
 }
 
 /* Header Styles */
@@ -36,6 +40,12 @@ body, html {
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
 }
 
+.header-overlay {
+    background: rgba(0, 0, 0, 0.5);
+    padding: 2em;
+    border-radius: 10px;
+}
+
 .header-title {
     font-size: 4em;
     animation: kinetic 2s infinite alternate;
@@ -53,15 +63,16 @@ body, html {
 
 .cta-button {
     padding: 0.5em 1em;
-    background-color: #ff4500;
+    background-color: #1e90ff;
     color: white;
     text-decoration: none;
     border-radius: 5px;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s, transform 0.3s;
 }
 
 .cta-button:hover {
-    background-color: #e43e00;
+    background-color: #1c86ee;
+    transform: scale(1.05);
 }
 
 .navbar {
@@ -132,7 +143,7 @@ body, html {
     }
 }
 
-.about-section, .team-section, .events-section, .media-section, .contact-section, .ai-section, .integration-section {
+.about-section, .team-section, .events-section, .media-section, .contact-section, .ai-section, .integration-section, .testimonials-section {
     padding: 2em;
     background: #111;
     transition: opacity 1s ease-in-out;
@@ -327,4 +338,24 @@ body, html {
 
 .social-media a:hover {
     color: #ff4500;
+}
+
+.testimonials-section {
+    padding: 2em;
+    background: #111;
+    color: #fff;
+    text-align: center;
+}
+
+.testimonials-carousel {
+    display: flex;
+    justify-content: center;
+    gap: 2em;
+}
+
+.testimonial-item {
+    background: #222;
+    padding: 2em;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(255, 69, 0, 0.7);
 }
