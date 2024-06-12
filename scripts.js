@@ -1,4 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
+    const loadingSpinner = document.getElementById('loading-spinner');
+    window.addEventListener('load', () => {
+        loadingSpinner.style.display = 'none';
+    });
+
     const navToggle = document.getElementById('js-navbar-toggle');
     const menu = document.getElementById('js-menu');
 
@@ -141,4 +146,42 @@ document.addEventListener('DOMContentLoaded', () => {
     lazyImages.forEach(img => {
         lazyObserver.observe(img);
     });
+
+    const backToTop = document.querySelector('.back-to-top');
+
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 300) {
+            backToTop.style.display = 'block';
+        } else {
+            backToTop.style.display = 'none';
+        }
+    });
+
+    backToTop.addEventListener('click', (e) => {
+        e.preventDefault();
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    });
 });
+
+function initializeTestimonialsCarousel() {
+    $('.testimonials-carousel').slick({
+        infinite: true,
+        slidesToShow: 2,
+        slidesToScroll: 1,
+        autoplay: true,
+        autoplaySpeed: 3000,
+        arrows: false,
+        dots: true,
+        responsive: [
+            {
+                breakpoint: 768,
+                settings: {
+                    slidesToShow: 1
+                }
+            }
+        ]
+    });
+}
