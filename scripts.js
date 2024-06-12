@@ -17,18 +17,20 @@ document.addEventListener('DOMContentLoaded', () => {
     // Smooth scrolling for navigation links
     navLinks.forEach(link => {
         link.addEventListener('click', function(e) {
-            e.preventDefault();
-            const targetId = this.getAttribute('href').substring(1);
-            const targetSection = document.getElementById(targetId);
+            if (this.getAttribute('href').startsWith('#')) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href').substring(1);
+                const targetSection = document.getElementById(targetId);
 
-            window.scrollTo({
-                top: targetSection.offsetTop - document.querySelector('.navbar').offsetHeight,
-                behavior: 'smooth'
-            });
+                window.scrollTo({
+                    top: targetSection.offsetTop - document.querySelector('.navbar').offsetHeight,
+                    behavior: 'smooth'
+                });
 
-            // Close the menu on mobile after clicking a link
-            if (menu.classList.contains('active')) {
-                menu.classList.remove('active');
+                // Close the menu on mobile after clicking a link
+                if (menu.classList.contains('active')) {
+                    menu.classList.remove('active');
+                }
             }
         });
     });
