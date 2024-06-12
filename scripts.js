@@ -49,6 +49,9 @@ document.addEventListener('DOMContentLoaded', () => {
         observer.observe(section);
     });
 
+    // Initialize Firebase
+    firebase.initializeApp(CONFIG.FIREBASE_CONFIG);
+
     // YouTube Data API Key
     const API_KEY = CONFIG.YOUTUBE_API_KEY;
     const CHANNEL_ID = CONFIG.YOUTUBE_CHANNEL_ID;
