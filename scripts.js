@@ -1,9 +1,16 @@
-// scripts.js
-//   const API_KEY = 'AIzaSyDaCJQhs3fz-k7hg-j0NQWj0S1r7ZEvThs';
-//   const CHANNEL_ID = 'UCbvXNK-13KBK_yZuZ5YeLZw';
-// scripts.js
-
 document.addEventListener('DOMContentLoaded', () => {
+    const loadingSpinner = document.getElementById('loading-spinner');
+    window.addEventListener('load', () => {
+        loadingSpinner.style.display = 'none';
+    });
+
+    const navToggle = document.getElementById('js-navbar-toggle');
+    const menu = document.getElementById('js-menu');
+
+    navToggle.addEventListener('click', () => {
+        menu.classList.toggle('active');
+    });
+
     const navLinks = document.querySelectorAll('.navbar a');
     const sections = document.querySelectorAll('section');
 
@@ -18,6 +25,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 top: targetSection.offsetTop - document.querySelector('.navbar').offsetHeight,
                 behavior: 'smooth'
             });
+
+            // Close the menu on mobile after clicking a link
+            if (menu.classList.contains('active')) {
+                menu.classList.remove('active');
+            }
         });
     });
 
@@ -42,29 +54,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Fetch YouTube videos
     function fetchYouTubeVideos() {
-        const url = `https://www.googleapis.com/youtube/v3/search?key=${API_KEY}&channelId=${CHANNEL_ID}&part=snippet,id&order=date&maxResults=${MAX_RESULTS}`;
-        
-        $.ajax({
-            url: url,
-            type: 'GET',
-            success: function(data) {
-                let videoItems = '';
-                data.items.forEach(item => {
-                    if (item.id.kind === "youtube#video") {
-                        videoItems += `
-                            <div class="carousel-item">
-                                <iframe src="https://www.youtube.com/embed/${item.id.videoId}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                            </div>
-                        `;
-                    }
-                });
-                $('.media-carousel').html(videoItems);
-                initializeCarousel();
-            },
-            error: function(err) {
-                console.error('Error fetching YouTube videos:', err);
-                $('.media-carousel').html('<p>Error loading videos. Please try again later.</p>');
-            }
+        $.get(`https://www.googleapis.com/youtube/v3/search?key=${API_KEY}&channelId=${CHANNEL_ID}&part=snippet,id&order=date&maxResults=${MAX_RESULTS}`, function(data) {
+            let videoItems = '';
+            data.items.forEach(item => {
+                if (item.id.kind === "youtube#video") {
+                    videoItems += `
+                        <div class="carousel-item">
+                            <iframe src="https://www.youtube.com/embed/${item.id.videoId}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        </div>
+                    `;
+                }
+            });
+            $('.media-carousel').html(videoItems);
+            initializeCarousel();
         });
     }
 
@@ -101,6 +103,27 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Initialize Spotlight carousel
+    function initializeSpotlightCarousel() {
+        $('.spotlight-carousel').slick({
+            infinite: true,
+            slidesToShow: 2,
+            slidesToScroll: 1,
+            autoplay: true,
+            autoplaySpeed: 3000,
+            arrows: true,
+            dots: true,
+            responsive: [
+                {
+                    breakpoint: 768,
+                    settings: {
+                        slidesToShow: 1
+                    }
+                }
+            ]
+        });
+    }
+
     // Disqus configuration
     const disqus_config = function () {
         this.page.url = CONFIG.DISQUS_PAGE_URL;
@@ -118,11 +141,71 @@ document.addEventListener('DOMContentLoaded', () => {
     const googleCalendarSrc = `https://calendar.google.com/calendar/embed?src=${CONFIG.GOOGLE_CALENDAR_ID}&ctz=America%2FLos_Angeles`;
     document.getElementById('google-calendar').src = googleCalendarSrc;
 
-    $(document).ready(function(){
-        // Initialize the media carousel
-        fetchYouTubeVideos();
+    // Initialize AOS
+    AOS.init();
 
-        // Initialize YouTube background
-        $('#youtube-background').youtube_background();
+    // Initialize the media carousel
+    fetchYouTubeVideos();
+    initializeCarousel();
+
+    // Initialize Spotlight carousel
+    initializeSpotlightCarousel();
+
+    // Initialize testimonials carousel
+    initializeTestimonialsCarousel();
+
+    // Lazy load images
+    const lazyImages = document.querySelectorAll('img.lazy');
+    const lazyObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const img = entry.target;
+                img.src = img.dataset.src;
+                img.classList.remove('lazy');
+                lazyObserver.unobserve(img);
+            }
+        });
+    });
+
+    lazyImages.forEach(img => {
+        lazyObserver.observe(img);
+    });
+
+    const backToTop = document.querySelector('.back-to-top');
+
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 300) {
+            backToTop.style.display = 'block';
+        } else {
+            backToTop.style.display = 'none';
+        }
+    });
+
+    backToTop.addEventListener('click', (e) => {
+        e.preventDefault();
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
     });
 });
+
+function initializeTestimonialsCarousel() {
+    $('.testimonials-carousel').slick({
+        infinite: true,
+        slidesToShow: 2,
+        slidesToScroll: 1,
+        autoplay: true,
+        autoplaySpeed: 3000,
+        arrows: false,
+        dots: true,
+        responsive: [
+            {
+                breakpoint: 768,
+                settings: {
+                    slidesToShow: 1
+                }
+            }
+        ]
+    });
+}
