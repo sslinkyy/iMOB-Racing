@@ -335,7 +335,8 @@ h1, h2, h3, h4, h5, h6 {
 
 .spotlight-item {
     flex: 0 0 auto;
-    width: 300px;
+    width: 100%; /* Adjust width for mobile view */
+    max-width: 300px;
     background: #333;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(255, 69, 0, 0.7);
