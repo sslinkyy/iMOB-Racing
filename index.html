@@ -14,6 +14,10 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&family=Roboto:wght@400;500;700&display=swap">
 </head>
 <body>
+    <div class="loading-spinner" id="loading-spinner">
+        <div class="spinner"></div>
+    </div>
+
     <header class="header" id="home">
         <div class="video-overlay">
             <iframe id="youtube-iframe" src="https://www.youtube.com/embed/RPGg_y2FHNs?autoplay=1&mute=1&loop=1&playlist=RPGg_y2FHNs" title="Welcome Video" aria-label="Welcome Video"></iframe>
@@ -23,6 +27,11 @@
                 <h1 class="header-title">Welcome to iMOB Racing</h1>
                 <p class="header-subtitle">Feel the Thrill of Racing</p>
                 <a href="#about" class="cta-button" aria-label="Learn more about iMOB Racing">Learn More</a>
+                <a href="#subscribe" class="cta-button subscribe-button" aria-label="Subscribe to our newsletter">Subscribe</a>
+                <div class="social-proof">
+                    <p><i class="fas fa-users"></i> 10k followers on Instagram</p>
+                    <p><i class="fas fa-trophy"></i> Featured in Top Gear</p>
+                </div>
             </div>
         </div>
     </header>
@@ -47,9 +56,24 @@
 
     <section id="about" class="about-section parallax" data-aos="fade-up">
         <h2>About Us</h2>
-        <p>At iMOB Racing, our ambition is to become the premier team in the racing industry. Comprising dedicated racecar modders and enthusiasts, we specialize in time attack racing while also participating in 4x4, rally, drifting, off-road, street bikes, dirt bikes, and crosskarts. We pride ourselves on being 100% built, not bought, with a commitment to modifying and customizing any vehicle.</p>
-        <p>Our co-founders, Anthony Yorba and Tony Langston, drive the team with their technical expertise and artistic vision. Leading the charge on the track, our top driver, Chris Statler, epitomizes our racing spirit, while our youngest member, Daniel Bertholf, stands out in the drifting scene.</p>
-        <p>We are dedicated to expanding our brand through dynamic race footage, informative repair videos, and exclusive behind-the-scenes content. Additionally, we offer engaging giveaways and forums for discussions, event updates, and buy/sell opportunities.</p>
+        <div class="about-content">
+            <div class="about-icon">
+                <i class="fas fa-car"></i>
+            </div>
+            <p>At iMOB Racing, our ambition is to become the premier team in the racing industry. Comprising dedicated racecar modders and enthusiasts, we specialize in time attack racing while also participating in 4x4, rally, drifting, off-road, street bikes, dirt bikes, and crosskarts. We pride ourselves on being 100% built, not bought, with a commitment to modifying and customizing any vehicle.</p>
+        </div>
+        <div class="about-content">
+            <div class="about-icon">
+                <i class="fas fa-users"></i>
+            </div>
+            <p>Our co-founders, Anthony Yorba and Tony Langston, drive the team with their technical expertise and artistic vision. Leading the charge on the track, our top driver, Chris Statler, epitomizes our racing spirit, while our youngest member, Daniel Bertholf, stands out in the drifting scene.</p>
+        </div>
+        <div class="about-content">
+            <div class="about-icon">
+                <i class="fas fa-video"></i>
+            </div>
+            <p>We are dedicated to expanding our brand through dynamic race footage, informative repair videos, and exclusive behind-the-scenes content. Additionally, we offer engaging giveaways and forums for discussions, event updates, and buy/sell opportunities.</p>
+        </div>
     </section>
 
     <section id="team" class="team-section" data-aos="fade-up">
@@ -172,6 +196,24 @@
             </div>
         </div>
     </section>
+
+    <section id="faq" class="faq-section" data-aos="fade-up">
+        <h2>Frequently Asked Questions</h2>
+        <div class="faq-item">
+            <h3>What is iMOB Racing?</h3>
+            <p>iMOB Racing is a team of dedicated racecar modders and enthusiasts who specialize in various forms of racing, including time attack, 4x4, rally, drifting, and more.</p>
+        </div>
+        <div class="faq-item">
+            <h3>How can I join the team?</h3>
+            <p>You can join our team by contacting us through our Contact Us section. We are always looking for passionate individuals to join our ranks.</p>
+        </div>
+        <div class="faq-item">
+            <h3>How can I participate in events?</h3>
+            <p>You can participate in our events by checking our Events section for upcoming events and registration details.</p>
+        </div>
+    </section>
+
+    <a href="#home" class="back-to-top" aria-label="Back to top"><i class="fas fa-arrow-up"></i></a>
 
     <footer class="footer">
         <div class="social-media">
