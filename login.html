@@ -34,7 +34,7 @@
                 })
                 .catch((error) => {
                     console.error('Error logging in: ', error);
-                    alert('Login failed: ' + error.message);
+                    alert('Login failed: ' + error.message + ' (' + error.code + ')');
                 });
         }
 
@@ -47,7 +47,7 @@
                 })
                 .catch((error) => {
                     console.error('Error registering: ', error);
-                    alert('Registration failed: ' + error.message);
+                    alert('Registration failed: ' + error.message + ' (' + error.code + ')');
                 });
         }
 
@@ -59,7 +59,7 @@
                 })
                 .catch((error) => {
                     console.error('Error logging in with Google: ', error);
-                    alert('Google login failed: ' + error.message);
+                    alert('Google login failed: ' + error.message + ' (' + error.code + ')');
                 });
         }
     </script>
