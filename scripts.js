@@ -213,3 +213,42 @@ function initializeTestimonialsCarousel() {
         ]
     });
 }
+
+// Facebook feed
+fetch('https://graph.facebook.com/v10.0/imobracing/feed?access_token=YOUR_FACEBOOK_ACCESS_TOKEN')
+    .then(response => response.json())
+    .then(data => {
+        let facebookFeed = document.getElementById('facebook-feed');
+        data.data.forEach(post => {
+            let postElement = document.createElement('div');
+            postElement.className = 'social-post';
+            postElement.innerHTML = `<p>${post.message}</p>`;
+            facebookFeed.appendChild(postElement);
+        });
+    });
+
+// Twitter feed
+fetch('https://api.twitter.com/2/tweets?ids=YOUR_TWEET_IDS&tweet.fields=created_at&expansions=author_id&user.fields=username&bearer_token=YOUR_TWITTER_BEARER_TOKEN')
+    .then(response => response.json())
+    .then(data => {
+        let twitterFeed = document.getElementById('twitter-feed');
+        data.data.forEach(tweet => {
+            let tweetElement = document.createElement('div');
+            tweetElement.className = 'social-post';
+            tweetElement.innerHTML = `<p>${tweet.text}</p>`;
+            twitterFeed.appendChild(tweetElement);
+        });
+    });
+
+// Instagram feed
+fetch('https://graph.instagram.com/me/media?fields=id,caption,media_url,permalink&access_token=YOUR_INSTAGRAM_ACCESS_TOKEN')
+    .then(response => response.json())
+    .then(data => {
+        let instagramFeed = document.getElementById('instagram-feed');
+        data.data.forEach(post => {
+            let postElement = document.createElement('div');
+            postElement.className = 'social-post';
+            postElement.innerHTML = `<img src="${post.media_url}" alt="${post.caption}"><p>${post.caption}</p>`;
+            instagramFeed.appendChild(postElement);
+        });
+    });
