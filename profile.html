@@ -11,7 +11,7 @@
     <script>
         // Firebase configuration with the updated API key
         const firebaseConfig = {
-            apiKey: "AIzaSyA0U-py8sgjtMkX0vD9ySsi2XGtUUEGZhg", // Updated API key
+            apiKey: "AIzaSyA0U-py8sgjtMkX0vD9ySsi2XGtUUEGZhg",
             authDomain: "imob-racing-website.firebaseapp.com",
             projectId: "imob-racing-website",
             storageBucket: "imob-racing-website.appspot.com",
@@ -42,10 +42,23 @@
             var user = firebase.auth().currentUser;
             if (user) {
                 var db = firebase.firestore();
+                var publicProfile = {
+                    displayName: user.displayName || user.email,
+                    email: user.email,
+                    content: content
+                };
                 db.collection('profiles').doc(user.uid).set({
                     htmlContent: content
                 }).then(function() {
                     alert('Profile saved!');
+                    // Save public profile
+                    db.collection('publicProfiles').doc(user.uid).set(publicProfile)
+                        .then(() => {
+                            console.log('Public profile saved');
+                        })
+                        .catch((error) => {
+                            console.error('Error saving public profile: ', error);
+                        });
                 }).catch(function(error) {
                     console.error('Error saving profile: ', error);
                 });
