@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Store - iMOB Racing</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdn.snipcart.com/themes/v3.0.28/default/snipcart.css" />
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-container">
+            <span class="navbar-toggle" id="js-navbar-toggle">
+                <i class="fas fa-bars"></i>
+            </span>
+            <a href="index.html" class="logo">iMOB Racing</a>
+            <ul class="main-nav" id="js-menu">
+                <li><a href="index.html" class="nav-links">Home</a></li>
+                <li><a href="drivers.html" class="nav-links">Drivers</a></li>
+                <li><a href="cars.html" class="nav-links">Cars</a></li>
+                <li><a href="mission.html" class="nav-links">Our Mission</a></li>
+                <li><a href="store.html" class="nav-links">Store</a></li>
+                <li><a href="index.html#contact" class="nav-links">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+    <section id="store" class="store-section">
+        <h2>Our Store</h2>
+        <div id="product-list" class="product-list">
+            <!-- Static Product Items -->
+            <div class="product">
+                <img src="images/tshirt1.jpg" alt="iMOB Racing T-Shirt 1">
+                <h3>iMOB Racing T-Shirt 1</h3>
+                <p>High quality racing t-shirt.</p>
+                <p>$20.00</p>
+                <button class="snipcart-add-item"
+                        data-item-id="tshirt1"
+                        data-item-name="iMOB Racing T-Shirt 1"
+                        data-item-price="20.00"
+                        data-item-url="/store.html"
+                        data-item-description="High quality racing t-shirt."
+                        data-item-image="images/tshirt1.jpg">
+                    Add to Cart
+                </button>
+            </div>
+            <div class="product">
+                <img src="images/tshirt2.jpg" alt="iMOB Racing T-Shirt 2">
+                <h3>iMOB Racing T-Shirt 2</h3>
+                <p>Another stylish racing t-shirt.</p>
+                <p>$20.00</p>
+                <button class="snipcart-add-item"
+                        data-item-id="tshirt2"
+                        data-item-name="iMOB Racing T-Shirt 2"
+                        data-item-price="20.00"
+                        data-item-url="/store.html"
+                        data-item-description="Another stylish racing t-shirt."
+                        data-item-image="images/tshirt2.jpg">
+                    Add to Cart
+                </button>
+            </div>
+            <!-- Amazon Linked Items -->
+            <div class="product">
+                <img src="https://images-na.ssl-images-amazon.com/images/I/81drfTT9ZfL._AC_SL1500_.jpg" alt="Racing Helmet">
+                <h3>Racing Helmet</h3>
+                <p>Top-quality racing helmet.</p>
+                <p><a href="https://www.amazon.com/dp/B07X5Y9KZ1" target="_blank">Buy on Amazon</a></p>
+            </div>
+            <div class="product">
+                <img src="https://images-na.ssl-images-amazon.com/images/I/91VokXkn8hL._AC_SL1500_.jpg" alt="Racing Gloves">
+                <h3>Racing Gloves</h3>
+                <p>Durable and comfortable racing gloves.</p>
+                <p><a href="https://www.amazon.com/dp/B082Y9WXT6" target="_blank">Buy on Amazon</a></p>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="social-media">
+            <a href="https://www.facebook.com/iMobRacing" target="_blank"><i class="fab fa-facebook"></i></a>
+            <a href="https://twitter.com/iMobRacing" target="_blank"><i class="fab fa-twitter"></i></a>
+            <a href="https://instagram.com/iMobRacing" target="_blank"><i class="fab fa-instagram"></i></a>
+            <a href="https://youtube.com/iMobRacing" target="_blank"><i class="fab fa-youtube"></i></a>
+        </div>
+        <p>&copy; 2024 iMOB Racing. All rights reserved.</p>
+        <p>Contact: info@imobracingonline.com | Phone: (530) 420-5850</p>
+    </footer>
+
+    <div hidden id="snipcart" data-api-key="YOUR_SNIPCART_API_KEY" data-config-modal-style="side"></div>
+    <script src="https://cdn.snipcart.com/themes/v3.0.28/default/snipcart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" async></script>
+    <script src="config.js"></script>
+    <script src="scripts.js"></script>
+</body>
+</html>
