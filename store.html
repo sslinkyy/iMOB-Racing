@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Store - iMOB Racing</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Our Store</h1>
+    <div id="product-list"></div>
+
+    <script>
+        // Fetch products from your e-commerce platform
+        fetch('https://api.yourstore.com/products')
+            .then(response => response.json())
+            .then(products => {
+                let productList = document.getElementById('product-list');
+                products.forEach(product => {
+                    let productElement = document.createElement('div');
+                    productElement.className = 'product';
+                    productElement.innerHTML = `
+                        <img src="${product.image}" alt="${product.name}">
+                        <h2>${product.name}</h2>
+                        <p>${product.description}</p>
+                        <p>$${product.price}</p>
+                        <button>Add to Cart</button>
+                    `;
+                    productList.appendChild(productElement);
+                });
+            });
+    </script>
+</body>
+</html>
