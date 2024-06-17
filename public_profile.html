@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Public Profile</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-firestore.js"></script>
+    <script>
+        // Firebase configuration with the updated API key
+        const firebaseConfig = {
+            apiKey: "AIzaSyA0U-py8sgjtMkX0vD9ySsi2XGtUUEGZhg",
+            authDomain: "imob-racing-website.firebaseapp.com",
+            projectId: "imob-racing-website",
+            storageBucket: "imob-racing-website.appspot.com",
+            messagingSenderId: "580908835958",
+            appId: "1:580908835958:web:a7bb3f6a4b52d8f8c28c1a"
+        };
+
+        // Initialize Firebase
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        } else {
+            firebase.app(); // if already initialized, use that one
+        }
+
+        // Load public profile data
+        function loadPublicProfile(uid) {
+            var db = firebase.firestore();
+            db.collection('publicProfiles').doc(uid).get().then(function(doc) {
+                if (doc.exists) {
+                    var data = doc.data();
+                    document.getElementById('profile-name').innerText = data.displayName;
+                    document.getElementById('profile-email').innerText = data.email;
+                    document.getElementById('profile-content').innerHTML = data.content;
+                } else {
+                    console.error('No such document!');
+                }
+            }).catch(function(error) {
+                console.error('Error getting document:', error);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const uid = urlParams.get('uid');
+            if (uid) {
+                loadPublicProfile(uid);
+            } else {
+                console.error('No UID provided in query string');
+            }
+        });
+    </script>
+</head>
+<body>
+    <h1>Public Profile</h1>
+    <h2 id="profile-name"></h2>
+    <p id="profile-email"></p>
+    <div id="profile-content"></div>
+</body>
+</html>
