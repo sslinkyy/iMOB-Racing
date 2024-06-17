@@ -7,16 +7,16 @@
     <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-auth.js"></script>
     <script>
-        // Firebase configuration
+        // Firebase configuration with the updated API key
         const firebaseConfig = {
-            apiKey: "AIzaSyA0U-py8sgjtMkX0vD9ySsi2XGtUUEGZhg",
+            apiKey: "AIzaSyA0U-py8sgjtMkX0vD9ySsi2XGtUUEGZhg", // Updated API key
             authDomain: "imob-racing-website.firebaseapp.com",
             projectId: "imob-racing-website",
             storageBucket: "imob-racing-website.appspot.com",
             messagingSenderId: "580908835958",
             appId: "1:580908835958:web:a7bb3f6a4b52d8f8c28c1a"
         };
-localStorage.setItem('firebase:debug', 'true');
+
         // Initialize Firebase
         if (!firebase.apps.length) {
             firebase.initializeApp(firebaseConfig);
@@ -45,6 +45,7 @@ localStorage.setItem('firebase:debug', 'true');
                 .then((userCredential) => {
                     console.log('Login successful:', userCredential);
                     alert('Login successful');
+                    window.location.href = 'profile.html'; // Redirect to profile page after login
                 })
                 .catch((error) => {
                     console.error('Error logging in:', error);
@@ -59,6 +60,7 @@ localStorage.setItem('firebase:debug', 'true');
                 .then((userCredential) => {
                     console.log('Registration successful:', userCredential);
                     alert('Registration successful');
+                    window.location.href = 'profile.html'; // Redirect to profile page after registration
                 })
                 .catch((error) => {
                     console.error('Error registering:', error);
@@ -72,6 +74,7 @@ localStorage.setItem('firebase:debug', 'true');
                 .then((result) => {
                     console.log('Google login successful:', result);
                     alert('Google login successful');
+                    window.location.href = 'profile.html'; // Redirect to profile page after Google login
                 })
                 .catch((error) => {
                     console.error('Error logging in with Google:', error);
