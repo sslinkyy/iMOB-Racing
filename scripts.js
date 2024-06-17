@@ -220,37 +220,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Fetch products and display them in the store section
-    fetchProducts();
-
-    function fetchProducts() {
-        fetch('https://api.yourstore.com/products')
-            .then(response => response.json())
-            .then(products => {
-                let productList = document.getElementById('product-list');
-                products.forEach(product => {
-                    let productElement = document.createElement('div');
-                    productElement.className = 'product';
-                    productElement.innerHTML = `
-                        <img src="${product.image}" alt="${product.name}">
-                        <h3>${product.name}</h3>
-                        <p>${product.description}</p>
-                        <p>$${product.price}</p>
-                        <button class="snipcart-add-item"
-                                data-item-id="${product.id}"
-                                data-item-name="${product.name}"
-                                data-item-price="${product.price}"
-                                data-item-url="/store.html"
-                                data-item-description="${product.description}"
-                                data-item-image="${product.image}">
-                            Add to Cart
-                        </button>
-                    `;
-                    productList.appendChild(productElement);
-                });
-            });
-    }
-
     // Initialize Snipcart API key
     const snipcart = document.getElementById('snipcart');
     if (snipcart) {
