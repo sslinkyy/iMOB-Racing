@@ -7,11 +7,20 @@
     <link rel="stylesheet" href="styles.css">
     <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-auth.js"></script>
-    <script src="config.js"></script>
     <script>
-        // Ensure Firebase is initialized correctly
+        // Directly including the Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyABU-pv8sgjMtMx9Dv9ySsi2XGtUEGZhg",
+            authDomain: "imob-racing-website.firebaseapp.com",
+            projectId: "imob-racing-website",
+            storageBucket: "imob-racing-website.appspot.com",
+            messagingSenderId: "580908835958",
+            appId: "1:580908835958:web:a7bb3f6a4b52d8f8c28c1a"
+        };
+
+        // Initialize Firebase
         if (!firebase.apps.length) {
-            firebase.initializeApp(CONFIG.FIREBASE_CONFIG);
+            firebase.initializeApp(firebaseConfig);
         }
     </script>
 </head>
