@@ -250,11 +250,26 @@
     <!-- Facebook SDK -->
     <div id="fb-root"></div>
     <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v10.0"></script>
-    
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" async></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js" async></script>
     <script src="https://cdn.jsdelivr.net/npm/aos@2.3.1/dist/aos.js"></script>
     <script src="config.js"></script>
     <script src="scripts.js"></script>
+
+    <!-- Disqus Embed -->
+    <script>
+    var disqus_config = function () {
+        this.page.url = CONFIG.DISQUS_PAGE_URL;
+        this.page.identifier = CONFIG.DISQUS_PAGE_IDENTIFIER;
+    };
+    (function() {
+        var d = document, s = d.createElement('script');
+        s.src = 'https://' + CONFIG.DISQUS_SHORTNAME + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+    </script>
+
 </body>
 </html>
