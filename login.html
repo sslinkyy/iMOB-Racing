@@ -34,6 +34,7 @@
                 })
                 .catch((error) => {
                     console.error('Error logging in: ', error);
+                    alert('Login failed: ' + error.message);
                 });
         }
 
@@ -46,6 +47,7 @@
                 })
                 .catch((error) => {
                     console.error('Error registering: ', error);
+                    alert('Registration failed: ' + error.message);
                 });
         }
 
@@ -57,6 +59,7 @@
                 })
                 .catch((error) => {
                     console.error('Error logging in with Google: ', error);
+                    alert('Google login failed: ' + error.message);
                 });
         }
     </script>

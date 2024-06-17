@@ -1,4 +1,3 @@
-// config.js
 const CONFIG = {
     YOUTUBE_API_KEY: 'AIzaSyDaCJQhs3fz-k7hg-j0NQWj0S1r7ZEvThs',
     YOUTUBE_CHANNEL_ID: 'UCbvXNK-13KBK_yZuZ5YeLZw',
@@ -14,7 +13,8 @@ const CONFIG = {
         projectId: "imob-racing-website",
         storageBucket: "imob-racing-website.appspot.com",
         messagingSenderId: "580908835958",
-        appId: "1:580908835958:web:a7bb3f6a4b52d8f8c28c1a",
+        appId: "1:580908835958:web:a7bb3f6a4b52d8f8c28c1a"
+    },
     GOOGLE_CLIENT_ID: '580908835958-labitokmi7ivmvm0ha1muth5a45smnni.apps.googleusercontent.com',
-        SNIPCART_API_KEY: 'NDFkZGNlNDktMjE2YS00MmUyLTk4ZmYtMjY5YWE2OWYwOTI2NjM4NTQxODI3NjYwMTI3MDQ5'
+    SNIPCART_API_KEY: 'NDFkZGNlNDktMjE2YS00MmUyLTk4ZmYtMjY5YWE2OWYwOTI2NjM4NTQxODI3NjYwMTI3MDQ5'
 };
