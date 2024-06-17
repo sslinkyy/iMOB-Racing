@@ -1,22 +1,26 @@
 document.addEventListener('DOMContentLoaded', () => {
     const loadingSpinner = document.getElementById('loading-spinner');
-    window.addEventListener('load', () => {
-        loadingSpinner.style.display = 'none';
-    });
+    if (loadingSpinner) {
+        window.addEventListener('load', () => {
+            loadingSpinner.style.display = 'none';
+        });
+    }
 
     const navToggle = document.getElementById('js-navbar-toggle');
     const menu = document.getElementById('js-menu');
 
-    navToggle.addEventListener('click', () => {
-        menu.classList.toggle('active');
-    });
+    if (navToggle) {
+        navToggle.addEventListener('click', () => {
+            menu.classList.toggle('active');
+        });
+    }
 
     const navLinks = document.querySelectorAll('.navbar a');
     const sections = document.querySelectorAll('section');
 
     // Smooth scrolling for navigation links
     navLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
+        link.addEventListener('click', function (e) {
             if (this.getAttribute('href').startsWith('#')) {
                 e.preventDefault();
                 const targetId = this.getAttribute('href').substring(1);
@@ -56,7 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Fetch YouTube videos
     function fetchYouTubeVideos() {
-        $.get(`https://www.googleapis.com/youtube/v3/search?key=${API_KEY}&channelId=${CHANNEL_ID}&part=snippet,id&order=date&maxResults=${MAX_RESULTS}`, function(data) {
+        $.get(`https://www.googleapis.com/youtube/v3/search?key=${API_KEY}&channelId=${CHANNEL_ID}&part=snippet,id&order=date&maxResults=${MAX_RESULTS}`, function (data) {
             let videoItems = '';
             data.items.forEach(item => {
                 if (item.id.kind === "youtube#video") {
@@ -134,7 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
         this.page.identifier = CONFIG.DISQUS_PAGE_IDENTIFIER;
     };
 
-    (function() {
+    (function () {
         const d = document, s = d.createElement('script');
         s.src = `https://${CONFIG.DISQUS_SHORTNAME}.disqus.com/embed.js`;
         s.setAttribute('data-timestamp', +new Date());
@@ -143,7 +147,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Load Google Calendar
     const googleCalendarSrc = `https://calendar.google.com/calendar/embed?src=${CONFIG.GOOGLE_CALENDAR_ID}&ctz=America%2FLos_Angeles`;
-    document.getElementById('google-calendar').src = googleCalendarSrc;
+    const calendarElement = document.getElementById('google-calendar');
+    if (calendarElement) {
+        calendarElement.src = googleCalendarSrc;
+    }
 
     // Initialize AOS
     AOS.init();
@@ -192,63 +199,61 @@ document.addEventListener('DOMContentLoaded', () => {
             behavior: 'smooth'
         });
     });
-});
 
-function initializeTestimonialsCarousel() {
-    $('.testimonials-carousel').slick({
-        infinite: true,
-        slidesToShow: 2,
-        slidesToScroll: 1,
-        autoplay: true,
-        autoplaySpeed: 3000,
-        arrows: false,
-        dots: true,
-        responsive: [
-            {
-                breakpoint: 768,
-                settings: {
-                    slidesToShow: 1
+    function initializeTestimonialsCarousel() {
+        $('.testimonials-carousel').slick({
+            infinite: true,
+            slidesToShow: 2,
+            slidesToScroll: 1,
+            autoplay: true,
+            autoplaySpeed: 3000,
+            arrows: false,
+            dots: true,
+            responsive: [
+                {
+                    breakpoint: 768,
+                    settings: {
+                        slidesToShow: 1
+                    }
                 }
-            }
-        ]
-    });
-}
-
-// Facebook feed
-fetch('https://graph.facebook.com/v10.0/imobracing/feed?access_token=YOUR_FACEBOOK_ACCESS_TOKEN')
-    .then(response => response.json())
-    .then(data => {
-        let facebookFeed = document.getElementById('facebook-feed');
-        data.data.forEach(post => {
-            let postElement = document.createElement('div');
-            postElement.className = 'social-post';
-            postElement.innerHTML = `<p>${post.message}</p>`;
-            facebookFeed.appendChild(postElement);
+            ]
         });
-    });
+    }
 
-// Twitter feed
-fetch('https://api.twitter.com/2/tweets?ids=YOUR_TWEET_IDS&tweet.fields=created_at&expansions=author_id&user.fields=username&bearer_token=YOUR_TWITTER_BEARER_TOKEN')
-    .then(response => response.json())
-    .then(data => {
-        let twitterFeed = document.getElementById('twitter-feed');
-        data.data.forEach(tweet => {
-            let tweetElement = document.createElement('div');
-            tweetElement.className = 'social-post';
-            tweetElement.innerHTML = `<p>${tweet.text}</p>`;
-            twitterFeed.appendChild(tweetElement);
-        });
-    });
+    // Fetch products and display them in the store section
+    fetchProducts();
 
-// Instagram feed
-fetch('https://graph.instagram.com/me/media?fields=id,caption,media_url,permalink&access_token=YOUR_INSTAGRAM_ACCESS_TOKEN')
-    .then(response => response.json())
-    .then(data => {
-        let instagramFeed = document.getElementById('instagram-feed');
-        data.data.forEach(post => {
-            let postElement = document.createElement('div');
-            postElement.className = 'social-post';
-            postElement.innerHTML = `<img src="${post.media_url}" alt="${post.caption}"><p>${post.caption}</p>`;
-            instagramFeed.appendChild(postElement);
-        });
-    });
+    function fetchProducts() {
+        fetch('https://api.yourstore.com/products')
+            .then(response => response.json())
+            .then(products => {
+                let productList = document.getElementById('product-list');
+                products.forEach(product => {
+                    let productElement = document.createElement('div');
+                    productElement.className = 'product';
+                    productElement.innerHTML = `
+                        <img src="${product.image}" alt="${product.name}">
+                        <h3>${product.name}</h3>
+                        <p>${product.description}</p>
+                        <p>$${product.price}</p>
+                        <button class="snipcart-add-item"
+                                data-item-id="${product.id}"
+                                data-item-name="${product.name}"
+                                data-item-price="${product.price}"
+                                data-item-url="/store.html"
+                                data-item-description="${product.description}"
+                                data-item-image="${product.image}">
+                            Add to Cart
+                        </button>
+                    `;
+                    productList.appendChild(productElement);
+                });
+            });
+    }
+
+    // Initialize Snipcart API key
+    const snipcart = document.getElementById('snipcart');
+    if (snipcart) {
+        snipcart.setAttribute('data-api-key', CONFIG.SNIPCART_API_KEY);
+    }
+});
