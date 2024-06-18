@@ -145,7 +145,7 @@ h1, h2, h3, h4, h5, h6 {
     gap: 2em;
 }
 
-social-proof p {
+.social-proof p {
     display: flex;
     align-items: center;
     gap: 0.5em;
@@ -166,29 +166,6 @@ section {
 
 .about-section, .ai-section, .events-section {
     background-image: url('images/background.jpg');
-}
-
-/* Profile Section */
-#editor {
-    width: 100%;
-    height: 400px;
-}
-
-#profile-preview {
-    margin-top: 20px;
-    padding: 20px;
-    border: 1px solid #ddd;
-    background: #f9f9f9;
-}
-
-#socialMediaContent {
-    margin-top: 20px;
-}
-
-#socialMediaContent img, #socialMediaContent video {
-    width: 100%;
-    max-width: 300px;
-    margin: 10px;
 }
 
 /* Store Section */
@@ -334,3 +311,22 @@ section {
         right: 1em;
     }
 }
+
+/* Profile Page */
+.profile-page {
+    padding: 2em;
+}
+
+.profile-page h1, .profile-page h2 {
+    text-align: center;
+}
+
+.profile-preview {
+    margin-top: 20px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    background-color: #fff;
+    color: #000;
+}
+
+/* Add your additional custom styles below */
