@@ -1,27 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    {% include head.html %}
-</head>
-<body>
-    {% include navbar.html %}
-    <h1>Profile Page</h1>
-    <h2 id="username"></h2>
-    <p id="user-email"></p>
-    <textarea id="editor" name="editor" rows="10" cols="80"></textarea>
-    <script>
-        CKEDITOR.replace('editor');
-    </script>
-    <button onclick="saveProfile()">Save Profile</button>
-
-    <script src="https://cdn.ckeditor.com/4.16.0/standard/ckeditor.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <link rel="stylesheet" href="styles.css">
     <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-firestore.js"></script>
-    <script src="{{ site.baseurl }}/assets/js/config.js"></script>
+    <script src="https://cdn.ckeditor.com/4.16.0/standard/ckeditor.js"></script>
     <script>
-        firebase.initializeApp(CONFIG.FIREBASE_CONFIG);
+        // Firebase configuration with the updated API key
+        const firebaseConfig = {
+            apiKey: "AIzaSyA0U-py8sgjtMkX0vD9ySsi2XGtUUEGZhg",
+            authDomain: "imob-racing-website.firebaseapp.com",
+            projectId: "imob-racing-website",
+            storageBucket: "imob-racing-website.appspot.com",
+            messagingSenderId: "580908835958",
+            appId: "1:580908835958:web:a7bb3f6a4b52d8f8c28c1a"
+        };
 
+        // Initialize Firebase
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        } else {
+            firebase.app(); // if already initialized, use that one
+        }
+
+        // Check authentication state and load profile data
         firebase.auth().onAuthStateChanged(function(user) {
             if (user) {
                 document.getElementById('username').innerText = user.displayName || user.email;
@@ -37,10 +43,23 @@
             var user = firebase.auth().currentUser;
             if (user) {
                 var db = firebase.firestore();
+                var publicProfile = {
+                    displayName: user.displayName || user.email,
+                    email: user.email,
+                    content: content
+                };
                 db.collection('profiles').doc(user.uid).set({
                     htmlContent: content
                 }).then(function() {
                     alert('Profile saved!');
+                    // Save public profile
+                    db.collection('publicProfiles').doc(user.uid).set(publicProfile)
+                        .then(() => {
+                            console.log('Public profile saved');
+                        })
+                        .catch((error) => {
+                            console.error('Error saving public profile: ', error);
+                        });
                 }).catch(function(error) {
                     console.error('Error saving profile: ', error);
                 });
@@ -58,6 +77,15 @@
             });
         }
     </script>
-    {% include footer.html %}
+</head>
+<body>
+    <h1>Profile Page</h1>
+    <h2 id="username"></h2>
+    <p id="user-email"></p>
+    <textarea id="editor" name="editor" rows="10" cols="80"></textarea>
+    <script>
+        CKEDITOR.replace('editor');
+    </script>
+    <button onclick="saveProfile()">Save Profile</button>
 </body>
 </html>
