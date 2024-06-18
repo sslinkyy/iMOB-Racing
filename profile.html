@@ -146,17 +146,20 @@
             }
         }
 
-        document.getElementById('profile-image').addEventListener('change', function(event) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                document.getElementById('profile-image-preview').src = e.target.result;
-                document.getElementById('profile-image-preview').style.display = 'block';
-            };
-            reader.readAsDataURL(event.target.files[0]);
-        });
+        document.addEventListener('DOMContentLoaded', function() {
+            CKEDITOR.replace('editor');
+            document.getElementById('profile-image').addEventListener('change', function(event) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('profile-image-preview').src = e.target.result;
+                    document.getElementById('profile-image-preview').style.display = 'block';
+                };
+                reader.readAsDataURL(event.target.files[0]);
+            });
 
-        document.getElementById('vehicle-images').addEventListener('change', function(event) {
-            updateVehiclePreviews(Array.from(event.target.files).map(file => URL.createObjectURL(file)));
+            document.getElementById('vehicle-images').addEventListener('change', function(event) {
+                updateVehiclePreviews(Array.from(event.target.files).map(file => URL.createObjectURL(file)));
+            });
         });
     </script>
 </head>
