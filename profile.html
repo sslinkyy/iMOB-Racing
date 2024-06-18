@@ -3,17 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Profile - IMOB Racing</title>
+    <title>Profile Editor</title>
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css">
-    <script src="https://cdn.ckeditor.com/4.16.0/full-all/ckeditor.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <script src="https://cdn.ckeditor.com/4.16.0/standard/ckeditor.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-firestore.js"></script>
     <script src="config.js"></script>
-    <script src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v10.0" async defer crossorigin="anonymous"></script>
     <script>
         firebase.initializeApp(CONFIG.FIREBASE_CONFIG);
 
@@ -28,25 +24,19 @@
         });
 
         function saveProfile() {
-            var content = CKEDITOR.instances.editor.getData();
-            var socialMediaUrls = $('#social-media-urls').val();
-            var specialItems = $('#special-items').val();
-            var vehicles = $('#vehicles').val();
             var user = firebase.auth().currentUser;
             if (user) {
                 var db = firebase.firestore();
                 db.collection('profiles').doc(user.uid).set({
-                    htmlContent: content,
-                    socialMediaUrls: socialMediaUrls,
-                    specialItems: specialItems,
-                    vehicles: vehicles
+                    username: user.displayName || user.email,
+                    email: user.email,
+                    htmlContent: CKEDITOR.instances.editor.getData(),
+                    socialMediaUrls: document.getElementById('social-media-urls').value,
+                    specialItems: document.getElementById('special-items').value,
+                    vehicles: document.getElementById('vehicles').value
                 }).then(function() {
                     alert('Profile saved!');
-                    document.getElementById('profile-preview').innerHTML = content;
-                    $('#profile-preview-social-media').text(socialMediaUrls);
-                    $('#profile-preview-special-items').text(specialItems);
-                    $('#profile-preview-vehicles').text(vehicles);
-                    FB.XFBML.parse(); // Parse Facebook embeds
+                    loadProfile(user.uid);
                 }).catch(function(error) {
                     console.error('Error saving profile: ', error);
                 });
@@ -57,15 +47,12 @@
             var db = firebase.firestore();
             db.collection('profiles').doc(uid).get().then(function(doc) {
                 if (doc.exists) {
-                    CKEDITOR.instances.editor.setData(doc.data().htmlContent);
-                    $('#social-media-urls').val(doc.data().socialMediaUrls);
-                    $('#special-items').val(doc.data().specialItems);
-                    $('#vehicles').val(doc.data().vehicles);
-                    document.getElementById('profile-preview').innerHTML = doc.data().htmlContent;
-                    $('#profile-preview-social-media').text(doc.data().socialMediaUrls);
-                    $('#profile-preview-special-items').text(doc.data().specialItems);
-                    $('#profile-preview-vehicles').text(doc.data().vehicles);
-                    FB.XFBML.parse(); // Parse Facebook embeds
+                    var profileData = doc.data();
+                    CKEDITOR.instances.editor.setData(profileData.htmlContent);
+                    document.getElementById('social-media-urls').value = profileData.socialMediaUrls || '';
+                    document.getElementById('special-items').value = profileData.specialItems || '';
+                    document.getElementById('vehicles').value = profileData.vehicles || '';
+                    document.getElementById('profile-preview').innerHTML = profileData.htmlContent;
                 }
             }).catch(function(error) {
                 console.error('Error loading profile: ', error);
@@ -73,23 +60,15 @@
         }
 
         function togglePreview() {
-            var form = document.getElementById('profileForm');
+            var editorContent = CKEDITOR.instances.editor.getData();
+            document.getElementById('profile-preview').innerHTML = editorContent;
             var preview = document.getElementById('profile-preview');
-            if (form.style.display === 'none') {
-                form.style.display = 'block';
-                preview.style.display = 'none';
-            } else {
-                form.style.display = 'none';
+            if (preview.style.display === 'none') {
                 preview.style.display = 'block';
-                FB.XFBML.parse(); // Parse Facebook embeds
+            } else {
+                preview.style.display = 'none';
             }
         }
-
-        $(function() {
-            $("#profile-editor-container").sortable({
-                handle: ".drag-handle"
-            });
-        });
     </script>
 </head>
 <body>
@@ -107,48 +86,22 @@
             </ul>
         </div>
     </nav>
-
-    <div class="profile-editor-container" id="profile-editor-container">
+    <div class="profile-editor-container">
         <h1>Edit Your Profile</h1>
-        <button type="button" onclick="togglePreview()">Toggle Preview</button>
+        <h2 id="username"></h2>
+        <p id="user-email"></p>
         <form id="profileForm">
-            <textarea name="profileContent" id="editor"></textarea>
-            <div class="form-group">
-                <label for="social-media-urls">Social Media URLs:</label>
-                <textarea id="social-media-urls" name="socialMediaUrls" rows="4" cols="50"></textarea>
-            </div>
-            <div class="form-group">
-                <label for="special-items">Special Items:</label>
-                <textarea id="special-items" name="specialItems" rows="4" cols="50"></textarea>
-            </div>
-            <div class="form-group">
-                <label for="vehicles">Vehicles:</label>
-                <textarea id="vehicles" name="vehicles" rows="4" cols="50"></textarea>
-            </div>
-            <button type="button" onclick="saveProfile()">Save Profile</button>
+            <textarea id="editor" name="editor" rows="10" cols="80"></textarea>
+            <textarea id="social-media-urls" placeholder="Social Media URLs" rows="5" cols="80"></textarea>
+            <textarea id="special-items" placeholder="Special Items" rows="5" cols="80"></textarea>
+            <textarea id="vehicles" placeholder="Vehicles" rows="5" cols="80"></textarea>
         </form>
-        <div id="profile-preview" style="display: none; margin-top: 20px; border: 1px solid #ccc; padding: 10px;">
-            <div id="profile-preview-social-media"></div>
-            <div id="profile-preview-special-items"></div>
-            <div id="profile-preview-vehicles"></div>
-        </div>
+        <button onclick="saveProfile()">Save Profile</button>
+        <button type="button" onclick="togglePreview()">Toggle Preview</button>
+        <div id="profile-preview" style="display: none; margin-top: 20px; border: 1px solid #ccc; padding: 10px;"></div>
     </div>
-
     <script>
-        CKEDITOR.replace('editor', {
-            extraPlugins: 'image2,embed,autoembed',
-            height: 300,
-            toolbar: [
-                { name: 'document', items: ['Source'] },
-                { name: 'clipboard', items: ['Undo', 'Redo'] },
-                { name: 'styles', items: ['Format', 'Font', 'FontSize'] },
-                { name: 'basicstyles', items: ['Bold', 'Italic', 'Underline', 'Strike'] },
-                { name: 'paragraph', items: ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote'] },
-                { name: 'insert', items: ['Image', 'Embed', 'Link'] },
-                { name: 'tools', items: ['Maximize'] },
-                { name: 'editing', items: ['Scayt'] }
-            ]
-        });
+        CKEDITOR.replace('editor');
     </script>
 </body>
 </html>
