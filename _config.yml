@@ -1,16 +1,8 @@
-# _config.yml
 title: iMOB Racing
-description: Feel the thrill of racing with our premier team. Join us for time attack, 4x4, rally, drifting, and more.
-baseurl: "" # the subpath of your site, e.g. /blog
-url: "https://yourusername.github.io" # the base hostname & protocol for your site
-exclude:
-  - "index.md"
-  - "login.md"
-  - "profile.md"
-  - "store.md"
-
-# Other Jekyll settings
-theme: minima
+description: "Feel the thrill of racing with our premier team."
+baseurl: ""
+url: "https://imobracingonline.com"
 markdown: kramdown
-paginate: 5
-paginate_path: "/page:num/"
+theme: minima
+plugins:
+  - jekyll-feed
