@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     const loadingSpinner = document.getElementById('loading-spinner');
     window.addEventListener('load', () => {
-        loadingSpinner.style.display = 'none';
+        loadingSpinner.classList.add('hidden');
     });
 
     const navToggle = document.getElementById('js-navbar-toggle');
