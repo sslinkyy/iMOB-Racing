@@ -47,7 +47,7 @@
             </div>
             <button type="button" onclick="saveProfile()">Save Profile</button>
         </form>
-        <button onclick="togglePreview()">Toggle Preview</button>
+        <button type="button" onclick="togglePreview()">Toggle Preview</button>
         <div id="profile-preview" style="display:none; margin-top: 20px; border: 1px solid #ccc; padding: 10px;"></div>
     </div>
 
@@ -97,13 +97,13 @@
         }
 
         function togglePreview() {
-            var editorContainer = document.getElementById('editor-container');
+            var profileForm = document.getElementById('profileForm');
             var profilePreview = document.getElementById('profile-preview');
-            if (editorContainer.style.display === 'none') {
-                editorContainer.style.display = 'block';
+            if (profileForm.style.display === 'none') {
+                profileForm.style.display = 'block';
                 profilePreview.style.display = 'none';
             } else {
-                editorContainer.style.display = 'none';
+                profileForm.style.display = 'none';
                 profilePreview.style.display = 'block';
                 updatePreview();
             }
