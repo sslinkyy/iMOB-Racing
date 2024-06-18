@@ -26,14 +26,29 @@
         </div>
     </nav>
 
-    <h1>Profile Page</h1>
     <div class="profile-editor-container">
+        <h1>Edit Your Profile</h1>
+        <form id="profileForm">
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name">
+            </div>
+            <div class="form-group">
+                <label for="bio">Bio:</label>
+                <textarea id="bio" name="bio"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="profilePicture">Profile Picture URL:</label>
+                <input type="text" id="profilePicture" name="profilePicture">
+            </div>
+            <div class="form-group">
+                <label for="socialMedia">Social Media Content:</label>
+                <textarea id="socialMedia" name="socialMedia"></textarea>
+            </div>
+            <button type="button" onclick="saveProfile()">Save Profile</button>
+        </form>
         <button onclick="togglePreview()">Toggle Preview</button>
-        <div id="editor-container">
-            <textarea id="editor" name="editor" rows="10" cols="80"></textarea>
-        </div>
         <div id="profile-preview" style="display:none; margin-top: 20px; border: 1px solid #ccc; padding: 10px;"></div>
-        <button onclick="saveProfile()">Save Profile</button>
     </div>
 
     <script>
@@ -49,15 +64,17 @@
         });
 
         function saveProfile() {
-            var content = CKEDITOR.instances.editor.getData();
             var user = firebase.auth().currentUser;
             if (user) {
                 var db = firebase.firestore();
                 db.collection('profiles').doc(user.uid).set({
-                    htmlContent: content
+                    name: document.getElementById('name').value,
+                    bio: CKEDITOR.instances.bio.getData(),
+                    profilePicture: document.getElementById('profilePicture').value,
+                    socialMedia: CKEDITOR.instances.socialMedia.getData()
                 }).then(function() {
                     alert('Profile saved successfully!');
-                    document.getElementById('profile-preview').innerHTML = content;
+                    updatePreview();
                 }).catch(function(error) {
                     console.error('Error saving profile: ', error);
                 });
@@ -68,8 +85,11 @@
             var db = firebase.firestore();
             db.collection('profiles').doc(uid).get().then(function(doc) {
                 if (doc.exists) {
-                    CKEDITOR.instances.editor.setData(doc.data().htmlContent);
-                    document.getElementById('profile-preview').innerHTML = doc.data().htmlContent;
+                    document.getElementById('name').value = doc.data().name;
+                    CKEDITOR.instances.bio.setData(doc.data().bio);
+                    document.getElementById('profilePicture').value = doc.data().profilePicture;
+                    CKEDITOR.instances.socialMedia.setData(doc.data().socialMedia);
+                    updatePreview();
                 }
             }).catch(function(error) {
                 console.error('Error loading profile: ', error);
@@ -85,12 +105,23 @@
             } else {
                 editorContainer.style.display = 'none';
                 profilePreview.style.display = 'block';
-                profilePreview.innerHTML = CKEDITOR.instances.editor.getData();
+                updatePreview();
             }
         }
 
+        function updatePreview() {
+            var profilePreview = document.getElementById('profile-preview');
+            profilePreview.innerHTML = `
+                <h2>${document.getElementById('name').value}</h2>
+                <img src="${document.getElementById('profilePicture').value}" alt="Profile Picture" class="profile-picture">
+                <div>${CKEDITOR.instances.bio.getData()}</div>
+                <div>${CKEDITOR.instances.socialMedia.getData()}</div>
+            `;
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
-            CKEDITOR.replace('editor');
+            CKEDITOR.replace('bio');
+            CKEDITOR.replace('socialMedia');
         });
     </script>
 </body>
