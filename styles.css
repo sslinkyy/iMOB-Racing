@@ -361,3 +361,18 @@ section {
         right: 1em;
     }
 }
+.profile-card {
+    background-color: #222;
+    border-radius: 5px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 0 10px rgba(255, 69, 0, 0.7);
+}
+
+.profile-card h3 {
+    margin-top: 0;
+}
+
+.profile-card p, .profile-card div {
+    margin-bottom: 10px;
+}
