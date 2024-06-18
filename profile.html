@@ -3,14 +3,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile Editor</title>
+    <title>Edit Profile - IMOB Racing</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.ckeditor.com/4.16.0/standard/ckeditor.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-firestore.js"></script>
     <script src="config.js"></script>
-    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v10.0"></script>
+    <script src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v10.0" async defer crossorigin="anonymous"></script>
+    <script>
+        firebase.initializeApp(CONFIG.FIREBASE_CONFIG);
+
+        firebase.auth().onAuthStateChanged(function(user) {
+            if (user) {
+                document.getElementById('username').innerText = user.displayName || user.email;
+                document.getElementById('user-email').innerText = user.email;
+                loadProfile(user.uid);
+            } else {
+                window.location.href = 'login.html';
+            }
+        });
+
+        function saveProfile() {
+            var content = CKEDITOR.instances.editor.getData();
+            var user = firebase.auth().currentUser;
+            if (user) {
+                var db = firebase.firestore();
+                db.collection('profiles').doc(user.uid).set({
+                    htmlContent: content
+                }).then(function() {
+                    alert('Profile saved!');
+                    document.getElementById('profile-preview').innerHTML = content;
+                    FB.XFBML.parse(); // Parse Facebook embeds
+                }).catch(function(error) {
+                    console.error('Error saving profile: ', error);
+                });
+            }
+        }
+
+        function loadProfile(uid) {
+            var db = firebase.firestore();
+            db.collection('profiles').doc(uid).get().then(function(doc) {
+                if (doc.exists) {
+                    CKEDITOR.instances.editor.setData(doc.data().htmlContent);
+                    document.getElementById('profile-preview').innerHTML = doc.data().htmlContent;
+                    FB.XFBML.parse(); // Parse Facebook embeds
+                }
+            }).catch(function(error) {
+                console.error('Error loading profile: ', error);
+            });
+        }
+
+        function togglePreview() {
+            var form = document.getElementById('profileForm');
+            var preview = document.getElementById('profile-preview');
+            if (form.style.display === 'none') {
+                form.style.display = 'block';
+                preview.style.display = 'none';
+            } else {
+                form.style.display = 'none';
+                preview.style.display = 'block';
+                FB.XFBML.parse(); // Parse Facebook embeds
+            }
+        }
+    </script>
 </head>
 <body>
     <nav class="navbar">
@@ -22,7 +78,7 @@
                 <li><a href="cars.html" class="nav-links">Cars</a></li>
                 <li><a href="mission.html" class="nav-links">Our Mission</a></li>
                 <li><a href="index.html#contact" class="nav-links">Contact</a></li>
-                <li><a href="profile.html" class="nav-links" id="profile-link" style="display:none;">Profile</a></li>
+                <li><a href="profile.html" class="nav-links">Profile</a></li>
                 <li><a href="all_profiles.html" class="nav-links">All Profiles</a></li>
             </ul>
         </div>
@@ -30,148 +86,16 @@
 
     <div class="profile-editor-container">
         <h1>Edit Your Profile</h1>
-        <form id="profileForm">
-            <div class="form-group">
-                <label for="name">Name:</label>
-                <input type="text" id="name" name="name">
-            </div>
-            <div class="form-group">
-                <label for="bio">Bio:</label>
-                <textarea id="bio" name="bio"></textarea>
-            </div>
-            <div class="form-group">
-                <label for="profilePicture">Profile Picture URL:</label>
-                <input type="text" id="profilePicture" name="profilePicture">
-            </div>
-            <div class="form-group">
-                <label for="socialMedia">Social Media Content:</label>
-                <textarea id="socialMedia" name="socialMedia"></textarea>
-            </div>
-            <div class="form-group">
-                <label for="socialMediaUrls">Add Social Media URLs (one per line):</label>
-                <textarea id="socialMediaUrls" name="socialMediaUrls"></textarea>
-            </div>
+        <button type="button" onclick="togglePreview()">Toggle Preview</button>
+        <form id="profileForm" style="display: none;">
+            <textarea name="profileContent" id="editor"></textarea>
             <button type="button" onclick="saveProfile()">Save Profile</button>
         </form>
-        <button type="button" onclick="togglePreview()">Toggle Preview</button>
-        <div id="profile-preview" style="display:none; margin-top: 20px; border: 1px solid #ccc; padding: 10px;"></div>
+        <div id="profile-preview" style="display: block; margin-top: 20px; border: 1px solid #ccc; padding: 10px;"></div>
     </div>
 
     <script>
-        firebase.initializeApp(CONFIG.FIREBASE_CONFIG);
-
-        firebase.auth().onAuthStateChanged(function(user) {
-            if (user) {
-                document.getElementById('profile-link').style.display = 'block';
-                loadProfile(user.uid);
-            } else {
-                window.location.href = 'login.html';
-            }
-        });
-
-        function saveProfile() {
-            var user = firebase.auth().currentUser;
-            if (user) {
-                var db = firebase.firestore();
-                db.collection('profiles').doc(user.uid).set({
-                    name: document.getElementById('name').value,
-                    bio: CKEDITOR.instances.bio.getData(),
-                    profilePicture: document.getElementById('profilePicture').value,
-                    socialMedia: CKEDITOR.instances.socialMedia.getData(),
-                    socialMediaUrls: document.getElementById('socialMediaUrls').value.split('\n').filter(url => url.trim())
-                }).then(function() {
-                    alert('Profile saved successfully!');
-                    updatePreview();
-                }).catch(function(error) {
-                    console.error('Error saving profile: ', error);
-                });
-            }
-        }
-
-        function loadProfile(uid) {
-            var db = firebase.firestore();
-            db.collection('profiles').doc(uid).get().then(function(doc) {
-                if (doc.exists) {
-                    var data = doc.data();
-                    document.getElementById('name').value = data.name;
-                    CKEDITOR.instances.bio.setData(data.bio);
-                    document.getElementById('profilePicture').value = data.profilePicture;
-                    CKEDITOR.instances.socialMedia.setData(data.socialMedia);
-                    document.getElementById('socialMediaUrls').value = (data.socialMediaUrls || []).join('\n');
-                    updatePreview();
-                }
-            }).catch(function(error) {
-                console.error('Error loading profile: ', error);
-            });
-        }
-
-        function togglePreview() {
-            var profileForm = document.getElementById('profileForm');
-            var profilePreview = document.getElementById('profile-preview');
-            if (profileForm.style.display === 'none') {
-                profileForm.style.display = 'block';
-                profilePreview.style.display = 'none';
-            } else {
-                profileForm.style.display = 'none';
-                profilePreview.style.display = 'block';
-                updatePreview();
-            }
-        }
-
-        function updatePreview() {
-            var profilePreview = document.getElementById('profile-preview');
-            var socialMediaUrls = document.getElementById('socialMediaUrls').value.split('\n').filter(url => url.trim());
-            var socialMediaEmbeds = socialMediaUrls.map(url => {
-                if (url.includes('instagram.com')) {
-                    return `<blockquote class="instagram-media" data-instgrm-permalink="${url}" data-instgrm-version="12"></blockquote>`;
-                } else if (url.includes('twitter.com')) {
-                    return `<blockquote class="twitter-tweet"><a href="${url}"></a></blockquote>`;
-                } else if (url.includes('facebook.com')) {
-                    return `<div class="fb-post" data-href="${url}" data-width="500"></div>`;
-                } else {
-                    return `<p><a href="${url}" target="_blank">${url}</a></p>`;
-                }
-            }).join('');
-
-            profilePreview.innerHTML = `
-                <h2>${document.getElementById('name').value}</h2>
-                <img src="${document.getElementById('profilePicture').value}" alt="Profile Picture" class="profile-picture">
-                <div>${CKEDITOR.instances.bio.getData()}</div>
-                <div>${CKEDITOR.instances.socialMedia.getData()}</div>
-                <div>${socialMediaEmbeds}</div>
-            `;
-
-            // Load the embed scripts for Instagram and Twitter
-            loadSocialMediaEmbeds();
-        }
-
-        function loadSocialMediaEmbeds() {
-            // Load Instagram embed script
-            if (document.querySelector('.instagram-media')) {
-                var script = document.createElement('script');
-                script.async = true;
-                script.src = "//www.instagram.com/embed.js";
-                document.body.appendChild(script);
-            }
-
-            // Load Twitter embed script
-            if (document.querySelector('.twitter-tweet')) {
-                var script = document.createElement('script');
-                script.async = true;
-                script.src = "//platform.twitter.com/widgets.js";
-                document.body.appendChild(script);
-            }
-
-            // Parse Facebook embeds
-            if (typeof FB !== 'undefined' && FB.XFBML) {
-                FB.XFBML.parse();
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            CKEDITOR.replace('bio');
-            CKEDITOR.replace('socialMedia');
-        });
+        CKEDITOR.replace('editor');
     </script>
 </body>
 </html>
