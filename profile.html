@@ -5,7 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Profile - IMOB Racing</title>
     <link rel="stylesheet" href="styles.css">
-    <script src="https://cdn.ckeditor.com/4.16.0/standard/ckeditor.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css">
+    <script src="https://cdn.ckeditor.com/4.16.0/full-all/ckeditor.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-firestore.js"></script>
@@ -26,14 +29,23 @@
 
         function saveProfile() {
             var content = CKEDITOR.instances.editor.getData();
+            var socialMediaUrls = $('#social-media-urls').val();
+            var specialItems = $('#special-items').val();
+            var vehicles = $('#vehicles').val();
             var user = firebase.auth().currentUser;
             if (user) {
                 var db = firebase.firestore();
                 db.collection('profiles').doc(user.uid).set({
-                    htmlContent: content
+                    htmlContent: content,
+                    socialMediaUrls: socialMediaUrls,
+                    specialItems: specialItems,
+                    vehicles: vehicles
                 }).then(function() {
                     alert('Profile saved!');
                     document.getElementById('profile-preview').innerHTML = content;
+                    $('#profile-preview-social-media').text(socialMediaUrls);
+                    $('#profile-preview-special-items').text(specialItems);
+                    $('#profile-preview-vehicles').text(vehicles);
                     FB.XFBML.parse(); // Parse Facebook embeds
                 }).catch(function(error) {
                     console.error('Error saving profile: ', error);
@@ -46,7 +58,13 @@
             db.collection('profiles').doc(uid).get().then(function(doc) {
                 if (doc.exists) {
                     CKEDITOR.instances.editor.setData(doc.data().htmlContent);
+                    $('#social-media-urls').val(doc.data().socialMediaUrls);
+                    $('#special-items').val(doc.data().specialItems);
+                    $('#vehicles').val(doc.data().vehicles);
                     document.getElementById('profile-preview').innerHTML = doc.data().htmlContent;
+                    $('#profile-preview-social-media').text(doc.data().socialMediaUrls);
+                    $('#profile-preview-special-items').text(doc.data().specialItems);
+                    $('#profile-preview-vehicles').text(doc.data().vehicles);
                     FB.XFBML.parse(); // Parse Facebook embeds
                 }
             }).catch(function(error) {
@@ -66,6 +84,12 @@
                 FB.XFBML.parse(); // Parse Facebook embeds
             }
         }
+
+        $(function() {
+            $("#profile-editor-container").sortable({
+                handle: ".drag-handle"
+            });
+        });
     </script>
 </head>
 <body>
@@ -84,18 +108,47 @@
         </div>
     </nav>
 
-    <div class="profile-editor-container">
+    <div class="profile-editor-container" id="profile-editor-container">
         <h1>Edit Your Profile</h1>
         <button type="button" onclick="togglePreview()">Toggle Preview</button>
-        <form id="profileForm" style="display: none;">
+        <form id="profileForm">
             <textarea name="profileContent" id="editor"></textarea>
+            <div class="form-group">
+                <label for="social-media-urls">Social Media URLs:</label>
+                <textarea id="social-media-urls" name="socialMediaUrls" rows="4" cols="50"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="special-items">Special Items:</label>
+                <textarea id="special-items" name="specialItems" rows="4" cols="50"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="vehicles">Vehicles:</label>
+                <textarea id="vehicles" name="vehicles" rows="4" cols="50"></textarea>
+            </div>
             <button type="button" onclick="saveProfile()">Save Profile</button>
         </form>
-        <div id="profile-preview" style="display: block; margin-top: 20px; border: 1px solid #ccc; padding: 10px;"></div>
+        <div id="profile-preview" style="display: none; margin-top: 20px; border: 1px solid #ccc; padding: 10px;">
+            <div id="profile-preview-social-media"></div>
+            <div id="profile-preview-special-items"></div>
+            <div id="profile-preview-vehicles"></div>
+        </div>
     </div>
 
     <script>
-        CKEDITOR.replace('editor');
+        CKEDITOR.replace('editor', {
+            extraPlugins: 'image2,embed,autoembed',
+            height: 300,
+            toolbar: [
+                { name: 'document', items: ['Source'] },
+                { name: 'clipboard', items: ['Undo', 'Redo'] },
+                { name: 'styles', items: ['Format', 'Font', 'FontSize'] },
+                { name: 'basicstyles', items: ['Bold', 'Italic', 'Underline', 'Strike'] },
+                { name: 'paragraph', items: ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote'] },
+                { name: 'insert', items: ['Image', 'Embed', 'Link'] },
+                { name: 'tools', items: ['Maximize'] },
+                { name: 'editing', items: ['Scayt'] }
+            ]
+        });
     </script>
 </body>
 </html>
