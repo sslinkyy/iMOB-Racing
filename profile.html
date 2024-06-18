@@ -33,52 +33,46 @@
             });
         }
 
-        function saveProfile() {
+        async function uploadImage(file, userId, imageType) {
+            const storageRef = firebase.storage().ref();
+            const imageRef = storageRef.child(`${imageType}_images/${userId}/${file.name}`);
+            await imageRef.put(file);
+            return await imageRef.getDownloadURL();
+        }
+
+        async function saveProfile() {
             var user = firebase.auth().currentUser;
             if (user) {
                 var db = firebase.firestore();
-                var storageRef = firebase.storage().ref();
                 var profileImage = document.getElementById('profile-image').files[0];
+                var vehicleImages = document.getElementById('vehicle-images').files;
+                var vehicleImageUrls = [];
 
-                if (profileImage) {
-                    var uploadTask = storageRef.child('profile_images/' + user.uid).put(profileImage);
-                    uploadTask.on('state_changed', function(snapshot) {
-                        // Progress function
-                    }, function(error) {
-                        console.error('Error uploading image: ', error);
-                    }, function() {
-                        uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
-                            db.collection('profiles').doc(user.uid).set({
-                                username: document.getElementById('username').value,
-                                email: user.email,
-                                htmlContent: CKEDITOR.instances.editor.getData(),
-                                socialMediaUrls: document.getElementById('social-media-urls').value,
-                                specialItems: document.getElementById('special-items').value,
-                                vehicles: document.getElementById('vehicles').value,
-                                profileImageUrl: downloadURL
-                            }).then(function() {
-                                alert('Profile saved!');
-                                loadProfile(user.uid);
-                            }).catch(function(error) {
-                                console.error('Error saving profile: ', error);
-                            });
-                        });
-                    });
-                } else {
-                    db.collection('profiles').doc(user.uid).set({
-                        username: document.getElementById('username').value,
-                        email: user.email,
-                        htmlContent: CKEDITOR.instances.editor.getData(),
-                        socialMediaUrls: document.getElementById('social-media-urls').value,
-                        specialItems: document.getElementById('special-items').value,
-                        vehicles: document.getElementById('vehicles').value
-                    }).then(function() {
-                        alert('Profile saved!');
-                        loadProfile(user.uid);
-                    }).catch(function(error) {
-                        console.error('Error saving profile: ', error);
-                    });
+                for (let i = 0; i < vehicleImages.length; i++) {
+                    let url = await uploadImage(vehicleImages[i], user.uid, 'vehicle');
+                    vehicleImageUrls.push(url);
                 }
+
+                let profileImageUrl = '';
+                if (profileImage) {
+                    profileImageUrl = await uploadImage(profileImage, user.uid, 'profile');
+                }
+
+                db.collection('profiles').doc(user.uid).set({
+                    username: document.getElementById('username').value,
+                    email: user.email,
+                    htmlContent: CKEDITOR.instances.editor.getData(),
+                    socialMediaUrls: document.getElementById('social-media-urls').value,
+                    specialItems: document.getElementById('special-items').value,
+                    vehicles: document.getElementById('vehicles').value,
+                    profileImageUrl: profileImageUrl,
+                    vehicleImageUrls: vehicleImageUrls
+                }).then(function() {
+                    alert('Profile saved!');
+                    loadProfile(user.uid);
+                }).catch(function(error) {
+                    console.error('Error saving profile: ', error);
+                });
             }
         }
 
@@ -98,11 +92,26 @@
                     } else {
                         document.getElementById('profile-image-preview').style.display = 'none';
                     }
+                    updateVehiclePreviews(profileData.vehicleImageUrls);
                     updatePreview(profileData);
                 }
             }).catch(function(error) {
                 console.error('Error loading profile: ', error);
             });
+        }
+
+        function updateVehiclePreviews(vehicleImageUrls) {
+            const container = document.getElementById('vehicle-images-previews');
+            container.innerHTML = '';
+            if (vehicleImageUrls && vehicleImageUrls.length > 0) {
+                vehicleImageUrls.forEach(url => {
+                    const img = document.createElement('img');
+                    img.src = url;
+                    img.style.maxWidth = '100px';
+                    img.style.maxHeight = '100px';
+                    container.appendChild(img);
+                });
+            }
         }
 
         function togglePreview() {
@@ -114,7 +123,8 @@
                 socialMediaUrls: document.getElementById('social-media-urls').value,
                 specialItems: document.getElementById('special-items').value,
                 vehicles: document.getElementById('vehicles').value,
-                profileImageUrl: document.getElementById('profile-image-preview').src
+                profileImageUrl: document.getElementById('profile-image-preview').src,
+                vehicleImageUrls: Array.from(document.getElementById('vehicle-images-previews').getElementsByTagName('img')).map(img => img.src)
             };
             updatePreview(profileData);
             var preview = document.getElementById('profile-preview');
@@ -138,6 +148,8 @@
                     <p>${profileData.specialItems}</p>
                     <h3>Vehicles</h3>
                     <p>${profileData.vehicles}</p>
+                    ${profileData.vehicleImageUrls.length > 0 ? '<h3>Vehicle Images</h3>' : ''}
+                    ${profileData.vehicleImageUrls.map(url => `<img src="${url}" alt="Vehicle Image" style="max-width: 100px; max-height: 100px;">`).join('')}
                 </div>
             `;
             document.getElementById('profile-preview').innerHTML = previewContent;
@@ -178,13 +190,13 @@
             <textarea id="special-items" placeholder="Special Items" rows="5" cols="80"></textarea>
             <label for="vehicles">Vehicles:</label>
             <textarea id="vehicles" placeholder="Vehicles" rows="5" cols="80"></textarea>
+            <label for="vehicle-images">Vehicle Images:</label>
+            <input type="file" id="vehicle-images" name="vehicle-images" multiple><br>
+            <div id="vehicle-images-previews"></div>
+            <button type="button" onclick="saveProfile()">Save</button>
         </form>
-        <button onclick="saveProfile()">Save Profile</button>
-        <button type="button" onclick="togglePreview()">Toggle Preview</button>
+        <button onclick="togglePreview()">Toggle Preview</button>
         <div id="profile-preview" style="display: none; margin-top: 20px; border: 1px solid #ccc; padding: 10px;"></div>
     </div>
-    <script>
-        CKEDITOR.replace('editor');
-    </script>
 </body>
 </html>
