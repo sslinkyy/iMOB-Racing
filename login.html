@@ -1,23 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    {% include head.html %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Test</title>
+    <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-auth.js"></script>
+    <script>
+        // Firebase configuration with the updated API key
+        const firebaseConfig = {
+            apiKey: "AIzaSyA0U-py8sgjtMkX0vD9ySsi2XGtUUEGZhg", // Updated API key
+            authDomain: "imob-racing-website.firebaseapp.com",
+            projectId: "imob-racing-website",
+            storageBucket: "imob-racing-website.appspot.com",
+            messagingSenderId: "580908835958",
+            appId: "1:580908835958:web:a7bb3f6a4b52d8f8c28c1a"
+        };
+
+        // Initialize Firebase
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        } else {
+            firebase.app(); // if already initialized, use that one
+        }
+    </script>
 </head>
 <body>
-    {% include navbar.html %}
-    <h1>Login</h1>
+    <h1>Login Test</h1>
     <input type="email" id="email" placeholder="Email">
     <input type="password" id="password" placeholder="Password">
     <button id="loginButton">Login</button>
     <button id="registerButton">Register</button>
     <button id="googleLoginButton">Login with Google</button>
 
-    <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-auth.js"></script>
-    <script src="{{ site.baseurl }}/assets/js/config.js"></script>
     <script>
-        firebase.initializeApp(CONFIG.FIREBASE_CONFIG);
-
         document.getElementById('loginButton').addEventListener('click', login);
         document.getElementById('registerButton').addEventListener('click', register);
         document.getElementById('googleLoginButton').addEventListener('click', loginWithGoogle);
@@ -27,10 +43,13 @@
             var password = document.getElementById('password').value;
             firebase.auth().signInWithEmailAndPassword(email, password)
                 .then((userCredential) => {
-                    window.location.href = 'profile.html';
+                    console.log('Login successful:', userCredential);
+                    alert('Login successful');
+                    window.location.href = 'profile.html'; // Redirect to profile page after login
                 })
                 .catch((error) => {
-                    console.error('Error logging in: ', error);
+                    console.error('Error logging in:', error);
+                    alert('Login failed: ' + error.message + ' (' + error.code + ')');
                 });
         }
 
@@ -39,10 +58,13 @@
             var password = document.getElementById('password').value;
             firebase.auth().createUserWithEmailAndPassword(email, password)
                 .then((userCredential) => {
-                    window.location.href = 'profile.html';
+                    console.log('Registration successful:', userCredential);
+                    alert('Registration successful');
+                    window.location.href = 'profile.html'; // Redirect to profile page after registration
                 })
                 .catch((error) => {
-                    console.error('Error registering: ', error);
+                    console.error('Error registering:', error);
+                    alert('Registration failed: ' + error.message + ' (' + error.code + ')');
                 });
         }
 
@@ -50,13 +72,15 @@
             var provider = new firebase.auth.GoogleAuthProvider();
             firebase.auth().signInWithPopup(provider)
                 .then((result) => {
-                    window.location.href = 'profile.html';
+                    console.log('Google login successful:', result);
+                    alert('Google login successful');
+                    window.location.href = 'profile.html'; // Redirect to profile page after Google login
                 })
                 .catch((error) => {
-                    console.error('Error logging in with Google: ', error);
+                    console.error('Error logging in with Google:', error);
+                    alert('Google login failed: ' + error.message + ' (' + error.code + ')');
                 });
         }
     </script>
-    {% include footer.html %}
 </body>
 </html>
