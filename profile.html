@@ -76,7 +76,7 @@
                     bio: CKEDITOR.instances.bio.getData(),
                     profilePicture: document.getElementById('profilePicture').value,
                     socialMedia: CKEDITOR.instances.socialMedia.getData(),
-                    socialMediaUrls: document.getElementById('socialMediaUrls').value.split('\n')
+                    socialMediaUrls: document.getElementById('socialMediaUrls').value.split('\n').filter(url => url.trim())
                 }).then(function() {
                     alert('Profile saved successfully!');
                     updatePreview();
@@ -90,11 +90,12 @@
             var db = firebase.firestore();
             db.collection('profiles').doc(uid).get().then(function(doc) {
                 if (doc.exists) {
-                    document.getElementById('name').value = doc.data().name;
-                    CKEDITOR.instances.bio.setData(doc.data().bio);
-                    document.getElementById('profilePicture').value = doc.data().profilePicture;
-                    CKEDITOR.instances.socialMedia.setData(doc.data().socialMedia);
-                    document.getElementById('socialMediaUrls').value = doc.data().socialMediaUrls.join('\n');
+                    var data = doc.data();
+                    document.getElementById('name').value = data.name;
+                    CKEDITOR.instances.bio.setData(data.bio);
+                    document.getElementById('profilePicture').value = data.profilePicture;
+                    CKEDITOR.instances.socialMedia.setData(data.socialMedia);
+                    document.getElementById('socialMediaUrls').value = (data.socialMediaUrls || []).join('\n');
                     updatePreview();
                 }
             }).catch(function(error) {
@@ -117,7 +118,7 @@
 
         function updatePreview() {
             var profilePreview = document.getElementById('profile-preview');
-            var socialMediaUrls = document.getElementById('socialMediaUrls').value.split('\n');
+            var socialMediaUrls = document.getElementById('socialMediaUrls').value.split('\n').filter(url => url.trim());
             var socialMediaEmbeds = socialMediaUrls.map(url => {
                 if (url.includes('instagram.com')) {
                     return `<blockquote class="instagram-media" data-instgrm-captioned data-instgrm-permalink="${url}" data-instgrm-version="12"></blockquote>`;
