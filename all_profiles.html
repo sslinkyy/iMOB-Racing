@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Profiles</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-firestore.js"></script>
+    <script src="config.js"></script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="index.html" class="logo">iMOB Racing</a>
+            <ul class="main-nav" id="js-menu">
+                <li><a href="index.html" class="nav-links">Home</a></li>
+                <li><a href="drivers.html" class="nav-links">Drivers</a></li>
+                <li><a href="cars.html" class="nav-links">Cars</a></li>
+                <li><a href="mission.html" class="nav-links">Our Mission</a></li>
+                <li><a href="index.html#contact" class="nav-links">Contact</a></li>
+                <li><a href="profile.html" class="nav-links">Profile</a></li>
+                <li><a href="all_profiles.html" class="nav-links">All Profiles</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <h1>All Registered Profiles</h1>
+    <div id="profiles-container" class="profiles-container"></div>
+
+    <script>
+        firebase.initializeApp(CONFIG.FIREBASE_CONFIG);
+
+        function loadAllProfiles() {
+            var db = firebase.firestore();
+            db.collection('profiles').get().then(function(querySnapshot) {
+                var profilesContainer = document.getElementById('profiles-container');
+                querySnapshot.forEach(function(doc) {
+                    var data = doc.data();
+                    var profileDiv = document.createElement('div');
+                    profileDiv.classList.add('profile-item');
+                    profileDiv.innerHTML = `
+                        <h2>${data.name}</h2>
+                        <img src="${data.profilePicture}" alt="Profile Picture" class="profile-picture">
+                        <div>${data.bio}</div>
+                        <div>${data.socialMedia}</div>
+                    `;
+                    profilesContainer.appendChild(profileDiv);
+                });
+            }).catch(function(error) {
+                console.error('Error loading profiles: ', error);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadAllProfiles();
+        });
+    </script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Profiles</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-firestore.js"></script>
+    <script>
+        // Firebase configuration with the updated API key
+        const firebaseConfig = {
+            apiKey: "AIzaSyA0U-py8sgjtMkX0vD9ySsi2XGtUUEGZhg",
+            authDomain: "imob-racing-website.firebaseapp.com",
+            projectId: "imob-racing-website",
+            storageBucket: "imob-racing-website.appspot.com",
+            messagingSenderId: "580908835958",
+            appId: "1:580908835958:web:a7bb3f6a4b52d8f8c28c1a"
+        };
+
+        // Initialize Firebase
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        } else {
+            firebase.app(); // if already initialized, use that one
+        }
+
+        // Load all user profiles
+        function loadAllProfiles() {
+            var db = firebase.firestore();
+            db.collection('publicProfiles').get().then(function(querySnapshot) {
+                var profilesContainer = document.getElementById('profiles-container');
+                querySnapshot.forEach(function(doc) {
+                    var data = doc.data();
+                    var profileLink = document.createElement('a');
+                    profileLink.href = `public_profile.html?uid=${doc.id}`;
+                    profileLink.innerHTML = `
+                        <div class="profile-card">
+                            <h3>${data.displayName}</h3>
+                            <p>${data.email}</p>
+                        </div>
+                    `;
+                    profilesContainer.appendChild(profileLink);
+                });
+            }).catch(function(error) {
+                console.error('Error getting documents: ', error);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadAllProfiles();
+        });
+    </script>
+</head>
+<body>
+    <h1>All User Profiles</h1>
+    <div id="profiles-container"></div>
+</body>
+</html>
