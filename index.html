@@ -1,32 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="iMOB Racing - Feel the thrill of racing with our premier team. Join us for time attack, 4x4, rally, drifting, and more.">
-    <meta name="keywords" content="racing, time attack, 4x4, rally, drifting, off-road, street bikes, dirt bikes, crosskarts, iMOB Racing">
-    <meta name="author" content="iMOB Racing">
-    <meta property="og:title" content="iMOB Racing Online">
-    <meta property="og:description" content="Feel the thrill of racing with our premier team. Join us for time attack, 4x4, rally, drifting, and more.">
-    <meta property="og:image" content="https://imobracingonline.com/images/og-image.jpg">
-    <meta property="og:url" content="https://imobracingonline.com">
-    <meta name="twitter:card" content="summary_large_image">
-    <title>iMOB Racing Online</title>
-    <link rel="stylesheet" href="assets/css/styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.1/dist/aos.css" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&family=Roboto:wght@400;500;700&display=swap">
-    <link rel="stylesheet" href="{{ site.baseurl }}/assets/css/styles.css">
-    <link rel="stylesheet" href="{{ site.baseurl }}/assets/css/store.css">
-
+    {% include head.html %}
 </head>
 <body>
+    {% include navbar.html %}
     <div class="loading-spinner" id="loading-spinner">
         <div class="spinner"></div>
     </div>
-
     <header class="header" id="home">
         <div class="video-overlay">
             <iframe id="youtube-iframe" src="https://www.youtube.com/embed/RPGg_y2FHNs?autoplay=1&mute=1&loop=1&playlist=RPGg_y2FHNs" title="Welcome Video" aria-label="Welcome Video"></iframe>
@@ -44,22 +25,6 @@
             </div>
         </div>
     </header>
-
-    <nav class="navbar">
-        <div class="navbar-container">
-            <span class="navbar-toggle" id="js-navbar-toggle">
-                <i class="fas fa-bars"></i>
-            </span>
-            <a href="index.html" class="logo">iMOB Racing</a>
-            <ul class="main-nav" id="js-menu">
-                <li><a href="index.html" class="nav-links">Home</a></li>
-                <li><a href="drivers.html" class="nav-links">Drivers</a></li>
-                <li><a href="cars.html" class="nav-links">Cars</a></li>
-                <li><a href="mission.html" class="nav-links">Our Mission</a></li>
-                <li><a href="index.html#contact" class="nav-links">Contact</a></li>
-            </ul>
-        </div>
-    </nav>
 
     <section id="about" class="about-section parallax" data-aos="fade-up">
         <h2>About Us</h2>
@@ -148,7 +113,7 @@
         <div class="ai-content">
             <p>Discover how we embrace AI to enhance our racing strategies, improve vehicle performance, and provide better insights. Our AI-driven analytics help us make data-informed decisions and stay ahead of the competition.</p>
             <div class="ai-visualization">
-                <img src="images/AI.webp" alt="AI Visualization" class="responsive-image">
+                <img src="assets/images/AI.webp" alt="AI Visualization" class="responsive-image">
             </div>
         </div>
     </section>
@@ -238,25 +203,6 @@
 
     <a href="#home" class="back-to-top" aria-label="Back to top"><i class="fas fa-arrow-up"></i></a>
 
-    <footer class="footer">
-        <div class="social-media">
-            <a href="https://www.facebook.com/iMobRacing" target="_blank"><i class="fab fa-facebook"></i></a>
-            <a href="https://twitter.com/iMobRacing" target="_blank"><i class="fab fa-twitter"></i></a>
-            <a href="https://instagram.com/iMobRacing" target="_blank"><i class="fab fa-instagram"></i></a>
-            <a href="https://youtube.com/iMobRacing" target="_blank"><i class="fab fa-youtube"></i></a>
-        </div>
-        <p>&copy; 2024 iMOB Racing. All rights reserved.</p>
-        <p>Contact: info@imobracingonline.com | Phone: (530) 420-5850</p>
-    </footer>
-
-    <!-- Facebook SDK -->
-    <div id="fb-root"></div>
-    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v10.0"></script>
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" async></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js" async></script>
-    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.1/dist/aos.js"></script>
-    <script src="assets/js/config.js"></script>
-    <script src="assets/js/scripts.js"></script>
+    {% include footer.html %}
 </body>
 </html>
