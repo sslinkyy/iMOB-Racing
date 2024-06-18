@@ -1,0 +1,9 @@
+title: "iMOB Racing"
+email: "info@imobracingonline.com"
+description: "Feel the thrill of racing with our premier team."
+baseurl: "" # the subpath of your site, e.g. /blog
+url: "https://your-username.github.io" # the base hostname & protocol for your site
+theme: minima
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
