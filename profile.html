@@ -17,10 +17,20 @@
             if (user) {
                 document.getElementById('email').value = user.email;
                 loadProfile(user.uid);
+                document.getElementById('profile-link').style.display = 'block';
+                document.getElementById('logout-link').style.display = 'block';
             } else {
                 window.location.href = 'login.html';
             }
         });
+
+        function logout() {
+            firebase.auth().signOut().then(() => {
+                window.location.href = 'login.html';
+            }).catch((error) => {
+                console.error('Error logging out: ', error);
+            });
+        }
 
         function saveProfile() {
             var user = firebase.auth().currentUser;
@@ -106,8 +116,9 @@
                 <li><a href="cars.html" class="nav-links">Cars</a></li>
                 <li><a href="mission.html" class="nav-links">Our Mission</a></li>
                 <li><a href="index.html#contact" class="nav-links">Contact</a></li>
-                <li><a href="profile.html" class="nav-links">Profile</a></li>
+                <li><a href="profile.html" class="nav-links" id="profile-link" style="display: none;">Profile</a></li>
                 <li><a href="all_profiles.html" class="nav-links">All Profiles</a></li>
+                <li><a href="#" class="nav-links" id="logout-link" style="display: none;" onclick="logout()">Logout</a></li>
             </ul>
         </div>
     </nav>
