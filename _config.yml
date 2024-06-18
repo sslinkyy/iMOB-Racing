@@ -1,12 +1,16 @@
-title: "iMOB Racing"
-email: "info@imobracingonline.com"
-description: "Feel the thrill of racing with our premier team."
+# _config.yml
+title: iMOB Racing
+description: Feel the thrill of racing with our premier team. Join us for time attack, 4x4, rally, drifting, and more.
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "https://your-username.github.io" # the base hostname & protocol for your site
-# Ensure these options do not conflict with index.html
+url: "https://yourusername.github.io" # the base hostname & protocol for your site
 exclude:
   - "index.md"
+  - "login.md"
+  - "profile.md"
+  - "store.md"
+
+# Other Jekyll settings
 theme: minima
-plugins:
-  - jekyll-feed
-  - jekyll-seo-tag
+markdown: kramdown
+paginate: 5
+paginate_path: "/page:num/"
