@@ -10,6 +10,7 @@
     <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-firestore.js"></script>
     <script src="config.js"></script>
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v10.0"></script>
 </head>
 <body>
     <nav class="navbar">
@@ -22,6 +23,7 @@
                 <li><a href="mission.html" class="nav-links">Our Mission</a></li>
                 <li><a href="index.html#contact" class="nav-links">Contact</a></li>
                 <li><a href="profile.html" class="nav-links" id="profile-link" style="display:none;">Profile</a></li>
+                <li><a href="all_profiles.html" class="nav-links">All Profiles</a></li>
             </ul>
         </div>
     </nav>
@@ -125,7 +127,7 @@
                 } else if (url.includes('twitter.com')) {
                     return `<blockquote class="twitter-tweet"><a href="${url}"></a></blockquote>`;
                 } else if (url.includes('facebook.com')) {
-                    return `<iframe src="https://www.facebook.com/plugins/post.php?href=${encodeURIComponent(url)}&width=500" width="500" height="681" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>`;
+                    return `<div class="fb-post" data-href="${url}" data-width="500"></div>`;
                 } else {
                     return `<p><a href="${url}" target="_blank">${url}</a></p>`;
                 }
@@ -158,6 +160,11 @@
                 script.async = true;
                 script.src = "//platform.twitter.com/widgets.js";
                 document.body.appendChild(script);
+            }
+
+            // Parse Facebook embeds
+            if (typeof FB !== 'undefined' && FB.XFBML) {
+                FB.XFBML.parse();
             }
         }
 
