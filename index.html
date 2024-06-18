@@ -20,20 +20,12 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&family=Roboto:wght@400;500;700&display=swap">
     <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-firestore.js"></script>
+    <script src="config.js"></script>
     <script>
-        // Firebase configuration with the updated API key
-        const firebaseConfig = {
-            apiKey: "AIzaSyA0U-py8sgjtMkX0vD9ySsi2XGtUUEGZhg",
-            authDomain: "imob-racing-website.firebaseapp.com",
-            projectId: "imob-racing-website",
-            storageBucket: "imob-racing-website.appspot.com",
-            messagingSenderId: "580908835958",
-            appId: "1:580908835958:web:a7bb3f6a4b52d8f8c28c1a"
-        };
-
         // Initialize Firebase
         if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
+            firebase.initializeApp(CONFIG.FIREBASE_CONFIG);
         } else {
             firebase.app(); // if already initialized, use that one
         }
@@ -83,8 +75,9 @@
                 <li><a href="drivers.html" class="nav-links">Drivers</a></li>
                 <li><a href="cars.html" class="nav-links">Cars</a></li>
                 <li><a href="mission.html" class="nav-links">Our Mission</a></li>
-                <li><a href="index.html#contact" class="nav-links">Contact</a></li>
-                <li><a href="profile.html" class="nav-links">Profile</a></li>
+                <li><a href="store.html" class="nav-links">Store</a></li>
+                <li><a href="contact.html" class="nav-links">Contact</a></li>
+                <li><a href="profile.html" class="nav-links" id="profile-link">Profile</a></li>
             </ul>
         </div>
     </nav>
@@ -276,15 +269,15 @@
         <p>&copy; 2024 iMOB Racing. All rights reserved.</p>
         <p>Contact: info@imobracingonline.com | Phone: (530) 420-5850</p>
     </footer>
-<script src="https://cdn.jsdelivr.net/npm/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.1/dist/aos.js"></script>
     <script src="scripts.js"></script>
-<script>
-  var config = {
-    apiKey: "AIzaSyB4sfEfSXbRq9pFcXnHJQWueJppv0n9Uzw",
-    authDomain: "imob-racing-website.firebaseapp.com",
-  };
-  firebase.initializeApp(config);
-</script>
+    <script>
+        var config = {
+            apiKey: "AIzaSyB4sfEfSXbRq9pFcXnHJQWueJppv0n9Uzw",
+            authDomain: "imob-racing-website.firebaseapp.com",
+        };
+        firebase.initializeApp(config);
+    </script>
     <!-- Facebook SDK -->
     <div id="fb-root"></div>
     <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v10.0"></script>
