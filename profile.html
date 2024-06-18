@@ -45,6 +45,10 @@
                 <label for="socialMedia">Social Media Content:</label>
                 <textarea id="socialMedia" name="socialMedia"></textarea>
             </div>
+            <div class="form-group">
+                <label for="socialMediaUrls">Add Social Media URLs (one per line):</label>
+                <textarea id="socialMediaUrls" name="socialMediaUrls"></textarea>
+            </div>
             <button type="button" onclick="saveProfile()">Save Profile</button>
         </form>
         <button type="button" onclick="togglePreview()">Toggle Preview</button>
@@ -71,7 +75,8 @@
                     name: document.getElementById('name').value,
                     bio: CKEDITOR.instances.bio.getData(),
                     profilePicture: document.getElementById('profilePicture').value,
-                    socialMedia: CKEDITOR.instances.socialMedia.getData()
+                    socialMedia: CKEDITOR.instances.socialMedia.getData(),
+                    socialMediaUrls: document.getElementById('socialMediaUrls').value.split('\n')
                 }).then(function() {
                     alert('Profile saved successfully!');
                     updatePreview();
@@ -89,6 +94,7 @@
                     CKEDITOR.instances.bio.setData(doc.data().bio);
                     document.getElementById('profilePicture').value = doc.data().profilePicture;
                     CKEDITOR.instances.socialMedia.setData(doc.data().socialMedia);
+                    document.getElementById('socialMediaUrls').value = doc.data().socialMediaUrls.join('\n');
                     updatePreview();
                 }
             }).catch(function(error) {
@@ -111,12 +117,45 @@
 
         function updatePreview() {
             var profilePreview = document.getElementById('profile-preview');
+            var socialMediaUrls = document.getElementById('socialMediaUrls').value.split('\n');
+            var socialMediaEmbeds = socialMediaUrls.map(url => {
+                if (url.includes('instagram.com')) {
+                    return `<blockquote class="instagram-media" data-instgrm-captioned data-instgrm-permalink="${url}" data-instgrm-version="12"></blockquote>`;
+                } else if (url.includes('twitter.com')) {
+                    return `<blockquote class="twitter-tweet"><a href="${url}"></a></blockquote>`;
+                } else {
+                    return `<p><a href="${url}" target="_blank">${url}</a></p>`;
+                }
+            }).join('');
+
             profilePreview.innerHTML = `
                 <h2>${document.getElementById('name').value}</h2>
                 <img src="${document.getElementById('profilePicture').value}" alt="Profile Picture" class="profile-picture">
                 <div>${CKEDITOR.instances.bio.getData()}</div>
                 <div>${CKEDITOR.instances.socialMedia.getData()}</div>
+                <div>${socialMediaEmbeds}</div>
             `;
+
+            // Load the embed scripts for Instagram and Twitter
+            loadSocialMediaEmbeds();
+        }
+
+        function loadSocialMediaEmbeds() {
+            // Load Instagram embed script
+            if (document.querySelector('.instagram-media')) {
+                var script = document.createElement('script');
+                script.async = true;
+                script.src = "//www.instagram.com/embed.js";
+                document.body.appendChild(script);
+            }
+
+            // Load Twitter embed script
+            if (document.querySelector('.twitter-tweet')) {
+                var script = document.createElement('script');
+                script.async = true;
+                script.src = "//platform.twitter.com/widgets.js";
+                document.body.appendChild(script);
+            }
         }
 
         document.addEventListener('DOMContentLoaded', () => {
