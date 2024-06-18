@@ -1,16 +1,17 @@
-<nav class="navbar">
-    <div class="navbar-container">
-        <span class="navbar-toggle" id="js-navbar-toggle">
-            <i class="fas fa-bars"></i>
-        </span>
-        <a href="{{ "/" | relative_url }}" class="logo">iMOB Racing</a>
-        <ul class="main-nav" id="js-menu">
-            <li><a href="{{ "/" | relative_url }}" class="nav-links">Home</a></li>
-            <li><a href="{{ "/drivers/" | relative_url }}" class="nav-links">Drivers</a></li>
-            <li><a href="{{ "/cars/" | relative_url }}" class="nav-links">Cars</a></li>
-            <li><a href="{{ "/mission/" | relative_url }}" class="nav-links">Our Mission</a></li>
-            <li><a href="{{ "/store/" | relative_url }}" class="nav-links">Store</a></li>
-            <li><a href="{{ "/#contact" | relative_url }}" class="nav-links">Contact</a></li>
-        </ul>
+<header class="header" id="home">
+    <div class="video-overlay">
+        <iframe id="youtube-iframe" src="https://www.youtube.com/embed/RPGg_y2FHNs?autoplay=1&mute=1&loop=1&playlist=RPGg_y2FHNs" title="Welcome Video" aria-label="Welcome Video"></iframe>
     </div>
-</nav>
+    <div class="header-content">
+        <div class="header-overlay">
+            <h1 class="header-title">Welcome to iMOB Racing</h1>
+            <p class="header-subtitle">Feel the Thrill of Racing</p>
+            <a href="#about" class="cta-button" aria-label="Learn more about iMOB Racing">Learn More</a>
+            <a href="login.html" class="cta-button subscribe-button" aria-label="Login">Login</a>
+            <div class="social-proof">
+                <p><i class="fas fa-users"></i> 10k followers on Instagram</p>
+                <p><i class="fas fa-trophy"></i> Featured in Top Gear</p>
+            </div>
+        </div>
+    </div>
+</header>
