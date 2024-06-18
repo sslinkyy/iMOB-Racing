@@ -312,21 +312,24 @@ section {
     }
 }
 
-/* Profile Page */
-.profile-page {
+/* Profile Editor Styles */
+.profile-editor-container {
+    max-width: 800px;
+    margin: 0 auto;
     padding: 2em;
-}
-
-.profile-page h1, .profile-page h2 {
+    background-color: #222;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(255, 69, 0, 0.7);
     text-align: center;
 }
 
-.profile-preview {
-    margin-top: 20px;
-    border: 1px solid #ccc;
-    padding: 10px;
-    background-color: #fff;
-    color: #000;
+#editor-container {
+    margin-bottom: 1em;
 }
 
-/* Add your additional custom styles below */
+#profile-preview {
+    display: none;
+    background-color: #111;
+    padding: 1em;
+    border-radius: 10px;
+}
