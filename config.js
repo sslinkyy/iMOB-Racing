@@ -8,7 +8,7 @@ const CONFIG = {
     DISQUS_PAGE_IDENTIFIER: 'imobracing-forums',
     GOOGLE_CALENDAR_ID: 'imobracing%40gmail.com',
     FIREBASE_CONFIG: {
-        apiKey: "AIzaSyABU-pv8sgjMtMx9Dv9ySsi2XGtUEGZhg",
+        apiKey: "AIzaSyA0U-py8sgjtMkX0vD9ySsi2XGtUUEGZhg",
         authDomain: "imob-racing-website.firebaseapp.com",
         projectId: "imob-racing-website",
         storageBucket: "imob-racing-website.appspot.com",
