@@ -200,11 +200,16 @@ h1, h2, h3, h4, h5, h6 {
     margin-bottom: 1em;
 }
 
-.team-grid-horizontal, .media-grid, .cars-grid {
-    display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
+.team-grid, .media-grid, .cars-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 1em;
+}
+
+.team-grid-horizontal {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
 }
 
 .team-card, .media-card, .car-card {
@@ -484,35 +489,47 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .back-to-top:hover {
-    background: #e43e00;
+    background-color: #e43e00;
     transform: scale(1.1);
 }
 
+@media (max-width: 768px) {
+    .back-to-top {
+        bottom: 1em;
+        right: 1em;
+    }
+}
+
+/* Responsive Image Styles */
+.responsive-image {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Loading Spinner */
 .loading-spinner {
     position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 9999;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
     display: flex;
-    align-items: center;
     justify-content: center;
+    align-items: center;
+    z-index: 1000;
 }
 
 .spinner {
-    border: 4px solid rgba(255, 255, 255, 0.3);
+    border: 8px solid #f3f3f3;
+    border-top: 8px solid #ff4500;
     border-radius: 50%;
-    border-top: 4px solid #fff;
-    width: 40px;
-    height: 40px;
+    width: 60px;
+    height: 60px;
     animation: spin 1s linear infinite;
 }
 
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
-}
-
-.hidden {
-    display: none;
 }
