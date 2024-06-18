@@ -1,10 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    {% include head.html %}
-</head>
-<body>
-    {% include navbar.html %}
+---
+layout: default
+title: "Login"
+description: "Login to your iMOB Racing account"
+---
+
+<section id="login" class="login-section" data-aos="fade-up">
     <h1>Login</h1>
     <input type="email" id="email" placeholder="Email">
     <input type="password" id="password" placeholder="Password">
@@ -57,6 +57,4 @@
                 });
         }
     </script>
-    {% include footer.html %}
-</body>
-</html>
+</section>

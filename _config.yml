@@ -1,0 +1,15 @@
+title: iMOB Racing
+description: "Feel the thrill of racing with our premier team."
+baseurl: ""
+url: "https://your-username.github.io/repository-name"  # Replace with your GitHub Pages URL
+markdown: kramdown
+theme: minima
+plugins:
+  - jekyll-feed
+
+exclude:
+  - .github
+  - node_modules
+  - Gemfile
+  - Gemfile.lock
+  - README.md

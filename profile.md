@@ -1,10 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    {% include head.html %}
-</head>
-<body>
-    {% include navbar.html %}
+---
+layout: default
+title: "Profile"
+description: "Manage your iMOB Racing profile"
+---
+
+<section id="profile" class="profile-section" data-aos="fade-up">
     <h1>Profile Page</h1>
     <h2 id="username"></h2>
     <p id="user-email"></p>
@@ -58,6 +58,4 @@
             });
         }
     </script>
-    {% include footer.html %}
-</body>
-</html>
+</section>

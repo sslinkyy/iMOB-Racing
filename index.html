@@ -1,95 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="iMOB Racing - Feel the thrill of racing with our premier team. Join us for time attack, 4x4, rally, drifting, and more.">
-    <meta name="keywords" content="racing, time attack, 4x4, rally, drifting, off-road, street bikes, dirt bikes, crosskarts, iMOB Racing">
-    <meta name="author" content="iMOB Racing">
-    <meta property="og:title" content="iMOB Racing Online">
-    <meta property="og:description" content="Feel the thrill of racing with our premier team. Join us for time attack, 4x4, rally, drifting, and more.">
-    <meta property="og:image" content="https://imobracingonline.com/images/og-image.jpg">
-    <meta property="og:url" content="https://imobracingonline.com">
-    <meta name="twitter:card" content="summary_large_image">
-    <title>iMOB Racing Online</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="index.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.1/dist/aos.css" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&family=Roboto:wght@400;500;700&display=swap">
-    <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-auth.js"></script>
-    <script>
-        // Firebase configuration with the updated API key
-        const firebaseConfig = {
-            apiKey: "AIzaSyA0U-py8sgjtMkX0vD9ySsi2XGtUUEGZhg",
-            authDomain: "imob-racing-website.firebaseapp.com",
-            projectId: "imob-racing-website",
-            storageBucket: "imob-racing-website.appspot.com",
-            messagingSenderId: "580908835958",
-            appId: "1:580908835958:web:a7bb3f6a4b52d8f8c28c1a"
-        };
-
-        // Initialize Firebase
-        if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
-        } else {
-            firebase.app(); // if already initialized, use that one
-        }
-
-        // Check authentication state
-        firebase.auth().onAuthStateChanged(function(user) {
-            if (user) {
-                document.getElementById('profile-link').style.display = 'block';
-                document.getElementById('profile-link').href = `profile.html`;
-            } else {
-                document.getElementById('profile-link').style.display = 'none';
-            }
-        });
-    </script>
+    {% include head.html %}
 </head>
 <body>
-    <div class="loading-spinner" id="loading-spinner">
-        <div class="spinner"></div>
-    </div>
-
-    <header class="header" id="home">
-        <div class="video-overlay">
-            <iframe id="youtube-iframe" src="https://www.youtube.com/embed/RPGg_y2FHNs?autoplay=1&mute=1&loop=1&playlist=RPGg_y2FHNs" title="Welcome Video" aria-label="Welcome Video"></iframe>
-        </div>
-        <div class="header-content">
-            <div class="header-overlay">
-                <h1 class="header-title">Welcome to iMOB Racing</h1>
-                <p class="header-subtitle">Feel the Thrill of Racing</p>
-                <a href="#about" class="cta-button" aria-label="Learn more about iMOB Racing">Learn More</a>
-                <a href="login.html" class="cta-button subscribe-button" aria-label="Login">Login</a>
-                <div class="social-proof">
-                    <p><i class="fas fa-users"></i> 10k followers on Instagram</p>
-                    <p><i class="fas fa-trophy"></i> Featured in Top Gear</p>
-                </div>
-            </div>
-        </div>
-    </header>
-
-    <nav class="navbar">
-        <div class="navbar-container">
-            <span class="navbar-toggle" id="js-navbar-toggle">
-                <i class="fas fa-bars"></i>
-            </span>
-            <a href="index.html" class="logo">iMOB Racing</a>
-            <ul class="main-nav" id="js-menu">
-                <li><a href="index.html" class="nav-links">Home</a></li>
-                <li><a href="drivers.html" class="nav-links">Drivers</a></li>
-                <li><a href="cars.html" class="nav-links">Cars</a></li>
-                <li><a href="mission.html" class="nav-links">Our Mission</a></li>
-                <li><a href="store.html" class="nav-links">Store</a></li>
-                <li><a href="index.html#contact" class="nav-links">Contact</a></li>
-                <li><a href="all_users.html" class="nav-links">All Profiles</a></li>
-            </ul>
-        </div>
-    </nav>
+    {% include navbar.html %}
+    {% include header.html %}
 
     <section id="about" class="about-section parallax" data-aos="fade-up">
         <h2>About Us</h2>
@@ -131,7 +47,7 @@
 
     <section id="team" class="team-section" data-aos="fade-up">
         <h2>Meet the Team</h2>
-        <div class="team-grid">
+        <div class="team-grid-horizontal">
             <div class="team-card">
                 <img src="https://imobracingonline.com/images/member1.jpg" alt="Anthony Yorba">
                 <h3>Anthony Yorba</h3>
@@ -161,7 +77,7 @@
 
     <section id="integration" class="integration-section">
         <h2>Social Media & Polls</h2>
-        <div class="integration-container">
+        <div class="integration-container-horizontal">
             <div class="facebook-integration">
                 <div class="fb-page" data-href="https://www.facebook.com/imobracing" data-tabs="timeline, events" data-width="400" data-height="500" data-small-header="true" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="false">
                     <blockquote cite="https://www.facebook.com/imobracing" class="fb-xfbml-parse-ignore"><a href="https://www.facebook.com/imobracing">IMOB Racing</a></blockquote>
@@ -178,15 +94,15 @@
         <div class="ai-content">
             <p>Discover how we embrace AI to enhance our racing strategies, improve vehicle performance, and provide better insights. Our AI-driven analytics help us make data-informed decisions and stay ahead of the competition.</p>
             <div class="ai-visualization">
-                <img src="images/AI.webp" alt="AI Visualization" class="responsive-image">
+                <img src="{{ site.baseurl }}/assets/images/AI.webp" alt="AI Visualization" class="responsive-image">
             </div>
         </div>
     </section>
 
     <section id="events" class="events-section parallax" data-aos="fade-up">
         <h2>Upcoming Events</h2>
-        <div class="events-container">
-            <ul class="events-list">
+        <div class="events-container-horizontal">
+            <div class="events-list">
                 <li>
                     <h3>TT Event 3</h3>
                     <p>Date: June 22, 2024</p>
@@ -197,9 +113,9 @@
                     <p>Date: September 20, 2024</p>
                     <p>Location: Thunderhill, Willows, Ca</p>
                 </li>
-            </ul>
+            </div>
             <div class="calendar-container">
-                <iframe id="google-calendar" src="https://calendar.google.com/calendar/embed?src=imobracing%40gmail.com&ctz=America%2FLos_Angeles" width="100%" height="300" frameborder="0" scrolling="no"></iframe>
+                <iframe id="google-calendar" src="" width="100%" height="300" frameborder="0" scrolling="no"></iframe>
             </div>
         </div>
     </section>
@@ -268,48 +184,10 @@
 
     <a href="#home" class="back-to-top" aria-label="Back to top"><i class="fas fa-arrow-up"></i></a>
 
-    <footer class="footer">
-        <div class="social-media">
-            <a href="https://www.facebook.com/iMobRacing" target="_blank"><i class="fab fa-facebook"></i></a>
-            <a href="https://twitter.com/iMobRacing" target="_blank"><i class="fab fa-twitter"></i></a>
-            <a href="https://instagram.com/iMobRacing" target="_blank"><i class="fab fa-instagram"></i></a>
-            <a href="https://youtube.com/iMobRacing" target="_blank"><i class="fab fa-youtube"></i></a>
-        </div>
-        <p>&copy; 2024 iMOB Racing. All rights reserved.</p>
-        <p>Contact: info@imobracingonline.com | Phone: (530) 420-5850</p>
-    </footer>
-<script src="https://cdn.jsdelivr.net/npm/aos@2.3.1/dist/aos.js"></script>
-    <script src="scripts.js"></script>
-<script>
-  var config = {
-    apiKey: "AIzaSyB4sfEfSXbRq9pFcXnHJQWueJppv0n9Uzw",
-    authDomain: "imob-racing-website.firebaseapp.com",
-  };
-  firebase.initializeApp(config);
-</script>
-    <!-- Facebook SDK -->
-    <div id="fb-root"></div>
-    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v10.0"></script>
-
+    {% include footer.html %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" async></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js" async></script>
     <script src="https://cdn.jsdelivr.net/npm/aos@2.3.1/dist/aos.js"></script>
-    <script src="config.js"></script>
-    <script src="scripts.js"></script>
-
-    <!-- Disqus Embed -->
-    <script>
-    var disqus_config = function () {
-        this.page.url = CONFIG.DISQUS_PAGE_URL;
-        this.page.identifier = CONFIG.DISQUS_PAGE_IDENTIFIER;
-    };
-    (function() {
-        var d = document, s = d.createElement('script');
-        s.src = 'https://' + CONFIG.DISQUS_SHORTNAME + '.disqus.com/embed.js';
-        s.setAttribute('data-timestamp', +new Date());
-        (d.head || d.body).appendChild(s);
-    })();
-    </script>
-
+    <script src="{{ site.baseurl }}/assets/js/config.js"></script>
+    <script src="{{ site.baseurl }}/assets/js/scripts.js"></script>
 </body>
 </html>
