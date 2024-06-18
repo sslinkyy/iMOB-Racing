@@ -1,10 +1,10 @@
-/* Store Styles */
+/* Store Specific Styles */
 .store-container {
     padding: 2em;
-    background: #111;
+    background-color: #111;
 }
 
-.product-grid {
+.store-grid {
     display: flex;
     flex-wrap: wrap;
     gap: 2em;
