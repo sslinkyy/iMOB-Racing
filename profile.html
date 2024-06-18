@@ -15,8 +15,7 @@
 
         firebase.auth().onAuthStateChanged(function(user) {
             if (user) {
-                document.getElementById('username').innerText = user.displayName || user.email;
-                document.getElementById('user-email').innerText = user.email;
+                document.getElementById('email').value = user.email;
                 loadProfile(user.uid);
             } else {
                 window.location.href = 'login.html';
@@ -28,7 +27,7 @@
             if (user) {
                 var db = firebase.firestore();
                 db.collection('profiles').doc(user.uid).set({
-                    username: user.displayName || user.email,
+                    username: document.getElementById('username').value,
                     email: user.email,
                     htmlContent: CKEDITOR.instances.editor.getData(),
                     socialMediaUrls: document.getElementById('social-media-urls').value,
@@ -48,6 +47,7 @@
             db.collection('profiles').doc(uid).get().then(function(doc) {
                 if (doc.exists) {
                     var profileData = doc.data();
+                    document.getElementById('username').value = profileData.username || '';
                     CKEDITOR.instances.editor.setData(profileData.htmlContent);
                     document.getElementById('social-media-urls').value = profileData.socialMediaUrls || '';
                     document.getElementById('special-items').value = profileData.specialItems || '';
@@ -62,6 +62,8 @@
         function togglePreview() {
             var editorContent = CKEDITOR.instances.editor.getData();
             var profileData = {
+                username: document.getElementById('username').value,
+                email: document.getElementById('email').value,
                 htmlContent: editorContent,
                 socialMediaUrls: document.getElementById('social-media-urls').value,
                 specialItems: document.getElementById('special-items').value,
@@ -111,12 +113,18 @@
     </nav>
     <div class="profile-editor-container">
         <h1>Edit Your Profile</h1>
-        <h2 id="username"></h2>
-        <p id="user-email"></p>
         <form id="profileForm">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username"><br>
+            <label for="email">Email:</label>
+            <input type="text" id="email" name="email" disabled><br>
+            <label for="editor">Profile Content:</label>
             <textarea id="editor" name="editor" rows="10" cols="80"></textarea>
+            <label for="social-media-urls">Social Media URLs:</label>
             <textarea id="social-media-urls" placeholder="Social Media URLs" rows="5" cols="80"></textarea>
+            <label for="special-items">Special Items:</label>
             <textarea id="special-items" placeholder="Special Items" rows="5" cols="80"></textarea>
+            <label for="vehicles">Vehicles:</label>
             <textarea id="vehicles" placeholder="Vehicles" rows="5" cols="80"></textarea>
         </form>
         <button onclick="saveProfile()">Save Profile</button>
