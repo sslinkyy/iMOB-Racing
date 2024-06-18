@@ -6,9 +6,13 @@
     <title>All Profiles - IMOB Racing</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-firestore.js"></script>
     <script src="config.js"></script>
-    <script src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v10.0" async defer crossorigin="anonymous"></script>
+    <script>
+        firebase.initializeApp(CONFIG.FIREBASE_CONFIG);
+    </script>
+    <script src="all_profiles.js" defer></script>
 </head>
 <body>
     <nav class="navbar">
@@ -25,38 +29,11 @@
             </ul>
         </div>
     </nav>
-
-    <h1>All Registered Profiles</h1>
-    <div id="profiles-container" class="profiles-container"></div>
-
-    <script>
-        firebase.initializeApp(CONFIG.FIREBASE_CONFIG);
-
-        function loadAllProfiles() {
-            var db = firebase.firestore();
-            db.collection('profiles').get().then(function(querySnapshot) {
-                var profilesContainer = document.getElementById('profiles-container');
-                querySnapshot.forEach(function(doc) {
-                    var data = doc.data();
-                    var profileDiv = document.createElement('div');
-                    profileDiv.classList.add('profile-item');
-                    profileDiv.innerHTML = `
-                        <h2>${data.name}</h2>
-                        <img src="${data.profilePicture}" alt="Profile Picture" class="profile-picture">
-                        <div>${data.bio}</div>
-                        <div>${data.socialMedia}</div>
-                    `;
-                    profilesContainer.appendChild(profileDiv);
-                    FB.XFBML.parse(); // Parse Facebook embeds
-                });
-            }).catch(function(error) {
-                console.error('Error loading profiles: ', error);
-            });
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            loadAllProfiles();
-        });
-    </script>
+    <div class="container">
+        <h1>All Profiles</h1>
+        <div id="profiles-list">
+            <!-- Profiles will be listed here -->
+        </div>
+    </div>
 </body>
 </html>
