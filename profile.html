@@ -52,7 +52,7 @@
                     document.getElementById('social-media-urls').value = profileData.socialMediaUrls || '';
                     document.getElementById('special-items').value = profileData.specialItems || '';
                     document.getElementById('vehicles').value = profileData.vehicles || '';
-                    document.getElementById('profile-preview').innerHTML = profileData.htmlContent;
+                    updatePreview(profileData);
                 }
             }).catch(function(error) {
                 console.error('Error loading profile: ', error);
@@ -61,13 +61,36 @@
 
         function togglePreview() {
             var editorContent = CKEDITOR.instances.editor.getData();
-            document.getElementById('profile-preview').innerHTML = editorContent;
+            var profileData = {
+                htmlContent: editorContent,
+                socialMediaUrls: document.getElementById('social-media-urls').value,
+                specialItems: document.getElementById('special-items').value,
+                vehicles: document.getElementById('vehicles').value
+            };
+            updatePreview(profileData);
             var preview = document.getElementById('profile-preview');
             if (preview.style.display === 'none') {
                 preview.style.display = 'block';
             } else {
                 preview.style.display = 'none';
             }
+        }
+
+        function updatePreview(profileData) {
+            var previewContent = `
+                <div class="profile-section">
+                    <h2>${profileData.username}</h2>
+                    <p>${profileData.email}</p>
+                    <div>${profileData.htmlContent}</div>
+                    <h3>Social Media URLs</h3>
+                    <p>${profileData.socialMediaUrls}</p>
+                    <h3>Special Items</h3>
+                    <p>${profileData.specialItems}</p>
+                    <h3>Vehicles</h3>
+                    <p>${profileData.vehicles}</p>
+                </div>
+            `;
+            document.getElementById('profile-preview').innerHTML = previewContent;
         }
     </script>
 </head>
