@@ -3,17 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Store - iMOB Racing</title>
+    <title>IMOB Racing - Store</title>
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://cdn.snipcart.com/themes/v3.2.1/default/snipcart.css" />
-    <script src="config.js"></script>
-    <script>
-        window.SnipcartSettings = {
-            publicApiKey: CONFIG.SNIPCART_API_KEY,
-            loadStrategy: 'on-user-interaction'
-        };
-    </script>
-    <script async src="https://cdn.snipcart.com/themes/v3.2.1/default/snipcart.js"></script>
 </head>
 <body>
     <nav class="navbar">
@@ -24,15 +15,14 @@
                 <li><a href="drivers.html" class="nav-links">Drivers</a></li>
                 <li><a href="cars.html" class="nav-links">Cars</a></li>
                 <li><a href="mission.html" class="nav-links">Our Mission</a></li>
-                <li><a href="index.html#contact" class="nav-links">Contact</a></li>
+                <li><a href="store.html" class="nav-links">Store</a></li>
+                <li><a href="contact.html" class="nav-links">Contact</a></li>
+                <li><a href="profile.html" class="nav-links">Profile</a></li>
             </ul>
         </div>
     </nav>
-
-    <section id="store" class="store-section" data-aos="fade-up">
-        <h2>Our Store</h2>
-        
-        <h3>Internal Store Items</h3>
+    <section class="store-section">
+        <h3>Our Store</h3>
         <div class="store-grid">
             <div class="store-item">
                 <img src="images/tshirt1.jpg" alt="iMOB Racing T-Shirt 1">
@@ -40,11 +30,11 @@
                 <p>High quality racing t-shirt.</p>
                 <p>$20.00</p>
                 <button class="snipcart-add-item"
-                    data-item-id="tshirt1"
-                    data-item-name="iMOB Racing T-Shirt 1"
-                    data-item-price="20.00"
-                    data-item-url="/store.html"
-                    data-item-description="High quality racing t-shirt.">
+                        data-item-id="1"
+                        data-item-name="iMOB Racing T-Shirt 1"
+                        data-item-price="20.00"
+                        data-item-url="store.html"
+                        data-item-description="High quality racing t-shirt.">
                     Add to Cart
                 </button>
             </div>
@@ -54,44 +44,37 @@
                 <p>Another stylish racing t-shirt.</p>
                 <p>$20.00</p>
                 <button class="snipcart-add-item"
-                    data-item-id="tshirt2"
-                    data-item-name="iMOB Racing T-Shirt 2"
-                    data-item-price="20.00"
-                    data-item-url="/store.html"
-                    data-item-description="Another stylish racing t-shirt.">
+                        data-item-id="2"
+                        data-item-name="iMOB Racing T-Shirt 2"
+                        data-item-price="20.00"
+                        data-item-url="store.html"
+                        data-item-description="Another stylish racing t-shirt.">
                     Add to Cart
                 </button>
             </div>
-        </div>
-
-        <h3>External Store Items</h3>
-        <div class="store-grid">
             <div class="store-item">
-                <img src="images/racing_helmet.jpg" alt="Racing Helmet">
+                <img src="images/helmet.jpg" alt="Racing Helmet">
                 <h3>Racing Helmet</h3>
                 <p>Top-quality racing helmet.</p>
-                <a href="https://www.amazon.com/" target="_blank">Buy on Amazon</a>
+                <a href="https://www.amazon.com" target="_blank">Buy on Amazon</a>
             </div>
             <div class="store-item">
-                <img src="images/racing_gloves.jpg" alt="Racing Gloves">
+                <img src="images/gloves.jpg" alt="Racing Gloves">
                 <h3>Racing Gloves</h3>
                 <p>Durable and comfortable racing gloves.</p>
-                <a href="https://www.amazon.com/" target="_blank">Buy on Amazon</a>
+                <a href="https://www.amazon.com" target="_blank">Buy on Amazon</a>
             </div>
         </div>
     </section>
-
     <footer class="footer">
+        <p>© 2024 IMOB Racing. All rights reserved.</p>
         <div class="social-media">
-            <a href="https://www.facebook.com/iMobRacing" target="_blank"><i class="fab fa-facebook"></i></a>
-            <a href="https://twitter.com/iMobRacing" target="_blank"><i class="fab fa-twitter"></i></a>
-            <a href="https://instagram.com/iMobRacing" target="_blank"><i class="fab fa-instagram"></i></a>
-            <a href="https://youtube.com/iMobRacing" target="_blank"><i class="fab fa-youtube"></i></a>
+            <a href="https://www.facebook.com/imobracing"><i class="fab fa-facebook-f"></i></a>
+            <a href="https://twitter.com/imobracing"><i class="fab fa-twitter"></i></a>
+            <a href="https://instagram.com/imobracing"><i class="fab fa-instagram"></i></a>
         </div>
-        <p>&copy; 2024 iMOB Racing. All rights reserved.</p>
-        <p>Contact: info@imobracingonline.com | Phone: (530) 420-5850</p>
     </footer>
-
-    <div hidden id="snipcart" data-api-key="NDFkZGNlNDktMjE2YS00MmUyLTk4ZmYtMjY5YWE2OWYwOTI2NjM4NTQxODI3NjYwMTI3MDQ5" data-config-modal-style="side"></div>
+    <script src="https://cdn.snipcart.com/themes/v3.0.31/default/snipcart.js"></script>
+    <div hidden id="snipcart" data-api-key="YOUR_SNIPCART_API_KEY"></div>
 </body>
 </html>
