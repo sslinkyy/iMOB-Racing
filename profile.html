@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile Editor</title>
+    <title>Profile</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.ckeditor.com/4.16.0/standard/ckeditor.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
@@ -16,11 +16,9 @@
 
         firebase.auth().onAuthStateChanged(function(user) {
             if (user) {
-                console.log("User authenticated:", user);
+                document.getElementById('username').value = user.displayName || user.email;
                 document.getElementById('email').value = user.email;
                 loadProfile(user.uid);
-                document.getElementById('profile-link').style.display = 'block';
-                document.getElementById('logout-link').style.display = 'block';
             } else {
                 window.location.href = 'login.html';
             }
@@ -34,154 +32,131 @@
             });
         }
 
-        async function uploadImage(file, userId, imageType) {
-            try {
-                const storageRef = firebase.storage().ref();
-                const imageRef = storageRef.child(`${imageType}_images/${userId}/${file.name}`);
-                await imageRef.put(file);
-                return await imageRef.getDownloadURL();
-            } catch (error) {
-                console.error('Error uploading image:', error);
-                throw error;
-            }
-        }
-
-        async function saveProfile() {
-            console.log("Saving profile...");
-            var user = firebase.auth().currentUser;
+        function saveProfile() {
+            const user = firebase.auth().currentUser;
             if (user) {
-                var db = firebase.firestore();
-                var profileImage = document.getElementById('profile-image').files[0];
-                var vehicleImages = document.getElementById('vehicle-images').files;
-                var vehicleImageUrls = [];
+                const db = firebase.firestore();
+                const storage = firebase.storage();
+                const profileContent = CKEDITOR.instances.editor.getData();
+                const socialMediaUrls = document.getElementById('social-media-urls').value;
+                const specialItems = document.getElementById('special-items').value;
+                const vehicles = document.getElementById('vehicles').value;
+                const profileImage = document.getElementById('profile-image').files[0];
+                const vehicleImages = document.getElementById('vehicle-images').files;
+                const promises = [];
 
-                try {
-                    for (let i = 0; i < vehicleImages.length; i++) {
-                        let url = await uploadImage(vehicleImages[i], user.uid, 'vehicle');
-                        vehicleImageUrls.push(url);
-                    }
+                if (profileImage) {
+                    const profileImageRef = storage.ref().child(`profile-images/${user.uid}/${profileImage.name}`);
+                    promises.push(profileImageRef.put(profileImage).then(snapshot => snapshot.ref.getDownloadURL()));
+                }
 
-                    let profileImageUrl = '';
-                    if (profileImage) {
-                        profileImageUrl = await uploadImage(profileImage, user.uid, 'profile');
-                    }
+                const vehicleImageUrls = [];
+                for (let i = 0; i < vehicleImages.length; i++) {
+                    const vehicleImageRef = storage.ref().child(`vehicle-images/${user.uid}/${vehicleImages[i].name}`);
+                    promises.push(vehicleImageRef.put(vehicleImages[i]).then(snapshot => snapshot.ref.getDownloadURL().then(url => vehicleImageUrls.push(url))));
+                }
 
-                    await db.collection('profiles').doc(user.uid).set({
+                Promise.all(promises).then(urls => {
+                    const profileImageUrl = urls.length > 0 ? urls[0] : null;
+                    db.collection('profiles').doc(user.uid).set({
                         username: document.getElementById('username').value,
                         email: user.email,
-                        htmlContent: CKEDITOR.instances.editor.getData(),
-                        socialMediaUrls: document.getElementById('social-media-urls').value,
-                        specialItems: document.getElementById('special-items').value,
-                        vehicles: document.getElementById('vehicles').value,
+                        profileContent: profileContent,
+                        socialMediaUrls: socialMediaUrls,
+                        specialItems: specialItems,
+                        vehicles: vehicles,
                         profileImageUrl: profileImageUrl,
-                        vehicleImageUrls: vehicleImageUrls
+                        vehicleImages: vehicleImageUrls
+                    }).then(() => {
+                        alert('Profile saved!');
+                        updatePreview();
+                    }).catch(error => {
+                        console.error('Error saving profile: ', error);
+                        alert('Error saving profile.');
                     });
-                    console.log('Profile saved successfully');
-                    alert('Profile saved!');
-                    loadProfile(user.uid);
-                } catch (error) {
-                    console.error('Error saving profile:', error);
-                    alert('Error saving profile: ' + error.message);
-                }
-            } else {
-                console.error("No authenticated user found.");
+                });
             }
         }
 
         function loadProfile(uid) {
-            console.log("Loading profile for user:", uid);
-            var db = firebase.firestore();
-            db.collection('profiles').doc(uid).get().then(function(doc) {
+            const db = firebase.firestore();
+            db.collection('profiles').doc(uid).get().then(doc => {
                 if (doc.exists) {
-                    var profileData = doc.data();
-                    console.log("Profile data loaded:", profileData);
-                    document.getElementById('username').value = profileData.username || '';
-                    CKEDITOR.instances.editor.setData(profileData.htmlContent);
-                    document.getElementById('social-media-urls').value = profileData.socialMediaUrls || '';
-                    document.getElementById('special-items').value = profileData.specialItems || '';
-                    document.getElementById('vehicles').value = profileData.vehicles || '';
-                    if (profileData.profileImageUrl) {
-                        document.getElementById('profile-image-preview').src = profileData.profileImageUrl;
+                    const data = doc.data();
+                    document.getElementById('username').value = data.username || '';
+                    document.getElementById('email').value = data.email || '';
+                    CKEDITOR.instances.editor.setData(data.profileContent || '');
+                    document.getElementById('social-media-urls').value = data.socialMediaUrls || '';
+                    document.getElementById('special-items').value = data.specialItems || '';
+                    document.getElementById('vehicles').value = data.vehicles || '';
+                    if (data.profileImageUrl) {
+                        document.getElementById('profile-image-preview').src = data.profileImageUrl;
                         document.getElementById('profile-image-preview').style.display = 'block';
-                    } else {
-                        document.getElementById('profile-image-preview').style.display = 'none';
                     }
-                    updateVehiclePreviews(profileData.vehicleImageUrls);
-                    updatePreview(profileData);
-                } else {
-                    console.log("No profile data found for user.");
+                    updateVehiclePreviews(data.vehicleImages || []);
+                    updatePreview();
                 }
-            }).catch(function(error) {
-                console.error('Error loading profile:', error);
+            }).catch(error => {
+                console.error('Error loading profile: ', error);
+                alert('Error loading profile.');
             });
         }
 
         function updateVehiclePreviews(vehicleImageUrls) {
-            console.log("Updating vehicle previews:", vehicleImageUrls);
-            const container = document.getElementById('vehicle-images-previews');
-            container.innerHTML = '';
-            if (vehicleImageUrls && vehicleImageUrls.length > 0) {
+            const previewsContainer = document.getElementById('vehicle-images-previews');
+            previewsContainer.innerHTML = '';
+            if (vehicleImageUrls && vehicleImageUrls.length) {
                 vehicleImageUrls.forEach(url => {
                     const img = document.createElement('img');
                     img.src = url;
                     img.style.maxWidth = '100px';
                     img.style.maxHeight = '100px';
-                    container.appendChild(img);
+                    previewsContainer.appendChild(img);
                 });
+            } else {
+                console.log('No vehicle images to preview.');
             }
+        }
+
+        function updatePreview() {
+            const previewContainer = document.getElementById('profile-preview');
+            previewContainer.innerHTML = `
+                <h1>${document.getElementById('username').value}</h1>
+                <p>${document.getElementById('email').value}</p>
+                <img src="${document.getElementById('profile-image-preview').src}" alt="Profile Image" style="max-width: 100px; max-height: 100px;">
+                ${CKEDITOR.instances.editor.getData()}
+                <h2>Social Media URLs</h2>
+                <p>${document.getElementById('social-media-urls').value}</p>
+                <h2>Special Items</h2>
+                <p>${document.getElementById('special-items').value}</p>
+                <h2>Vehicles</h2>
+                <p>${document.getElementById('vehicles').value}</p>
+                <h2>Vehicle Images</h2>
+            `;
+            updateVehiclePreviews(Array.from(document.getElementById('vehicle-images').files).map(file => URL.createObjectURL(file)));
         }
 
         function togglePreview() {
-            try {
-                var editorContent = CKEDITOR.instances.editor.getData();
-                var profileData = {
-                    username: document.getElementById('username').value,
-                    email: document.getElementById('email').value,
-                    htmlContent: editorContent,
-                    socialMediaUrls: document.getElementById('social-media-urls').value,
-                    specialItems: document.getElementById('special-items').value,
-                    vehicles: document.getElementById('vehicles').value,
-                    profileImageUrl: document.getElementById('profile-image-preview').src,
-                    vehicleImageUrls: Array.from(document.getElementById('vehicle-images-previews').getElementsByTagName('img')).map(img => img.src)
-                };
-                updatePreview(profileData);
-                var preview = document.getElementById('profile-preview');
-                if (preview.style.display === 'none') {
-                    preview.style.display = 'block';
-                } else {
-                    preview.style.display = 'none';
-                }
-            } catch (error) {
-                console.error('Error toggling preview:', error);
+            const previewContainer = document.getElementById('profile-preview');
+            if (previewContainer.style.display === 'none' || !previewContainer.style.display) {
+                updatePreview();
+                previewContainer.style.display = 'block';
+            } else {
+                previewContainer.style.display = 'none';
             }
         }
 
-        function updatePreview(profileData) {
-            try {
-                var previewContent = `
-                    <div class="profile-section">
-                        <h2>${profileData.username}</h2>
-                        <p>${profileData.email}</p>
-                        ${profileData.profileImageUrl ? `<img src="${profileData.profileImageUrl}" alt="Profile Image" style="max-width: 100px; max-height: 100px;">` : ''}
-                        <div>${profileData.htmlContent}</div>
-                        <h3>Social Media URLs</h3>
-                        <p>${profileData.socialMediaUrls}</p>
-                        <h3>Special Items</h3>
-                        <p>${profileData.specialItems}</p>
-                        <h3>Vehicles</h3>
-                        <p>${profileData.vehicles}</p>
-                        ${profileData.vehicleImageUrls.length > 0 ? '<h3>Vehicle Images</h3>' : ''}
-                        ${profileData.vehicleImageUrls.map(url => `<img src="${url}" alt="Vehicle Image" style="max-width: 100px; max-height: 100px;">`).join('')}
-                    </div>
-                `;
-                document.getElementById('profile-preview').innerHTML = previewContent;
-            } catch (error) {
-                console.error('Error updating preview:', error);
-            }
-        }
+        document.getElementById('profile-image').addEventListener('change', function(event) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('profile-image-preview').src = e.target.result;
+                document.getElementById('profile-image-preview').style.display = 'block';
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        });
 
-        document.addEventListener('DOMContentLoaded', () => {
-            CKEDITOR.replace('editor');
+        document.getElementById('vehicle-images').addEventListener('change', function(event) {
+            updateVehiclePreviews(Array.from(event.target.files).map(file => URL.createObjectURL(file)));
         });
     </script>
 </head>
@@ -195,9 +170,8 @@
                 <li><a href="cars.html" class="nav-links">Cars</a></li>
                 <li><a href="mission.html" class="nav-links">Our Mission</a></li>
                 <li><a href="index.html#contact" class="nav-links">Contact</a></li>
-                <li><a href="profile.html" class="nav-links" id="profile-link" style="display: none;">Profile</a></li>
-                <li><a href="all_profiles.html" class="nav-links">All Profiles</a></li>
-                <li><a href="#" class="nav-links" id="logout-link" style="display: none;" onclick="logout()">Logout</a></li>
+                <li><a href="profile.html" class="nav-links">Profile</a></li>
+                <li><a href="javascript:void(0)" class="nav-links" id="profile-link" style="display: none;" onclick="logout()">Logout</a></li>
             </ul>
         </div>
     </nav>
@@ -220,11 +194,11 @@
             <label for="vehicles">Vehicles:</label>
             <textarea id="vehicles" placeholder="Vehicles" rows="5" cols="80"></textarea>
             <label for="vehicle-images">Vehicle Images:</label>
-            <input type="file" id="vehicle-images" name="vehicle-images" multiple accept="image/*"><br>
+            <input type="file" id="vehicle-images" name="vehicle-images" accept="image/*" multiple><br>
             <div id="vehicle-images-previews"></div>
-            <button type="button" onclick="saveProfile()">Save</button>
+            <button type="button" onclick="saveProfile()">Save Profile</button>
+            <button type="button" onclick="togglePreview()">Toggle Preview</button>
         </form>
-        <button onclick="togglePreview()">Toggle Preview</button>
         <div id="profile-preview" style="display: none; margin-top: 20px; border: 1px solid #ccc; padding: 10px;"></div>
     </div>
 </body>
