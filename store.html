@@ -6,10 +6,10 @@
     <title>Store - iMOB Racing</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdn.snipcart.com/themes/v3.2.1/default/snipcart.css" />
-    <script src="config.js"></script> <!-- Ensure this is loaded first -->
+    <script src="config.js"></script>
     <script>
         window.SnipcartSettings = {
-            publicApiKey: CONFIG.SNIPCART_API_KEY, // Use the API key from config.js
+            publicApiKey: CONFIG.SNIPCART_API_KEY,
             loadStrategy: 'on-user-interaction'
         };
     </script>
@@ -31,6 +31,8 @@
 
     <section id="store" class="store-section" data-aos="fade-up">
         <h2>Our Store</h2>
+        
+        <h3>Internal Store Items</h3>
         <div class="store-grid">
             <div class="store-item">
                 <img src="images/tshirt1.jpg" alt="iMOB Racing T-Shirt 1">
@@ -60,6 +62,10 @@
                     Add to Cart
                 </button>
             </div>
+        </div>
+
+        <h3>External Store Items</h3>
+        <div class="store-grid">
             <div class="store-item">
                 <img src="images/racing_helmet.jpg" alt="Racing Helmet">
                 <h3>Racing Helmet</h3>
