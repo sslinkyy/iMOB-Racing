@@ -16,6 +16,7 @@
 
         firebase.auth().onAuthStateChanged(function(user) {
             if (user) {
+                console.log("User authenticated:", user);
                 document.getElementById('email').value = user.email;
                 loadProfile(user.uid);
                 document.getElementById('profile-link').style.display = 'block';
@@ -40,12 +41,13 @@
                 await imageRef.put(file);
                 return await imageRef.getDownloadURL();
             } catch (error) {
-                console.error('Error uploading image: ', error);
+                console.error('Error uploading image:', error);
                 throw error;
             }
         }
 
         async function saveProfile() {
+            console.log("Saving profile...");
             var user = firebase.auth().currentUser;
             if (user) {
                 var db = firebase.firestore();
@@ -78,17 +80,21 @@
                     alert('Profile saved!');
                     loadProfile(user.uid);
                 } catch (error) {
-                    console.error('Error saving profile: ', error);
+                    console.error('Error saving profile:', error);
                     alert('Error saving profile: ' + error.message);
                 }
+            } else {
+                console.error("No authenticated user found.");
             }
         }
 
         function loadProfile(uid) {
+            console.log("Loading profile for user:", uid);
             var db = firebase.firestore();
             db.collection('profiles').doc(uid).get().then(function(doc) {
                 if (doc.exists) {
                     var profileData = doc.data();
+                    console.log("Profile data loaded:", profileData);
                     document.getElementById('username').value = profileData.username || '';
                     CKEDITOR.instances.editor.setData(profileData.htmlContent);
                     document.getElementById('social-media-urls').value = profileData.socialMediaUrls || '';
@@ -102,13 +108,16 @@
                     }
                     updateVehiclePreviews(profileData.vehicleImageUrls);
                     updatePreview(profileData);
+                } else {
+                    console.log("No profile data found for user.");
                 }
             }).catch(function(error) {
-                console.error('Error loading profile: ', error);
+                console.error('Error loading profile:', error);
             });
         }
 
         function updateVehiclePreviews(vehicleImageUrls) {
+            console.log("Updating vehicle previews:", vehicleImageUrls);
             const container = document.getElementById('vehicle-images-previews');
             container.innerHTML = '';
             if (vehicleImageUrls && vehicleImageUrls.length > 0) {
@@ -143,7 +152,7 @@
                     preview.style.display = 'none';
                 }
             } catch (error) {
-                console.error('Error toggling preview: ', error);
+                console.error('Error toggling preview:', error);
             }
         }
 
@@ -167,9 +176,13 @@
                 `;
                 document.getElementById('profile-preview').innerHTML = previewContent;
             } catch (error) {
-                console.error('Error updating preview: ', error);
+                console.error('Error updating preview:', error);
             }
         }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            CKEDITOR.replace('editor');
+        });
     </script>
 </head>
 <body>
@@ -188,16 +201,16 @@
             </ul>
         </div>
     </nav>
-    <div class="profile-editor-container">
-        <h1>Edit Your Profile</h1>
-        <form id="profileForm">
-            <label for="username">Username:</label>
+    <div class="container">
+        <h1>Profile Editor</h1>
+        <form id="profile-form">
+            <label for="username">Name:</label>
             <input type="text" id="username" name="username"><br>
             <label for="email">Email:</label>
-            <input type="text" id="email" name="email" disabled><br>
+            <input type="email" id="email" name="email" readonly><br>
             <label for="profile-image">Profile Image:</label>
-            <input type="file" id="profile-image" name="profile-image"><br>
-            <img id="profile-image-preview" style="display: none; max-width: 100px; max-height: 100px;"><br>
+            <input type="file" id="profile-image" name="profile-image" accept="image/*"><br>
+            <img id="profile-image-preview" src="#" alt="Profile Image" style="display: none; max-width: 100px; max-height: 100px;"><br>
             <label for="editor">Profile Content:</label>
             <textarea id="editor" name="editor" rows="10" cols="80"></textarea>
             <label for="social-media-urls">Social Media URLs:</label>
@@ -207,7 +220,7 @@
             <label for="vehicles">Vehicles:</label>
             <textarea id="vehicles" placeholder="Vehicles" rows="5" cols="80"></textarea>
             <label for="vehicle-images">Vehicle Images:</label>
-            <input type="file" id="vehicle-images" name="vehicle-images" multiple><br>
+            <input type="file" id="vehicle-images" name="vehicle-images" multiple accept="image/*"><br>
             <div id="vehicle-images-previews"></div>
             <button type="button" onclick="saveProfile()">Save</button>
         </form>
