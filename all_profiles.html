@@ -15,42 +15,44 @@
             firebase.initializeApp(CONFIG.FIREBASE_CONFIG);
         }
 
-        async function loadProfiles() {
-            const db = firebase.firestore();
-            const profilesContainer = document.getElementById('profiles-container');
+        document.addEventListener('DOMContentLoaded', () => {
+            async function loadProfiles() {
+                const db = firebase.firestore();
+                const profilesContainer = document.getElementById('profiles-container');
 
-            if (!profilesContainer) {
-                console.error('No profiles container found');
-                return;
+                if (!profilesContainer) {
+                    console.error('No profiles container found');
+                    return;
+                }
+
+                try {
+                    const snapshot = await db.collection('profiles').get();
+                    snapshot.forEach(doc => {
+                        const profile = doc.data();
+                        const profileDiv = document.createElement('div');
+                        profileDiv.classList.add('profile');
+
+                        const profileImg = document.createElement('img');
+                        profileImg.src = profile.profileImageUrl || 'default-profile.png';
+                        profileImg.alt = profile.username || 'No username';
+                        profileImg.style.maxWidth = '100px';
+                        profileImg.style.maxHeight = '100px';
+
+                        const profileLink = document.createElement('a');
+                        profileLink.href = `profile.html?uid=${doc.id}`;
+                        profileLink.textContent = profile.username || 'No username';
+
+                        profileDiv.appendChild(profileImg);
+                        profileDiv.appendChild(profileLink);
+                        profilesContainer.appendChild(profileDiv);
+                    });
+                } catch (error) {
+                    console.error('Error loading profiles: ', error);
+                }
             }
 
-            try {
-                const snapshot = await db.collection('profiles').get();
-                snapshot.forEach(doc => {
-                    const profile = doc.data();
-                    const profileDiv = document.createElement('div');
-                    profileDiv.classList.add('profile');
-
-                    const profileImg = document.createElement('img');
-                    profileImg.src = profile.profileImageUrl || 'default-profile.png';
-                    profileImg.alt = profile.username || 'No username';
-                    profileImg.style.maxWidth = '100px';
-                    profileImg.style.maxHeight = '100px';
-
-                    const profileLink = document.createElement('a');
-                    profileLink.href = `profile.html?uid=${doc.id}`;
-                    profileLink.textContent = profile.username || 'No username';
-
-                    profileDiv.appendChild(profileImg);
-                    profileDiv.appendChild(profileLink);
-                    profilesContainer.appendChild(profileDiv);
-                });
-            } catch (error) {
-                console.error('Error loading profiles: ', error);
-            }
-        }
-
-        loadProfiles();
+            loadProfiles();
+        });
     </script>
 </head>
 <body>
