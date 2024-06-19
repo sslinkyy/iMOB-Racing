@@ -3,20 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>All Profiles - IMOB Racing</title>
+    <title>All Profiles</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-firestore.js"></script>
     <script src="config.js"></script>
     <script>
         firebase.initializeApp(CONFIG.FIREBASE_CONFIG);
     </script>
-    <script src="all_profiles.js" defer></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async function() {
+            const db = firebase.firestore();
+
+            try {
+                const profilesSnapshot = await db.collection('profiles').get();
+                const profilesList = document.getElementById('profiles-list');
+                profilesList.innerHTML = '';
+
+                profilesSnapshot.forEach(doc => {
+                    const profile = doc.data();
+                    const profileItem = document.createElement('div');
+                    profileItem.classList.add('profile-item');
+                    profileItem.innerHTML = `
+                        <a href="profile.html?userId=${doc.id}">
+                            <img src="${profile.profileImageUrl}" alt="Profile Image" style="max-width: 100px; max-height: 100px;">
+                        </a>
+                        <h2>${profile.username}</h2>
+                        <p>${profile.email}</p>
+                    `;
+                    profilesList.appendChild(profileItem);
+                });
+            } catch (error) {
+                console.error('Error loading profiles: ', error);
+                alert('Error loading profiles.');
+            }
+        });
+    </script>
 </head>
 <body>
     <nav class="navbar">
         <div class="navbar-container">
+            <span class="navbar-toggle" id="js-navbar-toggle">
+                <i class="fas fa-bars"></i>
+            </span>
             <a href="index.html" class="logo">iMOB Racing</a>
             <ul class="main-nav" id="js-menu">
                 <li><a href="index.html" class="nav-links">Home</a></li>
@@ -25,15 +54,10 @@
                 <li><a href="mission.html" class="nav-links">Our Mission</a></li>
                 <li><a href="index.html#contact" class="nav-links">Contact</a></li>
                 <li><a href="profile.html" class="nav-links">Profile</a></li>
-                <li><a href="all_profiles.html" class="nav-links">All Profiles</a></li>
             </ul>
         </div>
     </nav>
-    <div class="container">
-        <h1>All Profiles</h1>
-        <div id="profiles-list">
-            <!-- Profiles will be listed here -->
-        </div>
-    </div>
+    <h1>All Profiles</h1>
+    <div id="profiles-list"></div>
 </body>
 </html>
