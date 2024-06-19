@@ -105,13 +105,12 @@ h1, h2, h3, h4, h5, h6 {
     color: #fff;
 }
 
-/* Drag Handle Styles */
-.drag-handle {
-    cursor: move;
-    padding: 10px;
-    background-color: #444;
-    border-radius: 5px;
-    margin-bottom: 10px;
+/* Normalized Image Styles */
+.normalized-image {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 10px auto;
 }
 
 /* Header Styles */
@@ -361,6 +360,7 @@ section {
         right: 1em;
     }
 }
+
 .profile-card {
     background-color: #222;
     border-radius: 5px;
@@ -429,35 +429,3 @@ section {
 .profile-card .view-profile-button:hover {
     background-color: #e43e00;
 }
-/* Snipcart Customization */
-.snipcart-checkout,
-.snipcart-cart-header__close {
-    display: none !important;
-}
-
-.snipcart__modal--cart {
-    width: 25% !important; /* Set the cart width to 25% */
-    right: 0 !important;
-    top: 0 !important;
-    height: 100% !important;
-    transform: none !important;
-    box-shadow: none !important;
-    max-width: 400px !important; /* Adjust the max-width as needed */
-}
-
-.snipcart__modal {
-    max-width: 100% !important;
-}
-
-.snipcart-cart-header,
-.snipcart-cart-content {
-    width: 100% !important;
-}
-
-.snipcart-overlay {
-    width: 75% !important;
-    left: 0 !important;
-    background: rgba(0, 0, 0, 0.5) !important;
-    transition: width 0.3s ease-in-out !important;
-}
-
