@@ -38,7 +38,7 @@
     <script>
         // Initialize Firebase
         if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
+            firebase.initializeApp(CONFIG.FIREBASE_CONFIG);
         }
 
         function loadUserProfile(uid) {
