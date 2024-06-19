@@ -54,6 +54,7 @@
                 const doc = await db.collection('profiles').doc(userId).get();
                 if (doc.exists) {
                     const data = doc.data();
+                    data.vehicleImageUrls = data.vehicleImageUrls || []; // Ensure vehicleImageUrls is initialized
                     const container = document.getElementById('profile-container');
                     container.innerHTML = `
                         <h2 contenteditable="true">${data.username || 'No username provided'}</h2>
