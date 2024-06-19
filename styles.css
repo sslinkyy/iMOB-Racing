@@ -434,13 +434,13 @@ section {
 .snipcart-checkout {
     right: 0;
     width: 25% !important;
-    max-width: 400px !important; /* Adjust the max-width as needed */
+    max-width: 200px !important; /* Adjust the max-width as needed */
     transition: width 0.3s ease-in-out;
 }
 
 /* Adjust the Snipcart overlay to account for the new cart width */
 .snipcart-overlay {
-    width: 75% !important;
+    width: 25% !important;
     left: 0;
     background: rgba(0, 0, 0, 0.5); /* Optional: adjust the overlay background */
     transition: width 0.3s ease-in-out;
