@@ -1,66 +1,124 @@
-document.addEventListener('DOMContentLoaded', () => {
-    firebase.initializeApp(CONFIG.FIREBASE_CONFIG);
+document.addEventListener('DOMContentLoaded', async function() {
+    const db = firebase.firestore();
+    const storage = firebase.storage();
 
-    ClassicEditor
-        .create(document.querySelector('#editor'))
-        .then(editor => {
-            window.editor = editor;
-            loadProfile();
-        })
-        .catch(error => {
-            console.error(error);
-        });
+    const params = new URLSearchParams(window.location.search);
+    const userId = params.get('userId');
 
-    document.getElementById('profileForm').addEventListener('submit', async (event) => {
-        event.preventDefault();
-        const editorData = window.editor.getData();
-        const user = firebase.auth().currentUser;
-
-        if (user) {
-            await firebase.firestore().collection('profiles').doc(user.uid).set({
-                profileContent: editorData
-            });
-
-            alert('Profile saved successfully!');
-            document.getElementById('profile-preview').innerHTML = editorData;
-        } else {
-            alert('No user is logged in.');
+    if (userId) {
+        try {
+            const doc = await db.collection('profiles').doc(userId).get();
+            if (doc.exists) {
+                const profile = doc.data();
+                document.getElementById('username').innerText = profile.username || '';
+                document.getElementById('email').innerText = profile.email || '';
+                document.getElementById('profile-content').innerHTML = profile.profileContent || '';
+                document.getElementById('profile-image').src = profile.profileImageUrl || '';
+                updateVehiclePreviews(profile.vehicleImages || []);
+            } else {
+                alert('Profile not found.');
+            }
+        } catch (error) {
+            console.error('Error loading profile: ', error);
+            alert('Error loading profile.');
         }
-    });
+    } else {
+        alert('No user ID specified.');
+    }
 
-    document.getElementById('fetchSocialMediaButton').addEventListener('click', populateSocialMedia);
+    function updateVehiclePreviews(vehicleImages) {
+        const vehicleContainer = document.getElementById('vehicle-previews');
+        vehicleContainer.innerHTML = '';
+        vehicleImages.forEach(url => {
+            const img = document.createElement('img');
+            img.src = url;
+            img.alt = 'Vehicle Image';
+            img.style.maxWidth = '100px';
+            img.style.maxHeight = '100px';
+            vehicleContainer.appendChild(img);
+        });
+    }
 });
 
-function loadProfile() {
-    firebase.auth().onAuthStateChanged(user => {
-        if (user) {
-            firebase.firestore().collection('profiles').doc(user.uid).get().then(doc => {
-                if (doc.exists) {
-                    window.editor.setData(doc.data().profileContent);
-                    document.getElementById('profile-preview').innerHTML = doc.data().profileContent;
-                }
-            }).catch(error => {
-                console.error('Error loading profile: ', error);
-            });
-        } else {
-            alert('No user is logged in.');
+async function saveProfile() {
+    const user = firebase.auth().currentUser;
+    if (user) {
+        const db = firebase.firestore();
+        const storage = firebase.storage();
+
+        const profileImageFile = document.getElementById('profileImage').files[0];
+        const vehicleImagesFiles = document.getElementById('vehicleImages').files;
+        const profileContent = CKEDITOR.instances.editor.getData();
+        const username = document.getElementById('username').value;
+        const email = document.getElementById('email').value;
+
+        const profileRef = db.collection('profiles').doc(user.uid);
+        let profileImageUrl, vehicleImageUrls = [];
+
+        if (profileImageFile) {
+            const profileImageRef = storage.ref(`profile-images/${user.uid}/${profileImageFile.name}`);
+            await profileImageRef.put(profileImageFile);
+            profileImageUrl = await profileImageRef.getDownloadURL();
         }
-    });
+
+        if (vehicleImagesFiles.length > 0) {
+            for (let i = 0; i < vehicleImagesFiles.length; i++) {
+                const file = vehicleImagesFiles[i];
+                const vehicleImageRef = storage.ref(`vehicle-images/${user.uid}/${file.name}`);
+                await vehicleImageRef.put(file);
+                const url = await vehicleImageRef.getDownloadURL();
+                vehicleImageUrls.push(url);
+            }
+        }
+
+        await profileRef.set({
+            username,
+            email,
+            profileImageUrl,
+            vehicleImages: vehicleImageUrls,
+            profileContent
+        });
+
+        alert('Profile saved successfully!');
+        updatePreview();
+    }
 }
 
-async function fetchSocialMediaContent() {
-    const response = await fetch('/api/getSocialMediaContent');
-    const data = await response.json();
-    return data;
+function loadProfile(uid) {
+    const db = firebase.firestore();
+    const profileRef = db.collection('profiles').doc(uid);
+
+    profileRef.get().then(doc => {
+        if (doc.exists) {
+            const profile = doc.data();
+            document.getElementById('username').value = profile.username || '';
+            document.getElementById('email').value = profile.email || '';
+            CKEDITOR.instances.editor.setData(profile.profileContent || '');
+            document.getElementById('profileImagePreview').src = profile.profileImageUrl || '';
+            updateVehiclePreviews(profile.vehicleImages || []);
+        }
+    }).catch(error => console.error('Error loading profile: ', error));
 }
 
-async function populateSocialMedia() {
-    const content = await fetchSocialMediaContent();
-    const container = document.getElementById('socialMediaContent');
-    container.innerHTML = '';
-    content.forEach(item => {
-        const mediaElement = document.createElement(item.media_type === 'IMAGE' ? 'img' : 'video');
-        mediaElement.src = item.media_url;
-        container.appendChild(mediaElement);
+function updatePreview() {
+    const profileContent = CKEDITOR.instances.editor.getData();
+    document.getElementById('profile-preview').innerHTML = `
+        <h2>${document.getElementById('username').value}</h2>
+        <img src="${document.getElementById('profileImagePreview').src}" alt="Profile Image" style="max-width: 200px; max-height: 200px;">
+        ${profileContent}
+    `;
+    updateVehiclePreviews(Array.from(document.getElementById('vehiclePreviews').children).map(img => img.src));
+}
+
+function updateVehiclePreviews(vehicleImages) {
+    const vehicleContainer = document.getElementById('vehiclePreviews');
+    vehicleContainer.innerHTML = '';
+    vehicleImages.forEach(url => {
+        const img = document.createElement('img');
+        img.src = url;
+        img.alt = 'Vehicle Image';
+        img.style.maxWidth = '100px';
+        img.style.maxHeight = '100px';
+        vehicleContainer.appendChild(img);
     });
 }
