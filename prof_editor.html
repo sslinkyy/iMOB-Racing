@@ -94,6 +94,7 @@
             urls.forEach(url => {
                 const img = document.createElement('img');
                 img.src = url;
+                img.classList.add('normalized-image');
                 container.appendChild(img);
             });
         }
@@ -133,10 +134,10 @@
             const previewContainer = document.getElementById('profile-preview');
             previewContainer.innerHTML = `
                 <h2>${document.getElementById('username').value}</h2>
-                <img src="${document.getElementById('profile-image-preview').src}" alt="Profile Image">
+                <img src="${document.getElementById('profile-image-preview').src}" class="normalized-image" alt="Profile Image">
                 <div>${CKEDITOR.instances.bioEditor.getData()}</div>
                 <div id="vehicle-previews">
-                    ${Array.from(document.getElementById('vehicle-images').files).map(file => `<img src="${URL.createObjectURL(file)}" alt="Vehicle Image">`).join('')}
+                    ${Array.from(document.getElementById('vehicle-images').files).map(file => `<img src="${URL.createObjectURL(file)}" class="normalized-image" alt="Vehicle Image">`).join('')}
                 </div>
                 <div id="social-media-previews">
                     ${getSocialMediaUrls().map(url => `<a href="${url}" target="_blank">${url}</a>`).join('<br>')}
@@ -187,7 +188,7 @@
     <textarea id="bioEditor" name="bioEditor" rows="10" cols="80"></textarea>
     <label for="profile-image">Profile Image:</label>
     <input type="file" id="profile-image" name="profile-image" accept="image/*">
-    <img id="profile-image-preview" src="" alt="Profile Image Preview">
+    <img id="profile-image-preview" class="normalized-image" src="" alt="Profile Image Preview">
     <label for="vehicle-images">Vehicle Images:</label>
     <input type="file" id="vehicle-images" name="vehicle-images" accept="image/*" multiple>
     <div id="vehicle-previews"></div>
