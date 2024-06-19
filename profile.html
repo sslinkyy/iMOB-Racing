@@ -2,14 +2,73 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Profile - IMOB Racing</title>
+    <title>Profile Editor - IMOB Racing</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.ckeditor.com/4.16.0/standard/ckeditor.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-storage.js"></script>
     <script src="config.js"></script>
     <script>
         firebase.initializeApp(CONFIG.FIREBASE_CONFIG);
+
+        firebase.auth().onAuthStateChanged(function(user) {
+            if (user) {
+                document.getElementById('username').value = user.displayName || '';
+                document.getElementById('user-email').innerText = user.email;
+                loadProfile(user.uid);
+            } else {
+                window.location.href = 'login.html';
+            }
+        });
+
+        async function saveProfile() {
+            try {
+                const user = firebase.auth().currentUser;
+                if (user) {
+                    const db = firebase.firestore();
+                    const profileData = {
+                        username: document.getElementById('username').value,
+                        bio: CKEDITOR.instances.bioEditor.getData(),
+                        profileImageUrl: await uploadFile(user.uid, 'profile-image', 'profile-images'),
+                        vehicleImageUrls: await uploadFiles(user.uid, 'vehicle-images', 'vehicle-images'),
+                        socialMediaUrls: getSocialMediaUrls(),
+                        customHtmlContent: CKEDITOR.instances.customHtmlEditor.getData()
+                    };
+                    await db.collection('profiles').doc(user.uid).set(profileData);
+                    alert('Profile saved successfully!');
+                    updatePreview();
+                }
+            } catch (error) {
+                console.error('Error saving profile: ', error);
+                alert('Error saving profile: ' + error.message);
+            }
+        }
+
+        async function uploadFile(userId, inputId, folder) {
+            const fileInput = document.getElementById(inputId);
+            if (fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+                const storageRef = firebase.storage().ref();
+                const fileRef = storageRef.child(`${folder}/${userId}/${file.name}`);
+                await fileRef.put(file);
+                return await fileRef.getDownloadURL();
+            }
+            return null;
+        }
+
+        async function uploadFiles(userId, inputId, folder) {
+            const fileInput = document.getElementById(inputId);
+            const urls = [];
+            for (const file of fileInput.files) {
+                const storageRef = firebase.storage().ref();
+                const fileRef = storageRef.child(`${folder}/${userId}/${file.name}`);
+                await fileRef.put(file);
+                urls.push(await fileRef.getDownloadURL());
+            }
+            return urls;
+        }
 
         async function loadProfile(userId) {
             try {
@@ -17,15 +76,12 @@
                 const doc = await db.collection('profiles').doc(userId).get();
                 if (doc.exists) {
                     const data = doc.data();
-                    document.getElementById('profile-username').innerText = data.username || '';
-                    document.getElementById('profile-email').innerText = data.email || '';
-                    document.getElementById('profile-bio').innerHTML = data.bio || '';
-                    document.getElementById('profile-image').src = data.profileImageUrl || '';
+                    document.getElementById('username').value = data.username || '';
+                    CKEDITOR.instances.bioEditor.setData(data.bio || '');
+                    document.getElementById('profile-image-preview').src = data.profileImageUrl || '';
                     updateVehiclePreviews(data.vehicleImageUrls || []);
                     setSocialMediaUrls(data.socialMediaUrls || []);
-                    document.getElementById('custom-html-content').innerHTML = data.customHtmlContent || '';
-                } else {
-                    console.error('No profile data found');
+                    CKEDITOR.instances.customHtmlEditor.setData(data.customHtmlContent || '');
                 }
             } catch (error) {
                 console.error('Error loading profile: ', error);
@@ -43,47 +99,70 @@
             });
         }
 
+        function getSocialMediaUrls() {
+            const urls = [];
+            document.querySelectorAll('.social-media-url').forEach(input => {
+                urls.push(input.value);
+            });
+            return urls;
+        }
+
         function setSocialMediaUrls(urls) {
-            const container = document.getElementById('social-media-links');
+            const container = document.getElementById('social-media-urls');
             container.innerHTML = '';
             urls.forEach(url => {
-                const link = document.createElement('a');
-                link.href = url;
-                link.target = '_blank';
-                link.innerText = url;
-                container.appendChild(link);
+                addSocialMediaUrl(url);
+            });
+        }
+
+        function addSocialMediaUrl(url = '') {
+            const container = document.getElementById('social-media-urls');
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.value = url;
+            input.classList.add('social-media-url');
+            container.appendChild(input);
+        }
+
+        function togglePreview() {
+            const previewContainer = document.getElementById('profile-preview');
+            previewContainer.style.display = previewContainer.style.display === 'none' ? 'block' : 'none';
+            updatePreview();
+        }
+
+        function updatePreview() {
+            const previewContainer = document.getElementById('profile-preview');
+            previewContainer.innerHTML = `
+                <h2>${document.getElementById('username').value}</h2>
+                <img src="${document.getElementById('profile-image-preview').src}" alt="Profile Image" class="normalized-image">
+                <div>${CKEDITOR.instances.bioEditor.getData()}</div>
+                <div id="vehicle-previews">
+                    ${Array.from(document.getElementById('vehicle-images').files).map(file => `<img src="${URL.createObjectURL(file)}" alt="Vehicle Image" class="normalized-image">`).join('')}
+                </div>
+                <div id="social-media-previews">
+                    ${getSocialMediaUrls().map(url => `<a href="${url}" target="_blank">${url}</a>`).join('<br>')}
+                </div>
+                <div>${CKEDITOR.instances.customHtmlEditor.getData()}</div>
+            `;
+        }
+
+        function logout() {
+            firebase.auth().signOut().then(() => {
+                window.location.href = 'index.html';
+            }).catch((error) => {
+                console.error('Error signing out: ', error);
             });
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            const urlParams = new URLSearchParams(window.location.search);
-            const userId = urlParams.get('userId');
-            if (userId) {
-                loadProfile(userId);
-            } else {
-                console.error('No user ID provided in URL');
-            }
+            CKEDITOR.replace('bioEditor');
+            CKEDITOR.replace('customHtmlEditor');
+            document.getElementById('toggle-preview').addEventListener('click', togglePreview);
+            document.getElementById('save-profile').addEventListener('click', saveProfile);
+            document.getElementById('add-social-media-url').addEventListener('click', () => addSocialMediaUrl());
+            document.getElementById('logout').addEventListener('click', logout);
         });
     </script>
-    <style>
-        .normalized-image {
-            width: 100px;
-            height: 100px;
-            object-fit: cover;
-            margin: 5px;
-        }
-        .profile-section {
-            text-align: center;
-            margin: 20px;
-        }
-        .profile-section img {
-            border-radius: 50%;
-        }
-        .social-media-links a {
-            display: block;
-            margin: 5px 0;
-        }
-    </style>
 </head>
 <body>
     <nav class="navbar">
@@ -101,14 +180,26 @@
             </ul>
         </div>
     </nav>
-    <div class="profile-section">
-        <h1 id="profile-username"></h1>
-        <p id="profile-email"></p>
-        <img id="profile-image" src="" alt="Profile Image" class="normalized-image">
-        <div id="profile-bio"></div>
-        <div id="vehicle-previews"></div>
-        <div id="social-media-links"></div>
-        <div id="custom-html-content"></div>
+    <h1>Profile Editor</h1>
+    <label for="username">Username:</label>
+    <input type="text" id="username" name="username">
+    <p id="user-email"></p>
+    <label for="bioEditor">Bio:</label>
+    <textarea id="bioEditor" name="bioEditor" rows="10" cols="80"></textarea>
+    <label for="profile-image">Profile Image:</label>
+    <input type="file" id="profile-image" name="profile-image" accept="image/*">
+    <img id="profile-image-preview" src="" alt="Profile Image Preview" class="normalized-image">
+    <label for="vehicle-images">Vehicle Images:</label>
+    <input type="file" id="vehicle-images" name="vehicle-images" accept="image/*" multiple>
+    <div id="vehicle-previews"></div>
+    <div id="social-media-urls">
+        <label>Social Media URLs:</label>
+        <button type="button" id="add-social-media-url">Add Social Media URL</button>
     </div>
+    <label for="customHtmlEditor">Custom HTML Content:</label>
+    <textarea id="customHtmlEditor" name="customHtmlEditor" rows="10" cols="80"></textarea>
+    <button id="toggle-preview">Toggle Preview</button>
+    <button id="save-profile">Save Profile</button>
+    <div id="profile-preview" style="display:none; border:1px solid #ccc; padding:10px;"></div>
 </body>
 </html>
