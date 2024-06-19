@@ -32,7 +32,9 @@
                         username: document.getElementById('username').value,
                         bio: CKEDITOR.instances.bioEditor.getData(),
                         profileImageUrl: await uploadFile(user.uid, 'profile-image', 'profile-images'),
-                        vehicleImageUrls: await uploadFiles(user.uid, 'vehicle-images', 'vehicle-images')
+                        vehicleImageUrls: await uploadFiles(user.uid, 'vehicle-images', 'vehicle-images'),
+                        socialMediaUrls: getSocialMediaUrls(),
+                        customHtmlContent: CKEDITOR.instances.customHtmlEditor.getData()
                     };
                     await db.collection('profiles').doc(user.uid).set(profileData);
                     alert('Profile saved successfully!');
@@ -78,6 +80,8 @@
                     CKEDITOR.instances.bioEditor.setData(data.bio || '');
                     document.getElementById('profile-image-preview').src = data.profileImageUrl || '';
                     updateVehiclePreviews(data.vehicleImageUrls || []);
+                    setSocialMediaUrls(data.socialMediaUrls || []);
+                    CKEDITOR.instances.customHtmlEditor.setData(data.customHtmlContent || '');
                 }
             } catch (error) {
                 console.error('Error loading profile: ', error);
@@ -92,6 +96,31 @@
                 img.src = url;
                 container.appendChild(img);
             });
+        }
+
+        function getSocialMediaUrls() {
+            const urls = [];
+            document.querySelectorAll('.social-media-url').forEach(input => {
+                urls.push(input.value);
+            });
+            return urls;
+        }
+
+        function setSocialMediaUrls(urls) {
+            const container = document.getElementById('social-media-urls');
+            container.innerHTML = '';
+            urls.forEach(url => {
+                addSocialMediaUrl(url);
+            });
+        }
+
+        function addSocialMediaUrl(url = '') {
+            const container = document.getElementById('social-media-urls');
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.value = url;
+            input.classList.add('social-media-url');
+            container.appendChild(input);
         }
 
         function togglePreview() {
@@ -109,22 +138,19 @@
                 <div id="vehicle-previews">
                     ${Array.from(document.getElementById('vehicle-images').files).map(file => `<img src="${URL.createObjectURL(file)}" alt="Vehicle Image">`).join('')}
                 </div>
+                <div id="social-media-previews">
+                    ${getSocialMediaUrls().map(url => `<a href="${url}" target="_blank">${url}</a>`).join('<br>')}
+                </div>
+                <div>${CKEDITOR.instances.customHtmlEditor.getData()}</div>
             `;
-        }
-
-        function logout() {
-            firebase.auth().signOut().then(() => {
-                window.location.href = 'login.html';
-            }).catch((error) => {
-                console.error('Error signing out: ', error);
-            });
         }
 
         document.addEventListener('DOMContentLoaded', () => {
             CKEDITOR.replace('bioEditor');
+            CKEDITOR.replace('customHtmlEditor');
             document.getElementById('toggle-preview').addEventListener('click', togglePreview);
             document.getElementById('save-profile').addEventListener('click', saveProfile);
-            document.getElementById('logout').addEventListener('click', logout);
+            document.getElementById('add-social-media-url').addEventListener('click', () => addSocialMediaUrl());
         });
     </script>
 </head>
@@ -156,6 +182,12 @@
     <label for="vehicle-images">Vehicle Images:</label>
     <input type="file" id="vehicle-images" name="vehicle-images" accept="image/*" multiple>
     <div id="vehicle-previews"></div>
+    <div id="social-media-urls">
+        <label>Social Media URLs:</label>
+        <button type="button" id="add-social-media-url">Add Social Media URL</button>
+    </div>
+    <label for="customHtmlEditor">Custom HTML Content:</label>
+    <textarea id="customHtmlEditor" name="customHtmlEditor" rows="10" cols="80"></textarea>
     <button id="toggle-preview">Toggle Preview</button>
     <button id="save-profile">Save Profile</button>
     <div id="profile-preview" style="display:none; border:1px solid #ccc; padding:10px;"></div>
