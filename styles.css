@@ -435,10 +435,8 @@ section {
     object-fit: cover;
 }
 .thumbnail {
-    width: 150px; /* Set the width of the thumbnails */
-    height: 150px; /* Set the height of the thumbnails */
-    object-fit: cover; /* Ensure the images cover the box while maintaining aspect ratio */
-    border-radius: 5px; /* Optional: Add rounded corners */
-    margin: 5px; /* Add some margin around the thumbnails */
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 5px;
 }
-
