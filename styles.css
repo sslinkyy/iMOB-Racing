@@ -429,3 +429,9 @@ section {
 .profile-card .view-profile-button:hover {
     background-color: #e43e00;
 }
+.normalized-image {
+    max-width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+
