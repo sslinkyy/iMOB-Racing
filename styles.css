@@ -438,7 +438,7 @@ section {
     height: 100% !important;
     transform: none !important;
     box-shadow: none !important;
-    max-width: 400px !important; /* Adjust the max-width as needed */
+    max-width: 200px !important; /* Adjust the max-width as needed */
 }
 
 .snipcart__modal__close {
@@ -447,7 +447,7 @@ section {
 
 .snipcart-cart-header,
 .snipcart-cart-content {
-    width: 100% !important;
+    width: 25% !important;
 }
 
 .snipcart-overlay {
