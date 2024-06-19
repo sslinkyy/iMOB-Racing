@@ -1,27 +1,26 @@
-document.addEventListener('DOMContentLoaded', function() {
-    var db = firebase.firestore();
-    var profilesList = document.getElementById('profiles-list');
+document.addEventListener('DOMContentLoaded', async function() {
+    const db = firebase.firestore();
 
-    function createProfileCard(profile) {
-        var card = document.createElement('div');
-        card.classList.add('profile-card');
-        card.innerHTML = `
-            <h3>${profile.username}</h3>
-            <p>Email: ${profile.email}</p>
-            <div>${profile.htmlContent}</div>
-            <div>Social Media URLs: ${profile.socialMediaUrls}</div>
-            <div>Special Items: ${profile.specialItems}</div>
-            <div>Vehicles: ${profile.vehicles}</div>
-        `;
-        return card;
-    }
+    try {
+        const profilesSnapshot = await db.collection('profiles').get();
+        const profilesList = document.getElementById('profiles-list');
+        profilesList.innerHTML = '';
 
-    db.collection('profiles').get().then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-            var profileData = doc.data();
-            profilesList.appendChild(createProfileCard(profileData));
+        profilesSnapshot.forEach(doc => {
+            const profile = doc.data();
+            const profileItem = document.createElement('div');
+            profileItem.classList.add('profile-item');
+            profileItem.innerHTML = `
+                <a href="profile.html?userId=${doc.id}">
+                    <img src="${profile.profileImageUrl}" alt="Profile Image" style="max-width: 100px; max-height: 100px;">
+                </a>
+                <h2>${profile.username}</h2>
+                <p>${profile.email}</p>
+            `;
+            profilesList.appendChild(profileItem);
         });
-    }).catch((error) => {
-        console.error("Error loading profiles: ", error);
-    });
+    } catch (error) {
+        console.error('Error loading profiles: ', error);
+        alert('Error loading profiles.');
+    }
 });
