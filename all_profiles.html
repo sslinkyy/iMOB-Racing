@@ -2,55 +2,39 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>All Profiles</title>
+    <title>All Profiles - IMOB Racing</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-firestore.js"></script>
     <script src="config.js"></script>
     <script>
-        // Ensure Firebase is initialized before using any Firebase services
-        if (!firebase.apps.length) {
-            firebase.initializeApp(CONFIG.FIREBASE_CONFIG);
+        firebase.initializeApp(CONFIG.FIREBASE_CONFIG);
+
+        async function loadProfiles() {
+            try {
+                const db = firebase.firestore();
+                const snapshot = await db.collection('profiles').get();
+                const profilesContainer = document.getElementById('profiles-container');
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    const profileCard = document.createElement('div');
+                    profileCard.classList.add('profile-card');
+                    profileCard.innerHTML = `
+                        <img src="${data.profileImageUrl || 'default-profile.png'}" alt="Profile Image" class="profile-image">
+                        <h3>${data.username || 'No Username'}</h3>
+                        <p>${data.bio || 'No bio available'}</p>
+                        <a href="profile.html?userId=${doc.id}" class="view-profile-button">View Profile</a>
+                    `;
+                    profilesContainer.appendChild(profileCard);
+                });
+            } catch (error) {
+                console.error('Error loading profiles: ', error);
+                alert('Error loading profiles: ' + error.message);
+            }
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            async function loadProfiles() {
-                const db = firebase.firestore();
-                const profilesContainer = document.getElementById('profiles-container');
-
-                if (!profilesContainer) {
-                    console.error('No profiles container found');
-                    return;
-                }
-
-                try {
-                    const snapshot = await db.collection('profiles').get();
-                    snapshot.forEach(doc => {
-                        const profile = doc.data();
-                        const profileDiv = document.createElement('div');
-                        profileDiv.classList.add('profile');
-
-                        const profileImg = document.createElement('img');
-                        profileImg.src = profile.profileImageUrl || 'default-profile.webp';
-                        profileImg.alt = profile.username || 'No username';
-                        profileImg.style.maxWidth = '100px';
-                        profileImg.style.maxHeight = '100px';
-
-                        const profileLink = document.createElement('a');
-                        profileLink.href = `profile.html?uid=${doc.id}`;
-                        profileLink.textContent = profile.username || 'No username';
-
-                        profileDiv.appendChild(profileImg);
-                        profileDiv.appendChild(profileLink);
-                        profilesContainer.appendChild(profileDiv);
-                    });
-                } catch (error) {
-                    console.error('Error loading profiles: ', error);
-                }
-            }
-
             loadProfiles();
         });
     </script>
@@ -58,9 +42,6 @@
 <body>
     <nav class="navbar">
         <div class="navbar-container">
-            <span class="navbar-toggle" id="js-navbar-toggle">
-                <i class="fas fa-bars"></i>
-            </span>
             <a href="index.html" class="logo">iMOB Racing</a>
             <ul class="main-nav" id="js-menu">
                 <li><a href="index.html" class="nav-links">Home</a></li>
@@ -68,11 +49,13 @@
                 <li><a href="cars.html" class="nav-links">Cars</a></li>
                 <li><a href="mission.html" class="nav-links">Our Mission</a></li>
                 <li><a href="index.html#contact" class="nav-links">Contact</a></li>
-                <li><a href="prof_editor.html" class="nav-links">Profile Editor</a></li>
+                <li><a href="prof_editor.html" class="nav-links">Edit Profile</a></li>
+                <li><a href="all_profiles.html" class="nav-links">Profiles</a></li>
+                <li><a href="javascript:void(0)" class="nav-links" id="logout">Logout</a></li>
             </ul>
         </div>
     </nav>
     <h1>All Profiles</h1>
-    <div id="profiles-container"></div> <!-- Ensure this element is present in the HTML -->
+    <div id="profiles-container"></div>
 </body>
 </html>
