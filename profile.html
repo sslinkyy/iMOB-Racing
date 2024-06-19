@@ -36,6 +36,11 @@
     <div id="profile-content"></div>
     <div id="vehicle-previews"></div>
     <script>
+        // Initialize Firebase
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+
         function loadUserProfile(uid) {
             const db = firebase.firestore();
             const profileRef = db.collection('profiles').doc(uid);
