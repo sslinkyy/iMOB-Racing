@@ -53,22 +53,23 @@
                     const data = doc.data();
                     const container = document.getElementById('profile-container');
                     container.innerHTML = `
-                        <h2>${data.username}</h2>
-                        <img src="${data.profileImageUrl || ''}" alt="Profile Image" class="thumbnail">
-                        <div>${data.bio || ''}</div>
+                        <h2>${data.username || 'No username provided'}</h2>
+                        <img src="${data.profileImageUrl || 'default-profile.png'}" alt="Profile Image" class="thumbnail">
+                        <div>${data.bio || 'No bio provided'}</div>
                         <div id="vehicle-previews">
                             ${(data.vehicleImageUrls || []).map(url => `<img src="${url}" alt="Vehicle Image" class="thumbnail">`).join('')}
                         </div>
                         <div id="social-media-previews">
                             ${(data.socialMediaUrls || []).map(url => `<a href="${url}" target="_blank">${url}</a>`).join('<br>')}
                         </div>
-                        <div>${data.customHtmlContent || ''}</div>
+                        <div>${data.customHtmlContent || 'No additional content provided'}</div>
                     `;
                 } else {
                     document.getElementById('profile-container').innerText = 'Profile not found.';
                 }
             } catch (error) {
                 console.error('Error loading profile: ', error);
+                document.getElementById('profile-container').innerText = 'Error loading profile.';
             }
         }
     </script>
