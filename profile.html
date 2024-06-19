@@ -2,21 +2,72 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Profile</title>
+    <title>Profile - IMOB Racing</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-firestore.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-storage.js"></script>
     <script src="config.js"></script>
+    <script>
+        firebase.initializeApp(CONFIG.FIREBASE_CONFIG);
+
+        async function loadProfile(userId) {
+            try {
+                const db = firebase.firestore();
+                const doc = await db.collection('profiles').doc(userId).get();
+                if (doc.exists) {
+                    const data = doc.data();
+                    document.getElementById('username').innerText = data.username || '';
+                    document.getElementById('bio').innerHTML = data.bio || '';
+                    document.getElementById('profile-image').src = data.profileImageUrl || '';
+                    updateVehiclePreviews(data.vehicleImageUrls || []);
+                    updateSocialMediaPreviews(data.socialMediaUrls || []);
+                    document.getElementById('custom-html-content').innerHTML = data.customHtmlContent || '';
+                } else {
+                    document.getElementById('profile-container').innerHTML = '<p>No profile found.</p>';
+                }
+            } catch (error) {
+                console.error('Error loading profile: ', error);
+            }
+        }
+
+        function updateVehiclePreviews(urls) {
+            const container = document.getElementById('vehicle-previews');
+            container.innerHTML = '';
+            urls.forEach(url => {
+                const img = document.createElement('img');
+                img.src = url;
+                container.appendChild(img);
+            });
+        }
+
+        function updateSocialMediaPreviews(urls) {
+            const container = document.getElementById('social-media-previews');
+            container.innerHTML = '';
+            urls.forEach(url => {
+                const a = document.createElement('a');
+                a.href = url;
+                a.target = '_blank';
+                a.innerText = url;
+                container.appendChild(a);
+                container.appendChild(document.createElement('br'));
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const userId = urlParams.get('userId');
+            if (userId) {
+                loadProfile(userId);
+            } else {
+                document.getElementById('profile-container').innerHTML = '<p>No user ID provided in URL.</p>';
+            }
+        });
+    </script>
 </head>
 <body>
     <nav class="navbar">
         <div class="navbar-container">
-            <span class="navbar-toggle" id="js-navbar-toggle">
-                <i class="fas fa-bars"></i>
-            </span>
             <a href="index.html" class="logo">iMOB Racing</a>
             <ul class="main-nav" id="js-menu">
                 <li><a href="index.html" class="nav-links">Home</a></li>
@@ -24,68 +75,20 @@
                 <li><a href="cars.html" class="nav-links">Cars</a></li>
                 <li><a href="mission.html" class="nav-links">Our Mission</a></li>
                 <li><a href="index.html#contact" class="nav-links">Contact</a></li>
-                <li><a href="all_profiles.html" class="nav-links">All Profiles</a></li>
-                <li><a href="prof_editor.html" class="nav-links">Profile Editor</a></li>
+                <li><a href="all_profiles.html" class="nav-links">Profiles</a></li>
             </ul>
         </div>
     </nav>
-    <h1>User Profile</h1>
-    <img id="profile-image" alt="Profile Image" style="max-width: 200px; max-height: 200px;">
-    <h2 id="username"></h2>
-    <p id="email"></p>
-    <div id="profile-content"></div>
-    <div id="vehicle-previews"></div>
-    <script>
-        // Initialize Firebase
-        if (!firebase.apps.length) {
-            firebase.initializeApp(CONFIG.FIREBASE_CONFIG);
-        }
-
-        function loadUserProfile(uid) {
-            const db = firebase.firestore();
-            const profileRef = db.collection('profiles').doc(uid);
-
-            profileRef.get().then(doc => {
-                if (doc.exists) {
-                    const profile = doc.data();
-                    document.getElementById('username').textContent = profile.username || 'No username provided';
-                    document.getElementById('email').textContent = profile.email || 'No email provided';
-                    document.getElementById('profile-image').src = profile.profileImageUrl || 'default-profile.png';
-                    document.getElementById('profile-content').innerHTML = profile.profileContent || 'No profile content';
-                    updateVehiclePreviews(profile.vehicleImages || []);
-                } else {
-                    console.error('No profile data found');
-                }
-            }).catch(error => console.error('Error loading profile: ', error));
-        }
-
-        function updateVehiclePreviews(vehicleImages) {
-            const vehicleContainer = document.getElementById('vehicle-previews');
-            vehicleContainer.innerHTML = '';
-            vehicleImages.forEach(url => {
-                const img = document.createElement('img');
-                img.src = url;
-                img.alt = 'Vehicle Image';
-                img.style.maxWidth = '100px';
-                img.style.maxHeight = '100px';
-                vehicleContainer.appendChild(img);
-            });
-        }
-
-        const urlParams = new URLSearchParams(window.location.search);
-        const uid = urlParams.get('uid');
-
-        if (uid) {
-            loadUserProfile(uid);
-        } else {
-            firebase.auth().onAuthStateChanged(function(user) {
-                if (user) {
-                    loadUserProfile(user.uid);
-                } else {
-                    console.error('No user ID provided in URL and no user is logged in');
-                }
-            });
-        }
-    </script>
+    <div id="profile-container">
+        <h2 id="username"></h2>
+        <img id="profile-image" src="" alt="Profile Image" style="max-width: 200px;">
+        <div id="bio"></div>
+        <h3>Vehicles</h3>
+        <div id="vehicle-previews"></div>
+        <h3>Social Media</h3>
+        <div id="social-media-previews"></div>
+        <h3>Custom Content</h3>
+        <div id="custom-html-content"></div>
+    </div>
 </body>
 </html>
