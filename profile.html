@@ -32,6 +32,7 @@
     </nav>
     <h1>Public Profile</h1>
     <div id="profile-container" class="profile-container"></div>
+    <input type="file" id="upload-image-input" style="display:none;">
     <script>
         if (!firebase.apps.length) {
             firebase.initializeApp(CONFIG.FIREBASE_CONFIG);
@@ -55,17 +56,27 @@
                     const data = doc.data();
                     const container = document.getElementById('profile-container');
                     container.innerHTML = `
-                        <h2>${data.username || 'No username provided'}</h2>
-                        <img src="${data.profileImageUrl || 'default-profile.png'}" alt="Profile Image" class="thumbnail">
-                        <div>${data.bio || 'No bio provided'}</div>
+                        <h2 contenteditable="true">${data.username || 'No username provided'}</h2>
+                        <img src="${data.profileImageUrl || 'default-profile.png'}" alt="Profile Image" class="thumbnail" id="profile-image">
+                        <button class="delete-image" onclick="deleteImage('profileImageUrl')">X</button>
+                        <div contenteditable="true">${data.bio || 'No bio provided'}</div>
                         <div id="vehicle-previews" class="sortable">
-                            ${(data.vehicleImageUrls || []).map(url => `<div class="vehicle-image-container"><img src="${url}" alt="Vehicle Image" class="thumbnail"><button class="delete-vehicle-image">Delete</button></div>`).join('')}
+                            ${(data.vehicleImageUrls || []).map(url => `
+                                <div class="vehicle-image-container">
+                                    <img src="${url}" alt="Vehicle Image" class="thumbnail">
+                                    <button class="delete-vehicle-image" onclick="deleteVehicleImage('${url}')">X</button>
+                                </div>
+                            `).join('')}
                         </div>
                         <div id="social-media-previews">
-                            ${(data.socialMediaUrls || []).map(url => `<a href="${url}" target="_blank">${url}</a><button class="delete-social-media-url">Delete</button>`).join('<br>')}
+                            ${(data.socialMediaUrls || []).map(url => `
+                                <div class="social-media-url-container">
+                                    <a href="${url}" target="_blank" contenteditable="true">${url}</a>
+                                    <button class="delete-social-media-url" onclick="deleteSocialMediaUrl('${url}')">X</button>
+                                </div>
+                            `).join('<br>')}
                         </div>
-                        <div>${data.customHtmlContent || 'No additional content provided'}</div>
-                        <button id="edit-profile">Edit Profile</button>
+                        <div contenteditable="true">${data.customHtmlContent || 'No additional content provided'}</div>
                     `;
 
                     // Initialize SortableJS
@@ -77,24 +88,21 @@
                         }
                     });
 
-                    document.querySelectorAll('.delete-vehicle-image').forEach((btn, index) => {
-                        btn.addEventListener('click', async () => {
-                            const vehicleImageUrls = data.vehicleImageUrls.filter((_, i) => i !== index);
-                            await db.collection('profiles').doc(userId).update({ vehicleImageUrls });
-                            loadProfile(userId);
-                        });
-                    });
-
-                    document.querySelectorAll('.delete-social-media-url').forEach((btn, index) => {
-                        btn.addEventListener('click', async () => {
-                            const socialMediaUrls = data.socialMediaUrls.filter((_, i) => i !== index);
-                            await db.collection('profiles').doc(userId).update({ socialMediaUrls });
-                            loadProfile(userId);
-                        });
-                    });
-
-                    document.getElementById('edit-profile').addEventListener('click', () => {
-                        window.location.href = `prof_editor.html?userId=${userId}`;
+                    container.addEventListener('dblclick', () => {
+                        const input = document.getElementById('upload-image-input');
+                        input.click();
+                        input.onchange = async (event) => {
+                            const file = event.target.files[0];
+                            if (file) {
+                                const storageRef = firebase.storage().ref();
+                                const fileRef = storageRef.child(`vehicle-images/${userId}/${file.name}`);
+                                await fileRef.put(file);
+                                const url = await fileRef.getDownloadURL();
+                                data.vehicleImageUrls.push(url);
+                                await db.collection('profiles').doc(userId).update({ vehicleImageUrls: data.vehicleImageUrls });
+                                loadProfile(userId);
+                            }
+                        };
                     });
                 } else {
                     document.getElementById('profile-container').innerText = 'Profile not found.';
@@ -102,6 +110,37 @@
             } catch (error) {
                 console.error('Error loading profile: ', error);
                 document.getElementById('profile-container').innerText = 'Error loading profile.';
+            }
+        }
+
+        async function deleteImage(imageField) {
+            const userId = new URLSearchParams(window.location.search).get('userId');
+            const db = firebase.firestore();
+            await db.collection('profiles').doc(userId).update({ [imageField]: firebase.firestore.FieldValue.delete() });
+            loadProfile(userId);
+        }
+
+        async function deleteVehicleImage(url) {
+            const userId = new URLSearchParams(window.location.search).get('userId');
+            const db = firebase.firestore();
+            const doc = await db.collection('profiles').doc(userId).get();
+            if (doc.exists) {
+                const data = doc.data();
+                const updatedUrls = data.vehicleImageUrls.filter(imgUrl => imgUrl !== url);
+                await db.collection('profiles').doc(userId).update({ vehicleImageUrls: updatedUrls });
+                loadProfile(userId);
+            }
+        }
+
+        async function deleteSocialMediaUrl(url) {
+            const userId = new URLSearchParams(window.location.search).get('userId');
+            const db = firebase.firestore();
+            const doc = await db.collection('profiles').doc(userId).get();
+            if (doc.exists) {
+                const data = doc.data();
+                const updatedUrls = data.socialMediaUrls.filter(smUrl => smUrl !== url);
+                await db.collection('profiles').doc(userId).update({ socialMediaUrls: updatedUrls });
+                loadProfile(userId);
             }
         }
     </script>
