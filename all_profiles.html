@@ -10,9 +10,9 @@
     <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-firestore.js"></script>
     <script src="config.js"></script>
     <script>
-        // Initialize Firebase
+        // Ensure Firebase is initialized before using any Firebase services
         if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
+            firebase.initializeApp(CONFIG.FIREBASE_CONFIG);
         }
 
         async function loadProfiles() {
