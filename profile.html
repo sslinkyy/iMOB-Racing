@@ -54,13 +54,15 @@
                 const doc = await db.collection('profiles').doc(userId).get();
                 if (doc.exists) {
                     const data = doc.data();
-                    data.vehicleImageUrls = data.vehicleImageUrls || []; // Ensure vehicleImageUrls is initialized
+                    data.vehicleImageUrls = data.vehicleImageUrls || [];
                     const container = document.getElementById('profile-container');
                     container.innerHTML = `
-                        <h2 contenteditable="true">${data.username || 'No username provided'}</h2>
-                        <img src="${data.profileImageUrl || 'default-profile.png'}" alt="Profile Image" class="thumbnail" id="profile-image">
-                        <button class="delete-image" onclick="deleteImage('profileImageUrl')">X</button>
-                        <div contenteditable="true">${data.bio || 'No bio provided'}</div>
+                        <h2 contenteditable="true" onblur="saveField('username', this.innerText)">${data.username || 'No username provided'}</h2>
+                        <div class="profile-image-container">
+                            <img src="${data.profileImageUrl || 'default-profile.png'}" alt="Profile Image" class="thumbnail" id="profile-image">
+                            <button class="delete-image" onclick="deleteImage('profileImageUrl')">X</button>
+                        </div>
+                        <div contenteditable="true" onblur="saveField('bio', this.innerHTML)">${data.bio || 'No bio provided'}</div>
                         <div id="vehicle-previews" class="sortable">
                             ${(data.vehicleImageUrls || []).map(url => `
                                 <div class="vehicle-image-container">
@@ -72,15 +74,14 @@
                         <div id="social-media-previews">
                             ${(data.socialMediaUrls || []).map(url => `
                                 <div class="social-media-url-container">
-                                    <a href="${url}" target="_blank" contenteditable="true">${url}</a>
+                                    <a href="${url}" target="_blank" contenteditable="true" onblur="saveSocialMediaUrl('${url}', this.innerText)">${url}</a>
                                     <button class="delete-social-media-url" onclick="deleteSocialMediaUrl('${url}')">X</button>
                                 </div>
                             `).join('<br>')}
                         </div>
-                        <div contenteditable="true">${data.customHtmlContent || 'No additional content provided'}</div>
+                        <div contenteditable="true" onblur="saveField('customHtmlContent', this.innerHTML)">${data.customHtmlContent || 'No additional content provided'}</div>
                     `;
 
-                    // Initialize SortableJS
                     new Sortable(document.getElementById('vehicle-previews'), {
                         animation: 150,
                         onEnd: async (evt) => {
@@ -111,6 +112,23 @@
             } catch (error) {
                 console.error('Error loading profile: ', error);
                 document.getElementById('profile-container').innerText = 'Error loading profile.';
+            }
+        }
+
+        async function saveField(field, value) {
+            const userId = new URLSearchParams(window.location.search).get('userId');
+            const db = firebase.firestore();
+            await db.collection('profiles').doc(userId).update({ [field]: value });
+        }
+
+        async function saveSocialMediaUrl(oldUrl, newUrl) {
+            const userId = new URLSearchParams(window.location.search).get('userId');
+            const db = firebase.firestore();
+            const doc = await db.collection('profiles').doc(userId).get();
+            if (doc.exists) {
+                const data = doc.data();
+                const updatedUrls = data.socialMediaUrls.map(url => (url === oldUrl ? newUrl : url));
+                await db.collection('profiles').doc(userId).update({ socialMediaUrls: updatedUrls });
             }
         }
 
