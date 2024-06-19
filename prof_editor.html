@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Editor</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.ckeditor.com/4.16.0/standard/ckeditor.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-storage.js"></script>
+    <script src="config.js"></script>
+    <script>
+        firebase.initializeApp(CONFIG.FIREBASE_CONFIG);
+
+        firebase.auth().onAuthStateChanged(function(user) {
+            if (user) {
+                document.getElementById('username').value = user.displayName || '';
+                document.getElementById('email').value = user.email || '';
+                loadProfile(user.uid);
+            } else {
+                window.location.href = 'login.html';
+            }
+        });
+
+        function saveProfile() {
+            const user = firebase.auth().currentUser;
+            if (user) {
+                const db = firebase.firestore();
+                const storage = firebase.storage();
+
+                const profileImageFile = document.getElementById('profileImage').files[0];
+                const vehicleImagesFiles = document.getElementById('vehicleImages').files;
+                const profileContent = CKEDITOR.instances.editor.getData();
+                const username = document.getElementById('username').value;
+                const email = document.getElementById('email').value;
+
+                const profileRef = db.collection('profiles').doc(user.uid);
+                let profileImageUrl, vehicleImageUrls = [];
+
+                if (profileImageFile) {
+                    const profileImageRef = storage.ref(`profile-images/${user.uid}/${profileImageFile.name}`);
+                    profileImageRef.put(profileImageFile).then(snapshot => {
+                        profileImageRef.getDownloadURL().then(url => {
+                            profileImageUrl = url;
+                            uploadVehicleImages();
+                        });
+                    }).catch(error => console.error('Error uploading profile image: ', error));
+                } else {
+                    uploadVehicleImages();
+                }
+
+                function uploadVehicleImages() {
+                    if (vehicleImagesFiles.length > 0) {
+                        let uploadCount = 0;
+                        Array.from(vehicleImagesFiles).forEach(file => {
+                            const vehicleImageRef = storage.ref(`vehicle-images/${user.uid}/${file.name}`);
+                            vehicleImageRef.put(file).then(snapshot => {
+                                vehicleImageRef.getDownloadURL().then(url => {
+                                    vehicleImageUrls.push(url);
+                                    uploadCount++;
+                                    if (uploadCount === vehicleImagesFiles.length) {
+                                        saveToFirestore();
+                                    }
+                                });
+                            }).catch(error => console.error('Error uploading vehicle image: ', error));
+                        });
+                    } else {
+                        saveToFirestore();
+                    }
+                }
+
+                function saveToFirestore() {
+                    profileRef.set({
+                        username,
+                        email,
+                        profileImageUrl,
+                        vehicleImages: vehicleImageUrls,
+                        profileContent
+                    }).then(() => {
+                        alert('Profile saved successfully!');
+                        updatePreview();
+                    }).catch(error => console.error('Error saving profile: ', error));
+                }
+            }
+        }
+
+        function loadProfile(uid) {
+            const db = firebase.firestore();
+            const profileRef = db.collection('profiles').doc(uid);
+
+            profileRef.get().then(doc => {
+                if (doc.exists) {
+                    const profile = doc.data();
+                    document.getElementById('username').value = profile.username || '';
+                    document.getElementById('email').value = profile.email || '';
+                    CKEDITOR.instances.editor.setData(profile.profileContent || '');
+                    document.getElementById('profileImagePreview').src = profile.profileImageUrl || '';
+                    updateVehiclePreviews(profile.vehicleImages || []);
+                }
+            }).catch(error => console.error('Error loading profile: ', error));
+        }
+
+        function updatePreview() {
+            const profileContent = CKEDITOR.instances.editor.getData();
+            document.getElementById('profile-preview').innerHTML = profileContent;
+        }
+
+        function updateVehiclePreviews(vehicleImages) {
+            const vehicleContainer = document.getElementById('vehiclePreviews');
+            vehicleContainer.innerHTML = '';
+            vehicleImages.forEach(url => {
+                const img = document.createElement('img');
+                img.src = url;
+                img.alt = 'Vehicle Image';
+                img.style.maxWidth = '100px';
+                img.style.maxHeight = '100px';
+                vehicleContainer.appendChild(img);
+            });
+        }
+    </script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-container">
+            <span class="navbar-toggle" id="js-navbar-toggle">
+                <i class="fas fa-bars"></i>
+            </span>
+            <a href="index.html" class="logo">iMOB Racing</a>
+            <ul class="main-nav" id="js-menu">
+                <li><a href="index.html" class="nav-links">Home</a></li>
+                <li><a href="drivers.html" class="nav-links">Drivers</a></li>
+                <li><a href="cars.html" class="nav-links">Cars</a></li>
+                <li><a href="mission.html" class="nav-links">Our Mission</a></li>
+                <li><a href="index.html#contact" class="nav-links">Contact</a></li>
+                <li><a href="profile.html" class="nav-links">Profile</a></li>
+            </ul>
+        </div>
+    </nav>
+    <h1>Profile Editor</h1>
+    <label for="username">Username:</label>
+    <input type="text" id="username" name="username"><br><br>
+    <label for="email">Email:</label>
+    <input type="text" id="email" name="email" disabled><br><br>
+    <label for="profileImage">Profile Image:</label>
+    <input type="file" id="profileImage" name="profileImage" accept="image/*"><br><br>
+    <img id="profileImagePreview" src="" alt="Profile Image Preview" style="max-width: 100px; max-height: 100px;"><br><br>
+    <label for="vehicleImages">Vehicle Images:</label>
+    <input type="file" id="vehicleImages" name="vehicleImages" accept="image/*" multiple><br><br>
+    <div id="vehiclePreviews"></div><br><br>
+    <textarea id="editor" name="editor" rows="10" cols="80"></textarea>
+    <script>
+        CKEDITOR.replace('editor');
+    </script>
+    <button onclick="saveProfile()">Save Profile</button>
+    <button onclick="updatePreview()">Update Preview</button>
+    <div id="profile-preview" style="margin-top: 20px; border: 1px solid #ccc; padding: 10px;"></div>
+</body>
+</html>
