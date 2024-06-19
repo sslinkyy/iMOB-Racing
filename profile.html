@@ -8,52 +8,7 @@
     <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-firestore.js"></script>
     <script src="config.js"></script>
-    <script>
-        firebase.initializeApp(CONFIG.FIREBASE_CONFIG);
-    </script>
-    <script>
-        document.addEventListener('DOMContentLoaded', async function() {
-            const db = firebase.firestore();
-            const params = new URLSearchParams(window.location.search);
-            const userId = params.get('userId');
-
-            if (userId) {
-                try {
-                    const doc = await db.collection('profiles').doc(userId).get();
-                    if (doc.exists) {
-                        const profile = doc.data();
-                        document.getElementById('username').innerText = profile.username;
-                        document.getElementById('email').innerText = profile.email;
-                        document.getElementById('profile-content').innerHTML = profile.profileContent;
-                        document.getElementById('profile-image').src = profile.profileImageUrl;
-                        updateVehiclePreviews(profile.vehicles);
-                    } else {
-                        alert('Profile not found.');
-                    }
-                } catch (error) {
-                    console.error('Error loading profile: ', error);
-                    alert('Error loading profile.');
-                }
-            } else {
-                alert('No user ID specified.');
-            }
-        });
-
-        function updateVehiclePreviews(vehicles) {
-            const vehicleContainer = document.getElementById('vehicle-previews');
-            vehicleContainer.innerHTML = '';
-            if (vehicles) {
-                vehicles.forEach(vehicle => {
-                    const img = document.createElement('img');
-                    img.src = vehicle;
-                    img.alt = 'Vehicle Image';
-                    img.style.maxWidth = '100px';
-                    img.style.maxHeight = '100px';
-                    vehicleContainer.appendChild(img);
-                });
-            }
-        }
-    </script>
+    <script src="prof_editor.js"></script>
 </head>
 <body>
     <nav class="navbar">
@@ -68,7 +23,7 @@
                 <li><a href="cars.html" class="nav-links">Cars</a></li>
                 <li><a href="mission.html" class="nav-links">Our Mission</a></li>
                 <li><a href="index.html#contact" class="nav-links">Contact</a></li>
-                <li><a href="profile.html" class="nav-links">Profile</a></li>
+                <li><a href="all_profiles.html" class="nav-links">All Profiles</a></li>
             </ul>
         </div>
     </nav>
@@ -78,5 +33,45 @@
     <p id="email"></p>
     <div id="profile-content"></div>
     <div id="vehicle-previews"></div>
+    <script>
+        // This function assumes you have the user's UID stored in a query parameter or some other way to identify the user.
+        function loadUserProfile(uid) {
+            const db = firebase.firestore();
+            const profileRef = db.collection('profiles').doc(uid);
+
+            profileRef.get().then(doc => {
+                if (doc.exists) {
+                    const profile = doc.data();
+                    document.getElementById('username').textContent = profile.username || 'No username provided';
+                    document.getElementById('email').textContent = profile.email || 'No email provided';
+                    document.getElementById('profile-image').src = profile.profileImageUrl || '';
+                    document.getElementById('profile-content').innerHTML = profile.profileContent || '';
+                    updateVehiclePreviews(profile.vehicleImages || []);
+                }
+            }).catch(error => console.error('Error loading profile: ', error));
+        }
+
+        function updateVehiclePreviews(vehicleImages) {
+            const vehicleContainer = document.getElementById('vehicle-previews');
+            vehicleContainer.innerHTML = '';
+            vehicleImages.forEach(url => {
+                const img = document.createElement('img');
+                img.src = url;
+                img.alt = 'Vehicle Image';
+                img.style.maxWidth = '100px';
+                img.style.maxHeight = '100px';
+                vehicleContainer.appendChild(img);
+            });
+        }
+
+        // Extract UID from the URL query parameters and load the profile.
+        const urlParams = new URLSearchParams(window.location.search);
+        const uid = urlParams.get('uid');
+        if (uid) {
+            loadUserProfile(uid);
+        } else {
+            console.error('No user ID provided in URL');
+        }
+    </script>
 </body>
 </html>
