@@ -437,3 +437,19 @@ section {
     border-radius: 5px;
     margin: 5px;
 }
+
+.vehicle-image-container {
+    display: inline-block;
+    position: relative;
+}
+
+.delete-vehicle-image, .delete-social-media-url {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: red;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+}
