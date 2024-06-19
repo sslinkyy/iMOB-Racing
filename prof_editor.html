@@ -145,12 +145,21 @@
             `;
         }
 
+        function logout() {
+            firebase.auth().signOut().then(() => {
+                window.location.href = 'index.html';
+            }).catch((error) => {
+                console.error('Error signing out: ', error);
+            });
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             CKEDITOR.replace('bioEditor');
             CKEDITOR.replace('customHtmlEditor');
             document.getElementById('toggle-preview').addEventListener('click', togglePreview);
             document.getElementById('save-profile').addEventListener('click', saveProfile);
             document.getElementById('add-social-media-url').addEventListener('click', () => addSocialMediaUrl());
+            document.getElementById('logout').addEventListener('click', logout);
         });
     </script>
 </head>
