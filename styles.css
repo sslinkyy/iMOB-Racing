@@ -429,3 +429,8 @@ section {
 .profile-card .view-profile-button:hover {
     background-color: #e43e00;
 }
+
+/* Snipcart Customization */
+.snipcart-checkout {
+    display: none;
+}
