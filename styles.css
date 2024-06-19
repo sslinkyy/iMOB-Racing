@@ -436,6 +436,7 @@ section {
     object-fit: cover;
     border-radius: 5px;
     margin: 5px;
+    cursor: pointer;
 }
 
 .vehicle-image-container {
@@ -443,7 +444,12 @@ section {
     position: relative;
 }
 
-.delete-vehicle-image, .delete-social-media-url {
+.social-media-url-container {
+    display: flex;
+    align-items: center;
+}
+
+.delete-vehicle-image, .delete-social-media-url, .delete-image {
     position: absolute;
     top: 5px;
     right: 5px;
@@ -452,4 +458,10 @@ section {
     border: none;
     border-radius: 50%;
     cursor: pointer;
+}
+
+.editable {
+    border: 1px dashed #ccc;
+    padding: 5px;
+    cursor: text;
 }
