@@ -2,42 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>All Profiles - IMOB Racing</title>
+    <title>All Profiles</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-firestore.js"></script>
     <script src="config.js"></script>
-    <script>
-        firebase.initializeApp(CONFIG.FIREBASE_CONFIG);
-
-        async function loadProfiles() {
-            try {
-                const db = firebase.firestore();
-                const snapshot = await db.collection('profiles').get();
-                const profilesContainer = document.getElementById('profiles-container');
-                snapshot.forEach(doc => {
-                    const data = doc.data();
-                    const profileCard = document.createElement('div');
-                    profileCard.classList.add('profile-card');
-                    profileCard.innerHTML = `
-                        <img src="${data.profileImageUrl || 'default-profile.png'}" alt="Profile Image" class="profile-image">
-                        <h3>${data.username || 'No Username'}</h3>
-                        <p>${data.bio || 'No bio available'}</p>
-                        <a href="profile.html?userId=${doc.id}" class="view-profile-button">View Profile</a>
-                    `;
-                    profilesContainer.appendChild(profileCard);
-                });
-            } catch (error) {
-                console.error('Error loading profiles: ', error);
-                alert('Error loading profiles: ' + error.message);
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            loadProfiles();
-        });
-    </script>
 </head>
 <body>
     <nav class="navbar">
@@ -49,13 +19,44 @@
                 <li><a href="cars.html" class="nav-links">Cars</a></li>
                 <li><a href="mission.html" class="nav-links">Our Mission</a></li>
                 <li><a href="index.html#contact" class="nav-links">Contact</a></li>
-                <li><a href="all_profiles.html" class="nav-links">Profiles</a></li>
+                <li><a href="all_profiles.html" class="nav-links">All Profiles</a></li>
+                <li><a href="profile.html" class="nav-links">Profile</a></li>
                 <li><a href="prof_editor.html" class="nav-links">Edit Profile</a></li>
-                <li><a href="javascript:void(0)" class="nav-links" id="logout">Logout</a></li>
             </ul>
         </div>
     </nav>
     <h1>All Profiles</h1>
     <div id="profiles-container"></div>
+    <script>
+        if (!firebase.apps.length) {
+            firebase.initializeApp(CONFIG.FIREBASE_CONFIG);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadProfiles();
+        });
+
+        async function loadProfiles() {
+            try {
+                const db = firebase.firestore();
+                const profilesSnapshot = await db.collection('profiles').get();
+                const profilesContainer = document.getElementById('profiles-container');
+                profilesSnapshot.forEach(doc => {
+                    const profile = doc.data();
+                    const profileCard = document.createElement('div');
+                    profileCard.classList.add('profile-card');
+                    profileCard.innerHTML = `
+                        <h3>${profile.username}</h3>
+                        <img src="${profile.profileImageUrl}" alt="Profile Image" class="thumbnail">
+                        <p>${profile.email}</p>
+                        <a href="profile.html?userId=${doc.id}" class="view-profile-button">View Profile</a>
+                    `;
+                    profilesContainer.appendChild(profileCard);
+                });
+            } catch (error) {
+                console.error('Error loading profiles: ', error);
+            }
+        }
+    </script>
 </body>
 </html>
