@@ -19,6 +19,11 @@
             const db = firebase.firestore();
             const profilesContainer = document.getElementById('profiles-container');
 
+            if (!profilesContainer) {
+                console.error('No profiles container found');
+                return;
+            }
+
             try {
                 const snapshot = await db.collection('profiles').get();
                 snapshot.forEach(doc => {
