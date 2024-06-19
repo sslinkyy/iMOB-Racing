@@ -2,8 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile Editor</title>
+    <title>Profile Editor - IMOB Racing</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.ckeditor.com/4.16.0/standard/ckeditor.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
@@ -11,13 +10,127 @@
     <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-storage.js"></script>
     <script src="config.js"></script>
+    <script>
+        firebase.initializeApp(CONFIG.FIREBASE_CONFIG);
+
+        firebase.auth().onAuthStateChanged(function(user) {
+            if (user) {
+                document.getElementById('username').value = user.displayName || '';
+                document.getElementById('user-email').innerText = user.email;
+                loadProfile(user.uid);
+            } else {
+                window.location.href = 'login.html';
+            }
+        });
+
+        async function saveProfile() {
+            try {
+                const user = firebase.auth().currentUser;
+                if (user) {
+                    const db = firebase.firestore();
+                    const profileData = {
+                        username: document.getElementById('username').value,
+                        bio: CKEDITOR.instances.bioEditor.getData(),
+                        profileImageUrl: await uploadFile(user.uid, 'profile-image', 'profile-images'),
+                        vehicleImageUrls: await uploadFiles(user.uid, 'vehicle-images', 'vehicle-images')
+                    };
+                    await db.collection('profiles').doc(user.uid).set(profileData);
+                    alert('Profile saved successfully!');
+                    updatePreview();
+                }
+            } catch (error) {
+                console.error('Error saving profile: ', error);
+                alert('Error saving profile: ' + error.message);
+            }
+        }
+
+        async function uploadFile(userId, inputId, folder) {
+            const fileInput = document.getElementById(inputId);
+            if (fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+                const storageRef = firebase.storage().ref();
+                const fileRef = storageRef.child(`${folder}/${userId}/${file.name}`);
+                await fileRef.put(file);
+                return await fileRef.getDownloadURL();
+            }
+            return null;
+        }
+
+        async function uploadFiles(userId, inputId, folder) {
+            const fileInput = document.getElementById(inputId);
+            const urls = [];
+            for (const file of fileInput.files) {
+                const storageRef = firebase.storage().ref();
+                const fileRef = storageRef.child(`${folder}/${userId}/${file.name}`);
+                await fileRef.put(file);
+                urls.push(await fileRef.getDownloadURL());
+            }
+            return urls;
+        }
+
+        async function loadProfile(userId) {
+            try {
+                const db = firebase.firestore();
+                const doc = await db.collection('profiles').doc(userId).get();
+                if (doc.exists) {
+                    const data = doc.data();
+                    document.getElementById('username').value = data.username || '';
+                    CKEDITOR.instances.bioEditor.setData(data.bio || '');
+                    document.getElementById('profile-image-preview').src = data.profileImageUrl || '';
+                    updateVehiclePreviews(data.vehicleImageUrls || []);
+                }
+            } catch (error) {
+                console.error('Error loading profile: ', error);
+            }
+        }
+
+        function updateVehiclePreviews(urls) {
+            const container = document.getElementById('vehicle-previews');
+            container.innerHTML = '';
+            urls.forEach(url => {
+                const img = document.createElement('img');
+                img.src = url;
+                container.appendChild(img);
+            });
+        }
+
+        function togglePreview() {
+            const previewContainer = document.getElementById('profile-preview');
+            previewContainer.style.display = previewContainer.style.display === 'none' ? 'block' : 'none';
+            updatePreview();
+        }
+
+        function updatePreview() {
+            const previewContainer = document.getElementById('profile-preview');
+            previewContainer.innerHTML = `
+                <h2>${document.getElementById('username').value}</h2>
+                <img src="${document.getElementById('profile-image-preview').src}" alt="Profile Image">
+                <div>${CKEDITOR.instances.bioEditor.getData()}</div>
+                <div id="vehicle-previews">
+                    ${Array.from(document.getElementById('vehicle-images').files).map(file => `<img src="${URL.createObjectURL(file)}" alt="Vehicle Image">`).join('')}
+                </div>
+            `;
+        }
+
+        function logout() {
+            firebase.auth().signOut().then(() => {
+                window.location.href = 'login.html';
+            }).catch((error) => {
+                console.error('Error signing out: ', error);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            CKEDITOR.replace('bioEditor');
+            document.getElementById('toggle-preview').addEventListener('click', togglePreview);
+            document.getElementById('save-profile').addEventListener('click', saveProfile);
+            document.getElementById('logout').addEventListener('click', logout);
+        });
+    </script>
 </head>
 <body>
     <nav class="navbar">
         <div class="navbar-container">
-            <span class="navbar-toggle" id="js-navbar-toggle">
-                <i class="fas fa-bars"></i>
-            </span>
             <a href="index.html" class="logo">iMOB Racing</a>
             <ul class="main-nav" id="js-menu">
                 <li><a href="index.html" class="nav-links">Home</a></li>
@@ -25,131 +138,26 @@
                 <li><a href="cars.html" class="nav-links">Cars</a></li>
                 <li><a href="mission.html" class="nav-links">Our Mission</a></li>
                 <li><a href="index.html#contact" class="nav-links">Contact</a></li>
-                <li><a href="all_profiles.html" class="nav-links">All Profiles</a></li>
-                <li><a href="prof_editor.html" class="nav-links">Profile Editor</a></li>
+                <li><a href="all_profiles.html" class="nav-links">Profiles</a></li>
+                <li><a href="prof_editor.html" class="nav-links">Edit Profile</a></li>
+                <li><a href="javascript:void(0)" class="nav-links" id="logout">Logout</a></li>
             </ul>
         </div>
     </nav>
     <h1>Profile Editor</h1>
     <label for="username">Username:</label>
-    <input type="text" id="username-input" name="username"><br>
-    <label for="email">Email:</label>
-    <input type="text" id="email-input" name="email" disabled><br>
-    <label for="profile-image-input">Profile Image:</label>
-    <input type="file" id="profile-image-input" name="profile-image-input" accept="image/*"><br>
-    <label for="editor">Profile Content:</label>
-    <textarea id="editor" name="editor" rows="10" cols="80"></textarea><br>
-    <label for="vehicle-images-input">Vehicle Images:</label>
-    <input type="file" id="vehicle-images-input" name="vehicle-images-input" accept="image/*" multiple><br>
-    <button onclick="saveProfile()">Save Profile</button>
-    <button onclick="togglePreview()">Toggle Preview</button>
-    <div id="profile-preview" style="margin-top: 20px; border: 1px solid #ccc; padding: 10px;"></div>
-    <script>
-        // Initialize Firebase
-        if (!firebase.apps.length) {
-            firebase.initializeApp(CONFIG.FIREBASE_CONFIG);
-        }
-
-        CKEDITOR.replace('editor');
-
-        firebase.auth().onAuthStateChanged(function(user) {
-            if (user) {
-                document.getElementById('username-input').value = user.displayName || user.email;
-                document.getElementById('email-input').value = user.email;
-                loadProfile(user.uid);
-            } else {
-                window.location.href = 'login.html';
-            }
-        });
-
-        function loadProfile(uid) {
-            const db = firebase.firestore();
-            const profileRef = db.collection('profiles').doc(uid);
-
-            profileRef.get().then(doc => {
-                if (doc.exists) {
-                    const profile = doc.data();
-                    document.getElementById('username-input').value = profile.username || '';
-                    CKEDITOR.instances.editor.setData(profile.profileContent || '');
-                    document.getElementById('profile-preview').innerHTML = profile.profileContent || 'No profile content';
-                } else {
-                    console.error('No profile data found');
-                }
-            }).catch(error => console.error('Error loading profile: ', error));
-        }
-
-        async function saveProfile() {
-            const user = firebase.auth().currentUser;
-            if (!user) {
-                alert('No user logged in!');
-                return;
-            }
-
-            const db = firebase.firestore();
-            const storage = firebase.storage();
-
-            const username = document.getElementById('username-input').value;
-            const profileContent = CKEDITOR.instances.editor.getData();
-            const profileImageFile = document.getElementById('profile-image-input').files[0];
-            const vehicleImageFiles = document.getElementById('vehicle-images-input').files;
-
-            let profileImageUrl = '';
-            if (profileImageFile) {
-                const profileImageRef = storage.ref().child(`profile-images/${user.uid}/${profileImageFile.name}`);
-                await profileImageRef.put(profileImageFile);
-                profileImageUrl = await profileImageRef.getDownloadURL();
-            }
-
-            const vehicleImageUrls = [];
-            for (let i = 0; i < vehicleImageFiles.length; i++) {
-                const vehicleImageRef = storage.ref().child(`vehicle-images/${user.uid}/${vehicleImageFiles[i].name}`);
-                await vehicleImageRef.put(vehicleImageFiles[i]);
-                const url = await vehicleImageRef.getDownloadURL();
-                vehicleImageUrls.push(url);
-            }
-
-            const profileData = {
-                username,
-                email: user.email,
-                profileContent,
-                profileImageUrl: profileImageUrl || 'default-profile.png',
-                vehicleImages: vehicleImageUrls
-            };
-
-            db.collection('profiles').doc(user.uid).set(profileData)
-                .then(() => {
-                    alert('Profile saved successfully!');
-                    updatePreview(profileData);
-                })
-                .catch(error => console.error('Error saving profile: ', error));
-        }
-
-        function updatePreview(profile) {
-            document.getElementById('profile-preview').innerHTML = profile.profileContent || 'No profile content';
-            const vehicleContainer = document.getElementById('vehicle-previews');
-            vehicleContainer.innerHTML = '';
-            (profile.vehicleImages || []).forEach(url => {
-                const img = document.createElement('img');
-                img.src = url;
-                img.alt = 'Vehicle Image';
-                img.style.maxWidth = '100px';
-                img.style.maxHeight = '100px';
-                vehicleContainer.appendChild(img);
-            });
-        }
-
-        function togglePreview() {
-            const preview = document.getElementById('profile-preview');
-            if (preview.style.display === 'none') {
-                preview.style.display = 'block';
-                updatePreview({
-                    profileContent: CKEDITOR.instances.editor.getData(),
-                    vehicleImages: Array.from(document.getElementById('vehicle-images-input').files).map(file => URL.createObjectURL(file))
-                });
-            } else {
-                preview.style.display = 'none';
-            }
-        }
-    </script>
+    <input type="text" id="username" name="username">
+    <p id="user-email"></p>
+    <label for="bioEditor">Bio:</label>
+    <textarea id="bioEditor" name="bioEditor" rows="10" cols="80"></textarea>
+    <label for="profile-image">Profile Image:</label>
+    <input type="file" id="profile-image" name="profile-image" accept="image/*">
+    <img id="profile-image-preview" src="" alt="Profile Image Preview">
+    <label for="vehicle-images">Vehicle Images:</label>
+    <input type="file" id="vehicle-images" name="vehicle-images" accept="image/*" multiple>
+    <div id="vehicle-previews"></div>
+    <button id="toggle-preview">Toggle Preview</button>
+    <button id="save-profile">Save Profile</button>
+    <div id="profile-preview" style="display:none; border:1px solid #ccc; padding:10px;"></div>
 </body>
 </html>
