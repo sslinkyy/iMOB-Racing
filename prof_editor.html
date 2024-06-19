@@ -26,8 +26,8 @@
                 <li><a href="mission.html" class="nav-links">Our Mission</a></li>
                 <li><a href="index.html#contact" class="nav-links">Contact</a></li>
                 <li><a href="all_profiles.html" class="nav-links">All Profiles</a></li>
-                    <li><a href="profile.html?userId=${user.uid}" class="nav-links">Profile</a></li>
                 <li><a href="profile.html" class="nav-links">Profile</a></li>
+                <li><a href="prof_editor.html" class="nav-links">Edit Profile</a></li>
             </ul>
         </div>
     </nav>
@@ -73,19 +73,7 @@
                     document.getElementById('username-input').value = profile.username || '';
                     CKEDITOR.instances.editor.setData(profile.profileContent || '');
                     document.getElementById('profile-preview').innerHTML = profile.profileContent || 'No profile content';
-                    // Load profile image
-                    if (profile.profileImageUrl) {
-                        document.getElementById('profile-preview').innerHTML += `<img src="${profile.profileImageUrl}" class="thumbnail" alt="Profile Image">`;
-                    }
-                    // Load vehicle images
-                    const vehicleContainer = document.getElementById('profile-preview');
-                    (profile.vehicleImages || []).forEach(url => {
-                        const img = document.createElement('img');
-                        img.src = url;
-                        img.alt = 'Vehicle Image';
-                        img.classList.add('thumbnail');
-                        vehicleContainer.appendChild(img);
-                    });
+                    updateVehiclePreviews(profile.vehicleImages || []);
                 } else {
                     console.error('No profile data found');
                 }
@@ -139,18 +127,14 @@
         }
 
         function updatePreview(profile) {
-            const previewContainer = document.getElementById('profile-preview');
-            previewContainer.innerHTML = profile.profileContent || 'No profile content';
-            if (profile.profileImageUrl) {
-                const profileImage = document.createElement('img');
-                profileImage.src = profile.profileImageUrl;
-                profileImage.alt = 'Profile Image';
-                profileImage.classList.add('thumbnail');
-                previewContainer.appendChild(profileImage);
-            }
+            document.getElementById('profile-preview').innerHTML = profile.profileContent || 'No profile content';
+            updateVehiclePreviews(profile.vehicleImages || []);
+        }
+
+        function updateVehiclePreviews(urls) {
             const vehicleContainer = document.getElementById('vehicle-previews');
             vehicleContainer.innerHTML = '';
-            (profile.vehicleImages || []).forEach(url => {
+            urls.forEach(url => {
                 const img = document.createElement('img');
                 img.src = url;
                 img.alt = 'Vehicle Image';
@@ -165,7 +149,6 @@
                 preview.style.display = 'block';
                 updatePreview({
                     profileContent: CKEDITOR.instances.editor.getData(),
-                    profileImageUrl: URL.createObjectURL(document.getElementById('profile-image-input').files[0]),
                     vehicleImages: Array.from(document.getElementById('vehicle-images-input').files).map(file => URL.createObjectURL(file))
                 });
             } else {
