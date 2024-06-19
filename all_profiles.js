@@ -14,7 +14,7 @@ function loadAllProfiles() {
             profileDiv.className = 'profile-card';
 
             const profileImage = document.createElement('img');
-            profileImage.src = profile.profileImageUrl || 'default-profile.png';
+            profileImage.src = profile.profileImageUrl || 'default-profile.webp';
             profileImage.alt = profile.username || 'No username';
             profileImage.style.maxWidth = '100px';
             profileImage.style.maxHeight = '100px';
