@@ -28,6 +28,7 @@
                 <li><a href="all_profiles.html" class="nav-links">All Profiles</a></li>
                 <li><a href="profile.html" class="nav-links">Profile</a></li>
                 <li><a href="prof_editor.html" class="nav-links">Edit Profile</a></li>
+                <li><a href="javascript:void(0)" class="nav-links" id="logout">Logout</a></li>
             </ul>
         </div>
     </nav>
@@ -42,10 +43,10 @@
     <textarea id="editor" name="editor" rows="10" cols="80"></textarea><br>
     <label for="vehicle-images-input">Vehicle Images:</label>
     <input type="file" id="vehicle-images-input" name="vehicle-images-input" accept="image/*" multiple><br>
+    <div id="vehicle-previews"></div>
     <button onclick="saveProfile()">Save Profile</button>
     <button onclick="togglePreview()">Toggle Preview</button>
     <div id="profile-preview" style="margin-top: 20px; border: 1px solid #ccc; padding: 10px;"></div>
-    <div id="vehicle-previews"></div>
     <script>
         // Initialize Firebase
         if (!firebase.apps.length) {
@@ -128,32 +129,39 @@
         }
 
         function updatePreview(profile) {
-            document.getElementById('profile-preview').innerHTML = profile.profileContent || 'No profile content';
+            const profilePreview = document.getElementById('profile-preview');
+            if (profilePreview) {
+                profilePreview.innerHTML = profile.profileContent || 'No profile content';
+            }
             updateVehiclePreviews(profile.vehicleImages || []);
         }
 
         function updateVehiclePreviews(urls) {
             const vehicleContainer = document.getElementById('vehicle-previews');
-            vehicleContainer.innerHTML = '';
-            urls.forEach(url => {
-                const img = document.createElement('img');
-                img.src = url;
-                img.alt = 'Vehicle Image';
-                img.classList.add('thumbnail');
-                vehicleContainer.appendChild(img);
-            });
+            if (vehicleContainer) {
+                vehicleContainer.innerHTML = '';
+                urls.forEach(url => {
+                    const img = document.createElement('img');
+                    img.src = url;
+                    img.alt = 'Vehicle Image';
+                    img.classList.add('thumbnail');
+                    vehicleContainer.appendChild(img);
+                });
+            }
         }
 
         function togglePreview() {
             const preview = document.getElementById('profile-preview');
-            if (preview.style.display === 'none') {
-                preview.style.display = 'block';
-                updatePreview({
-                    profileContent: CKEDITOR.instances.editor.getData(),
-                    vehicleImages: Array.from(document.getElementById('vehicle-images-input').files).map(file => URL.createObjectURL(file))
-                });
-            } else {
-                preview.style.display = 'none';
+            if (preview) {
+                if (preview.style.display === 'none') {
+                    preview.style.display = 'block';
+                    updatePreview({
+                        profileContent: CKEDITOR.instances.editor.getData(),
+                        vehicleImages: Array.from(document.getElementById('vehicle-images-input').files).map(file => URL.createObjectURL(file))
+                    });
+                } else {
+                    preview.style.display = 'none';
+                }
             }
         }
     </script>
