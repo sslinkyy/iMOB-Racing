@@ -58,7 +58,7 @@
                         <img src="${data.profileImageUrl || 'default-profile.png'}" alt="Profile Image" class="thumbnail">
                         <div>${data.bio || 'No bio provided'}</div>
                         <div id="vehicle-previews">
-                            ${renderVehicleImages(data.vehicleImageUrls || [])}
+                            ${(data.vehicleImageUrls || []).map(url => `<img src="${url}" alt="Vehicle Image" class="thumbnail">`).join('')}
                         </div>
                         <div id="social-media-previews">
                             ${(data.socialMediaUrls || []).map(url => `<a href="${url}" target="_blank">${url}</a>`).join('<br>')}
@@ -72,15 +72,6 @@
                 console.error('Error loading profile: ', error);
                 document.getElementById('profile-container').innerText = 'Error loading profile.';
             }
-        }
-
-        function renderVehicleImages(urls) {
-            if (!Array.isArray(urls)) {
-                console.error('Vehicle URLs is not an array:', urls);
-                return 'No vehicle images available.';
-            }
-
-            return urls.map(url => `<img src="${url}" alt="Vehicle Image" class="thumbnail">`).join('');
         }
     </script>
 </body>
