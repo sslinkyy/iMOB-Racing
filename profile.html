@@ -8,7 +8,7 @@
     <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-firestore.js"></script>
     <script src="config.js"></script>
-    <script src="prof_editor.js"></script>
+    <script src="profile.js"></script>
 </head>
 <body>
     <nav class="navbar">
@@ -24,6 +24,7 @@
                 <li><a href="mission.html" class="nav-links">Our Mission</a></li>
                 <li><a href="index.html#contact" class="nav-links">Contact</a></li>
                 <li><a href="all_profiles.html" class="nav-links">All Profiles</a></li>
+                <li><a href="prof_editor.html" class="nav-links">Profile Editor</a></li>
             </ul>
         </div>
     </nav>
@@ -34,7 +35,6 @@
     <div id="profile-content"></div>
     <div id="vehicle-previews"></div>
     <script>
-        // This function assumes you have the user's UID stored in a query parameter or some other way to identify the user.
         function loadUserProfile(uid) {
             const db = firebase.firestore();
             const profileRef = db.collection('profiles').doc(uid);
@@ -44,7 +44,7 @@
                     const profile = doc.data();
                     document.getElementById('username').textContent = profile.username || 'No username provided';
                     document.getElementById('email').textContent = profile.email || 'No email provided';
-                    document.getElementById('profile-image').src = profile.profileImageUrl || '';
+                    document.getElementById('profile-image').src = profile.profileImageUrl || 'default-profile.png';
                     document.getElementById('profile-content').innerHTML = profile.profileContent || '';
                     updateVehiclePreviews(profile.vehicleImages || []);
                 }
@@ -64,7 +64,6 @@
             });
         }
 
-        // Extract UID from the URL query parameters and load the profile.
         const urlParams = new URLSearchParams(window.location.search);
         const uid = urlParams.get('uid');
         if (uid) {
