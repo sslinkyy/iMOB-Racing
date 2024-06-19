@@ -45,8 +45,10 @@
                     document.getElementById('username').textContent = profile.username || 'No username provided';
                     document.getElementById('email').textContent = profile.email || 'No email provided';
                     document.getElementById('profile-image').src = profile.profileImageUrl || 'default-profile.png';
-                    document.getElementById('profile-content').innerHTML = profile.profileContent || '';
+                    document.getElementById('profile-content').innerHTML = profile.profileContent || 'No profile content';
                     updateVehiclePreviews(profile.vehicleImages || []);
+                } else {
+                    console.error('No profile data found');
                 }
             }).catch(error => console.error('Error loading profile: ', error));
         }
