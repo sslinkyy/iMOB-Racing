@@ -51,6 +51,7 @@
                 const doc = await db.collection('profiles').doc(userId).get();
                 if (doc.exists) {
                     const data = doc.data();
+                    console.log('Profile data:', data); // Debugging line to check profile data
                     const container = document.getElementById('profile-container');
                     container.innerHTML = `
                         <h2>${data.username || 'No username provided'}</h2>
