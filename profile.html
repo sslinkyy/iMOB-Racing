@@ -32,7 +32,7 @@
             });
         }
 
-        function saveProfile() {
+        async function saveProfile() {
             const user = firebase.auth().currentUser;
             if (user) {
                 const db = firebase.firestore();
@@ -56,9 +56,10 @@
                     promises.push(vehicleImageRef.put(vehicleImages[i]).then(snapshot => snapshot.ref.getDownloadURL().then(url => vehicleImageUrls.push(url))));
                 }
 
-                Promise.all(promises).then(urls => {
+                try {
+                    const urls = await Promise.all(promises);
                     const profileImageUrl = urls.length > 0 ? urls[0] : null;
-                    db.collection('profiles').doc(user.uid).set({
+                    await db.collection('profiles').doc(user.uid).set({
                         username: document.getElementById('username').value,
                         email: user.email,
                         profileContent: profileContent,
@@ -67,23 +68,20 @@
                         vehicles: vehicles,
                         profileImageUrl: profileImageUrl,
                         vehicleImages: vehicleImageUrls
-                    }).then(() => {
-                        alert('Profile saved!');
-                        updatePreview();
-                    }).catch(error => {
-                        console.error('Error saving profile: ', error);
-                        alert('Error saving profile.');
                     });
-                }).catch(error => {
+                    alert('Profile saved!');
+                    updatePreview();
+                } catch (error) {
                     console.error('Error uploading files: ', error);
                     alert('Error uploading files.');
-                });
+                }
             }
         }
 
-        function loadProfile(uid) {
+        async function loadProfile(uid) {
             const db = firebase.firestore();
-            db.collection('profiles').doc(uid).get().then(doc => {
+            try {
+                const doc = await db.collection('profiles').doc(uid).get();
                 if (doc.exists) {
                     const data = doc.data();
                     document.getElementById('username').value = data.username || '';
@@ -99,10 +97,10 @@
                     updateVehiclePreviews(data.vehicleImages || []);
                     updatePreview();
                 }
-            }).catch(error => {
+            } catch (error) {
                 console.error('Error loading profile: ', error);
                 alert('Error loading profile.');
-            });
+            }
         }
 
         function updateVehiclePreviews(vehicleImageUrls) {
