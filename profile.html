@@ -17,14 +17,15 @@
                 const doc = await db.collection('profiles').doc(userId).get();
                 if (doc.exists) {
                     const data = doc.data();
-                    document.getElementById('username').innerText = data.username || '';
-                    document.getElementById('bio').innerHTML = data.bio || '';
+                    document.getElementById('profile-username').innerText = data.username || '';
+                    document.getElementById('profile-email').innerText = data.email || '';
+                    document.getElementById('profile-bio').innerHTML = data.bio || '';
                     document.getElementById('profile-image').src = data.profileImageUrl || '';
                     updateVehiclePreviews(data.vehicleImageUrls || []);
-                    updateSocialMediaPreviews(data.socialMediaUrls || []);
+                    setSocialMediaUrls(data.socialMediaUrls || []);
                     document.getElementById('custom-html-content').innerHTML = data.customHtmlContent || '';
                 } else {
-                    document.getElementById('profile-container').innerHTML = '<p>No profile found.</p>';
+                    console.error('No profile data found');
                 }
             } catch (error) {
                 console.error('Error loading profile: ', error);
@@ -37,20 +38,20 @@
             urls.forEach(url => {
                 const img = document.createElement('img');
                 img.src = url;
+                img.classList.add('normalized-image');
                 container.appendChild(img);
             });
         }
 
-        function updateSocialMediaPreviews(urls) {
-            const container = document.getElementById('social-media-previews');
+        function setSocialMediaUrls(urls) {
+            const container = document.getElementById('social-media-links');
             container.innerHTML = '';
             urls.forEach(url => {
-                const a = document.createElement('a');
-                a.href = url;
-                a.target = '_blank';
-                a.innerText = url;
-                container.appendChild(a);
-                container.appendChild(document.createElement('br'));
+                const link = document.createElement('a');
+                link.href = url;
+                link.target = '_blank';
+                link.innerText = url;
+                container.appendChild(link);
             });
         }
 
@@ -60,10 +61,29 @@
             if (userId) {
                 loadProfile(userId);
             } else {
-                document.getElementById('profile-container').innerHTML = '<p>No user ID provided in URL.</p>';
+                console.error('No user ID provided in URL');
             }
         });
     </script>
+    <style>
+        .normalized-image {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            margin: 5px;
+        }
+        .profile-section {
+            text-align: center;
+            margin: 20px;
+        }
+        .profile-section img {
+            border-radius: 50%;
+        }
+        .social-media-links a {
+            display: block;
+            margin: 5px 0;
+        }
+    </style>
 </head>
 <body>
     <nav class="navbar">
@@ -76,18 +96,18 @@
                 <li><a href="mission.html" class="nav-links">Our Mission</a></li>
                 <li><a href="index.html#contact" class="nav-links">Contact</a></li>
                 <li><a href="all_profiles.html" class="nav-links">Profiles</a></li>
+                <li><a href="prof_editor.html" class="nav-links">Edit Profile</a></li>
+                <li><a href="javascript:void(0)" class="nav-links" id="logout">Logout</a></li>
             </ul>
         </div>
     </nav>
-    <div id="profile-container">
-        <h2 id="username"></h2>
-        <img id="profile-image" src="" alt="Profile Image" style="max-width: 200px;">
-        <div id="bio"></div>
-        <h3>Vehicles</h3>
+    <div class="profile-section">
+        <h1 id="profile-username"></h1>
+        <p id="profile-email"></p>
+        <img id="profile-image" src="" alt="Profile Image" class="normalized-image">
+        <div id="profile-bio"></div>
         <div id="vehicle-previews"></div>
-        <h3>Social Media</h3>
-        <div id="social-media-previews"></div>
-        <h3>Custom Content</h3>
+        <div id="social-media-links"></div>
         <div id="custom-html-content"></div>
     </div>
 </body>
