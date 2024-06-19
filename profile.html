@@ -27,6 +27,7 @@
                 <li><a href="index.html#contact" class="nav-links">Contact</a></li>
                 <li><a href="all_profiles.html" class="nav-links">All Profiles</a></li>
                 <li><a href="profile.html" class="nav-links">Profile</a></li>
+                <li><a href="javascript:void(0)" class="nav-links" id="logout">Logout</a></li>
             </ul>
         </div>
     </nav>
@@ -162,6 +163,18 @@
                 loadProfile(userId);
             }
         }
+
+        function logout() {
+            firebase.auth().signOut().then(() => {
+                window.location.href = 'index.html';
+            }).catch((error) => {
+                console.error('Error signing out: ', error);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('logout').addEventListener('click', logout);
+        });
     </script>
 </body>
 </html>
