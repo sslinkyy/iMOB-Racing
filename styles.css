@@ -465,3 +465,77 @@ section {
     padding: 5px;
     cursor: text;
 }
+/* Admin Dashboard Styles */
+.admin-dashboard {
+    margin: 20px;
+    padding: 20px;
+    background-color: #f5f5f5;
+    border-radius: 10px;
+}
+
+.admin-dashboard label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.admin-dashboard input,
+.admin-dashboard textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.admin-dashboard button {
+    padding: 10px 20px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.admin-dashboard button:hover {
+    background-color: #218838;
+}
+
+.store-item {
+    margin: 10px 0;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.store-item img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.store-item h3 {
+    margin: 0;
+    font-size: 1.2em;
+}
+
+.store-item p {
+    margin: 5px 0;
+}
+
+.store-item button {
+    padding: 5px 10px;
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.store-item button:hover {
+    background-color: #c82333;
+}
