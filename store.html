@@ -28,7 +28,9 @@
     </nav>
     <section id="store" class="store-section">
         <h2>Our Store</h2>
-        <div class="store-grid" id="store-items-container"></div>
+        <div class="store-grid" id="store-grid">
+            <!-- Products will be dynamically added here -->
+        </div>
     </section>
 
     <footer class="footer">
@@ -42,52 +44,45 @@
         <p>Contact: info@imobracingonline.com | Phone: (530) 420-5850</p>
     </footer>
 
+    <!-- Snipcart integration -->
+    <script async src="https://cdn.snipcart.com/themes/v3.2.0/default/snipcart.js"></script>
+    <div hidden id="snipcart" data-api-key="YOUR_SNIPCART_API_KEY"></div>
+    
     <script>
-        // Initialize Firebase
         if (!firebase.apps.length) {
             firebase.initializeApp(CONFIG.FIREBASE_CONFIG);
-        } else {
-            firebase.app(); // if already initialized, use that one
         }
 
-        // Load store products
+        const db = firebase.firestore();
+
         async function loadProducts() {
             try {
-                const db = firebase.firestore();
-                const productsSnapshot = await db.collection('store-items').get();
-                const productsContainer = document.getElementById('store-items-container');
-                productsContainer.innerHTML = '';
-
-                productsSnapshot.forEach(doc => {
+                const productsSnapshot = await db.collection('products').get();
+                const storeGrid = document.getElementById('store-grid');
+                storeGrid.innerHTML = '';
+                productsSnapshot.forEach((doc) => {
                     const product = doc.data();
-                    const productElement = document.createElement('div');
-                    productElement.classList.add('store-item');
-                    productElement.innerHTML = `
-                        <img src="${product.imageUrl}" alt="${product.name}">
-                        <h3>${product.name}</h3>
-                        <p>${product.description}</p>
-                        <p>$${product.price.toFixed(2)}</p>
-                        <button class="snipcart-add-item"
-                                data-item-id="${doc.id}"
-                                data-item-name="${product.name}"
-                                data-item-price="${product.price}"
-                                data-item-url="/"
-                                data-item-description="${product.description}">Add to Cart</button>
+                    storeGrid.innerHTML += `
+                        <div class="store-item">
+                            <img src="${product.imageUrl}" alt="${product.name}">
+                            <h3>${product.name}</h3>
+                            <p>${product.description}</p>
+                            <button class="snipcart-add-item"
+                                    data-item-id="${doc.id}"
+                                    data-item-name="${product.name}"
+                                    data-item-price="${product.price}"
+                                    data-item-url="https://imobracingonline.com/"
+                                    data-item-description="${product.description}">Add to Cart</button>
+                        </div>
                     `;
-                    productsContainer.appendChild(productElement);
                 });
             } catch (error) {
                 console.error('Error loading products: ', error);
+                alert('Error loading products: ' + error.message);
             }
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            loadProducts();
-        });
+        document.addEventListener('DOMContentLoaded', loadProducts);
     </script>
-
-    <!-- Snipcart integration -->
-    <script async src="https://cdn.snipcart.com/themes/v3.2.0/default/snipcart.js"></script>
-    <div hidden id="snipcart" data-api-key="NDFkZGNlNDktMjE2YS00MmUyLTk4ZmYtMjY5YWE2OWYwOTI2NjM4NTQxODI3NjYwMTI3MDQ5"></div>
 </body>
 </html>
