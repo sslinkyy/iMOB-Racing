@@ -61,23 +61,44 @@
             async function loadProducts() {
                 try {
                     const productsSnapshot = await db.collection('store-items').get();
-                    const productList = document.getElementById('store-grid');
-                    productList.innerHTML = '';
+                    const storeGrid = document.getElementById('store-grid');
+                    storeGrid.innerHTML = '';
 
                     productsSnapshot.forEach((doc) => {
                         const product = doc.data();
-                        productList.innerHTML += `
+                        const productId = doc.id;
+                        storeGrid.innerHTML += `
                             <div class="store-item">
                                 <img src="${product.imageUrl}" alt="${product.name}">
                                 <h3>${product.name}</h3>
                                 <p>${product.description}</p>
                                 <button class="snipcart-add-item"
-                                        data-item-id="${doc.id}"
+                                        data-item-id="${productId}"
                                         data-item-name="${product.name}"
                                         data-item-price="${product.price}"
                                         data-item-url="https://imobracingonline.com/"
                                         data-item-description="${product.description}">Add to Cart</button>
                             </div>
+                            <script type="application/ld+json">
+                            {
+                                "@context": "http://schema.org/",
+                                "@type": "Product",
+                                "name": "${product.name}",
+                                "description": "${product.description}",
+                                "image": "${product.imageUrl}",
+                                "offers": {
+                                    "@type": "Offer",
+                                    "priceCurrency": "USD",
+                                    "price": "${product.price}",
+                                    "itemCondition": "http://schema.org/NewCondition",
+                                    "availability": "http://schema.org/InStock",
+                                    "seller": {
+                                        "@type": "Organization",
+                                        "name": "iMOB Racing"
+                                    }
+                                }
+                            }
+                            </script>
                         `;
                     });
                 } catch (error) {
