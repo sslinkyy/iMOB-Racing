@@ -52,7 +52,7 @@
 
             const name = document.getElementById('product-name').value;
             const description = document.getElementById('product-description').value;
-            const price = document.getElementById('product-price').value;
+            const price = parseFloat(document.getElementById('product-price').value); // Ensure price is a float
             const imageFile = document.getElementById('product-image').files[0];
 
             try {
@@ -96,7 +96,8 @@
                 });
 
                 if (!response.ok) {
-                    throw new Error(`Snipcart API responded with ${response.status}: ${response.statusText}`);
+                    const errorText = await response.text();
+                    throw new Error(`Snipcart API responded with ${response.status}: ${response.statusText} - ${errorText}`);
                 }
 
                 const data = await response.json();
@@ -143,7 +144,8 @@
                 });
 
                 if (!response.ok) {
-                    throw new Error(`Snipcart API responded with ${response.status}: ${response.statusText}`);
+                    const errorText = await response.text();
+                    throw new Error(`Snipcart API responded with ${response.status}: ${response.statusText} - ${errorText}`);
                 }
 
                 alert('Product deleted successfully');
