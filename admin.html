@@ -46,6 +46,7 @@
 
     const db = firebase.firestore();
     const storage = firebase.storage();
+    const SNIPCART_SECRET_KEY = 'ST_ZWIwYzA1ZDgtNzEwNS00YTc5LTk4YjUtMzQ2YmQyOGUxODhiNjM4NTQ0NDU5MzE2NzIyODc3';
 
     document.getElementById('add-product-form').addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -93,13 +94,13 @@
             const response = await fetch('https://app.snipcart.com/api/products', {
                 method: 'POST',
                 headers: {
-                    'Authorization': `Basic ${btoa(CONFIG.SNIPCART_SECRET_KEY + ':')}`,
+                    'Authorization': `Basic ${btoa(SNIPCART_SECRET_KEY + ':')}`,
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(payload)
             });
 
-            const data = await response.json();
+            const data = await response.text(); // Use response.text() to capture raw response
             console.log('Snipcart sync raw response:', data);
             if (!response.ok) {
                 throw new Error(`Snipcart API responded with ${response.status}: ${data}`);
@@ -141,11 +142,12 @@
             const response = await fetch(`https://app.snipcart.com/api/products/${productId}`, {
                 method: 'DELETE',
                 headers: {
-                    'Authorization': `Basic ${btoa(CONFIG.SNIPCART_SECRET_KEY + ':')}`
+                    'Authorization': `Basic ${btoa(SNIPCART_SECRET_KEY + ':')}`
                 }
             });
 
-            const data = await response.json();
+            const data = await response.text(); // Use response.text() to capture raw response
+            console.log('Snipcart delete raw response:', data);
             if (!response.ok) {
                 throw new Error(`Snipcart API responded with ${response.status}: ${data}`);
             }
