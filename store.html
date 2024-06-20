@@ -34,7 +34,7 @@
                         data-item-id="1"
                         data-item-name="iMOB Racing T-Shirt 1"
                         data-item-price="20.00"
-                        data-item-url="https://imobracingonline.com/store.html"
+                        data-item-url="https://imobracingonline.com/tshirt1.html"
                         data-item-description="High quality racing t-shirt.">Add to Cart</button>
             </div>
             <div class="store-item">
@@ -45,7 +45,7 @@
                         data-item-id="2"
                         data-item-name="iMOB Racing T-Shirt 2"
                         data-item-price="20.00"
-                        data-item-url="https://imobracingonline.com/store.html"
+                        data-item-url="https://imobracingonline.com/tshirt2.html"
                         data-item-description="Another stylish racing t-shirt.">Add to Cart</button>
             </div>
             <!-- Add more store items as needed -->
@@ -66,5 +66,32 @@
     <!-- Snipcart integration -->
     <script async src="https://cdn.snipcart.com/themes/v3.2.0/default/snipcart.js"></script>
     <div hidden id="snipcart" data-api-key="NDFkZGNlNDktMjE2YS00MmUyLTk4ZmYtMjY5YWE2OWYwOTI2NjM4NTQxODI3NjYwMTI3MDQ5"></div>
+
+    <script>
+        function debounce(func, wait) {
+            let timeout;
+            return function(...args) {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(this, args), wait);
+            };
+        }
+
+        function addItemToCart(event) {
+            const button = event.target;
+            button.disabled = true;
+            button.innerText = "Adding...";
+            setTimeout(() => {
+                button.disabled = false;
+                button.innerText = "Add to Cart";
+            }, 2000); // Simulate adding to cart delay
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const addToCartButtons = document.querySelectorAll('.snipcart-add-item');
+            addToCartButtons.forEach(button => {
+                button.addEventListener('click', debounce(addItemToCart, 500));
+            });
+        });
+    </script>
 </body>
 </html>
