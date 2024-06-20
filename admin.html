@@ -87,7 +87,7 @@
                 description,
                 image: imageUrl
             };
-            console.log('Payload to Snipcart:', payload);
+            console.log('Payload to Snipcart:', JSON.stringify(payload));
 
             const response = await fetch('https://app.snipcart.com/api/products', {
                 method: 'POST',
