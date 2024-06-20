@@ -2,8 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
+    <title>Admin - iMOB Racing Store</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-auth.js"></script>
@@ -14,9 +13,6 @@
 <body>
     <nav class="navbar">
         <div class="navbar-container">
-            <span class="navbar-toggle" id="js-navbar-toggle">
-                <i class="fas fa-bars"></i>
-            </span>
             <a href="index.html" class="logo">iMOB Racing</a>
             <ul class="main-nav" id="js-menu">
                 <li><a href="index.html" class="nav-links">Home</a></li>
@@ -24,116 +20,131 @@
                 <li><a href="cars.html" class="nav-links">Cars</a></li>
                 <li><a href="mission.html" class="nav-links">Our Mission</a></li>
                 <li><a href="store.html" class="nav-links">Store</a></li>
-                <li><a href="contact.html" class="nav-links">Contact</a></li>
-                <li><a href="profile.html" class="nav-links" id="profile-link" style="display: none;">Profile</a></li>
-                <li><a href="all_profiles.html" class="nav-links">All Profiles</a></li>
+                <li><a href="index.html#contact" class="nav-links">Contact</a></li>
+                <li><a href="all_profiles.html" class="nav-links">Profiles</a></li>
+                <li><a href="prof_editor.html" class="nav-links">Edit Profile</a></li>
                 <li><a href="javascript:void(0)" class="nav-links" id="logout">Logout</a></li>
             </ul>
         </div>
     </nav>
-
-    <h1>Admin Dashboard</h1>
-    <div>
-        <label for="item-name">Item Name:</label>
-        <input type="text" id="item-name">
-    </div>
-    <div>
-        <label for="item-price">Item Price:</label>
-        <input type="number" id="item-price">
-    </div>
-    <div>
-        <label for="item-description">Item Description:</label>
-        <textarea id="item-description"></textarea>
-    </div>
-    <div>
-        <label for="item-image">Item Image:</label>
-        <input type="file" id="item-image">
-    </div>
-    <button onclick="addItem()">Add Item</button>
-
-    <h2>Items</h2>
-    <div id="items-container"></div>
+    <section id="admin-section">
+        <h2>Admin Panel</h2>
+        <form id="add-product-form">
+            <input type="text" id="product-name" placeholder="Product Name" required><br>
+            <input type="text" id="product-description" placeholder="Product Description" required><br>
+            <input type="number" id="product-price" placeholder="Product Price" required><br>
+            <input type="file" id="product-image" required><br>
+            <button type="submit">Add Product</button>
+        </form>
+        <div id="product-list"></div>
+    </section>
 
     <script>
-        // Initialize Firebase
         if (!firebase.apps.length) {
             firebase.initializeApp(CONFIG.FIREBASE_CONFIG);
         }
 
-        firebase.auth().onAuthStateChanged(async function(user) {
-            if (user) {
-                const db = firebase.firestore();
-                const userDoc = await db.collection('profiles').doc(user.uid).get();
-                const userData = userDoc.data();
+        const db = firebase.firestore();
+        const storage = firebase.storage();
 
-                if (userData.isAdmin) {
-                    document.getElementById('profile-link').style.display = 'block';
-                    document.getElementById('profile-link').href = `profile.html?userId=${user.uid}`;
-                    loadItems();
-                } else {
-                    alert('You do not have permission to access this page.');
-                    window.location.href = 'index.html';
-                }
-            } else {
-                window.location.href = 'login.html';
+        document.getElementById('add-product-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const name = document.getElementById('product-name').value;
+            const description = document.getElementById('product-description').value;
+            const price = document.getElementById('product-price').value;
+            const imageFile = document.getElementById('product-image').files[0];
+
+            try {
+                const storageRef = storage.ref(`store-images/${imageFile.name}`);
+                await storageRef.put(imageFile);
+                const imageUrl = await storageRef.getDownloadURL();
+
+                const productRef = await db.collection('store-items').add({
+                    name,
+                    description,
+                    price,
+                    imageUrl
+                });
+
+                // Synchronize with Snipcart
+                await syncWithSnipcart(productRef.id, name, description, price, imageUrl);
+                alert('Product added successfully');
+                loadProducts();
+            } catch (error) {
+                console.error('Error adding product: ', error);
+                alert('Error adding product: ' + error.message);
             }
         });
 
-        async function addItem() {
-            const db = firebase.firestore();
-            const storage = firebase.storage();
-
-            const name = document.getElementById('item-name').value;
-            const price = document.getElementById('item-price').value;
-            const description = document.getElementById('item-description').value;
-            const imageFile = document.getElementById('item-image').files[0];
-
-            if (!name || !price || !description || !imageFile) {
-                alert('Please fill in all fields and select an image.');
-                return;
+        async function syncWithSnipcart(id, name, description, price, imageUrl) {
+            try {
+                const response = await fetch('https://app.snipcart.com/api/products', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Basic ${btoa(CONFIG.SNIPCART_SECRET_KEY + ':')}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        id,
+                        name,
+                        url: 'https://imobracingonline.com/', // URL to the store or product
+                        price,
+                        description,
+                        image: imageUrl
+                    })
+                });
+                const data = await response.json();
+                console.log('Snipcart sync response:', data);
+            } catch (error) {
+                console.error('Error syncing with Snipcart: ', error);
             }
-
-            const imageRef = storage.ref().child(`store-images/${imageFile.name}`);
-            await imageRef.put(imageFile);
-            const imageUrl = await imageRef.getDownloadURL();
-
-            const itemData = {
-                name,
-                price: parseFloat(price),
-                description,
-                imageUrl
-            };
-
-            await db.collection('store-items').add(itemData);
-            loadItems();
         }
 
-        async function loadItems() {
-            const db = firebase.firestore();
-            const itemsSnapshot = await db.collection('store-items').get();
-            const itemsContainer = document.getElementById('items-container');
-            itemsContainer.innerHTML = '';
+        async function loadProducts() {
+            try {
+                const productsSnapshot = await db.collection('store-items').get();
+                const productList = document.getElementById('product-list');
+                productList.innerHTML = '';
 
-            itemsSnapshot.forEach(doc => {
-                const item = doc.data();
-                const itemElement = document.createElement('div');
-                itemElement.classList.add('store-item');
-                itemElement.innerHTML = `
-                    <img src="${item.imageUrl}" alt="${item.name}">
-                    <h3>${item.name}</h3>
-                    <p>${item.description}</p>
-                    <p>$${item.price.toFixed(2)}</p>
-                    <button onclick="deleteItem('${doc.id}')">Delete</button>
-                `;
-                itemsContainer.appendChild(itemElement);
-            });
+                productsSnapshot.forEach((doc) => {
+                    const product = doc.data();
+                    productList.innerHTML += `
+                        <div class="product-item">
+                            <img src="${product.imageUrl}" alt="${product.name}">
+                            <h3>${product.name}</h3>
+                            <p>${product.description}</p>
+                            <p>$${product.price}</p>
+                            <button onclick="deleteProduct('${doc.id}')">Delete</button>
+                        </div>
+                    `;
+                });
+            } catch (error) {
+                console.error('Error loading products: ', error);
+            }
         }
 
-        async function deleteItem(itemId) {
-            const db = firebase.firestore();
-            await db.collection('store-items').doc(itemId).delete();
-            loadItems();
+        async function deleteProduct(productId) {
+            try {
+                await db.collection('store-items').doc(productId).delete();
+                
+                // Synchronize deletion with Snipcart
+                await fetch(`https://app.snipcart.com/api/products/${productId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Basic ${btoa(CONFIG.SNIPCART_SECRET_KEY + ':')}`
+                    }
+                });
+
+                alert('Product deleted successfully');
+                loadProducts();
+            } catch (error) {
+                console.error('Error deleting product: ', error);
+                alert('Error deleting product: ' + error.message);
+            }
         }
+
+        document.addEventListener('DOMContentLoaded', loadProducts);
 
         function logout() {
             firebase.auth().signOut().then(() => {
@@ -143,9 +154,7 @@
             });
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('logout').addEventListener('click', logout);
-        });
+        document.getElementById('logout').addEventListener('click', logout);
     </script>
 </body>
 </html>
