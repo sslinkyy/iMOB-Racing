@@ -57,12 +57,15 @@
 
         async function loadProducts() {
             try {
+                console.log('Loading products from Firestore...');
                 const productsSnapshot = await db.collection('products').get();
+                console.log('Products snapshot:', productsSnapshot);
                 const storeGrid = document.getElementById('store-grid');
                 storeGrid.innerHTML = '';
                 if (!productsSnapshot.empty) {
                     productsSnapshot.forEach((doc) => {
                         const product = doc.data();
+                        console.log('Product data:', product);
                         storeGrid.innerHTML += `
                             <div class="store-item">
                                 <img src="${product.imageUrl}" alt="${product.name}">
@@ -91,4 +94,4 @@
 </body>
 </html>
 
-   
+    
