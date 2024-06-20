@@ -105,6 +105,9 @@
             if (!response.ok) {
                 throw new Error(`Snipcart API responded with ${response.status}: ${data}`);
             }
+            // Ensure JSON is parsed correctly
+            const jsonData = JSON.parse(data);
+            console.log('Snipcart sync parsed response:', jsonData);
         } catch (error) {
             console.error('Error syncing with Snipcart:', error);
             throw error;
