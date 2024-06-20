@@ -77,14 +77,14 @@
         });
 
         async function syncWithSnipcart(id, name, description, price, imageUrl) {
-            const payload = JSON.stringify({
+            const payload = {
                 id,
                 name,
                 url: 'https://imobracingonline.com/', // URL to the store or product
                 price,
                 description,
                 image: imageUrl
-            });
+            };
 
             console.log('Payload to Snipcart:', payload);
 
@@ -95,15 +95,19 @@
                         'Authorization': `Basic ${btoa(CONFIG.SNIPCART_SECRET_KEY + ':')}`,
                         'Content-Type': 'application/json'
                     },
-                    body: payload
+                    body: JSON.stringify(payload)
                 });
 
-                const data = await response.json();
-                console.log('Snipcart sync response:', data);
+                const text = await response.text();
+                console.log('Snipcart sync raw response:', text);
 
                 if (!response.ok) {
-                    throw new Error(`Snipcart API responded with ${response.status}: ${data.errors || 'Invalid JSON response from Snipcart API'}`);
+                    throw new Error(`Snipcart API responded with ${response.status}: ${text}`);
                 }
+
+                const data = JSON.parse(text);
+                console.log('Snipcart sync response:', data);
+
             } catch (error) {
                 console.error('Error syncing with Snipcart: ', error);
                 throw error;
