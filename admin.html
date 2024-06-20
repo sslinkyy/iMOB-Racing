@@ -98,28 +98,14 @@
                 body: JSON.stringify(payload)
             });
 
-            const text = await response.text();  // get raw response text
-            console.log('Snipcart sync raw response:', text);
-
+            const data = await response.json();
+            console.log('Snipcart sync raw response:', response);
             if (!response.ok) {
-                let errorData = {};
-                try {
-                    errorData = JSON.parse(text);  // try to parse JSON
-                } catch (e) {
-                    errorData = { error: 'Invalid JSON response from Snipcart API' };
-                }
-                throw new Error(`Snipcart API responded with ${response.status}: ${errorData.error}`);
+                throw new Error(`Snipcart API responded with ${response.status}: ${response.statusText}`);
             }
-
-            if (text) {
-                const data = JSON.parse(text);  // parse the response text to JSON if no error
-                console.log('Snipcart sync response:', data);
-            } else {
-                console.warn('Snipcart sync response is empty.');
-            }
+            console.log('Snipcart sync response:', data);
         } catch (error) {
             console.error('Error syncing with Snipcart: ', error);
-            alert('Error syncing with Snipcart: ' + error.message);
         }
     }
 
@@ -158,24 +144,8 @@
                 }
             });
 
-            const text = await response.text();  // get raw response text
-            console.log('Snipcart delete raw response:', text);
-
             if (!response.ok) {
-                let errorData = {};
-                try {
-                    errorData = JSON.parse(text);  // try to parse JSON
-                } catch (e) {
-                    errorData = { error: 'Invalid JSON response from Snipcart API' };
-                }
-                throw new Error(`Snipcart API responded with ${response.status}: ${errorData.error}`);
-            }
-
-            if (text) {
-                const data = JSON.parse(text);  // parse the response text to JSON if no error
-                console.log('Snipcart delete response:', data);
-            } else {
-                console.warn('Snipcart delete response is empty.');
+                throw new Error(`Snipcart API responded with ${response.status}: ${response.statusText}`);
             }
 
             alert('Product deleted successfully');
