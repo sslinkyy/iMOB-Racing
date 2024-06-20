@@ -48,45 +48,45 @@
     <script async src="https://cdn.snipcart.com/themes/v3.2.0/default/snipcart.js"></script>
     <div hidden id="snipcart" data-api-key=""></div>
     
-   <script>
-    document.addEventListener('DOMContentLoaded', async () => {
-        if (!firebase.apps.length) {
-            firebase.initializeApp(CONFIG.FIREBASE_CONFIG);
-        }
-
-        const db = firebase.firestore();
-        const snipcartApiKey = CONFIG.SNIPCART_API_KEY;
-        document.getElementById('snipcart').setAttribute('data-api-key', snipcartApiKey);
-        
-        async function loadProducts() {
-            try {
-                const productsSnapshot = await db.collection('store-items').get();
-                const productList = document.getElementById('product-list');
-                productList.innerHTML = '';
-
-                productsSnapshot.forEach((doc) => {
-                    const product = doc.data();
-                    productList.innerHTML += `
-                        <div class="store-item">
-                            <img src="${product.imageUrl}" alt="${product.name}">
-                            <h3>${product.name}</h3>
-                            <p>${product.description}</p>
-                            <button class="snipcart-add-item"
-                                    data-item-id="${doc.id}"
-                                    data-item-name="${product.name}"
-                                    data-item-price="${product.price}"
-                                    data-item-url="https://imobracingonline.com/"
-                                    data-item-description="${product.description}">Add to Cart</button>
-                        </div>
-                    `;
-                });
-            } catch (error) {
-                console.error('Error loading products: ', error);
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            if (!firebase.apps.length) {
+                firebase.initializeApp(CONFIG.FIREBASE_CONFIG);
             }
-        }
 
-        loadProducts();
-    });
-</script>
+            const db = firebase.firestore();
+            const snipcartApiKey = CONFIG.SNIPCART_API_KEY;
+            document.getElementById('snipcart').setAttribute('data-api-key', snipcartApiKey);
+            
+            async function loadProducts() {
+                try {
+                    const productsSnapshot = await db.collection('store-items').get();
+                    const productList = document.getElementById('store-grid');
+                    productList.innerHTML = '';
+
+                    productsSnapshot.forEach((doc) => {
+                        const product = doc.data();
+                        productList.innerHTML += `
+                            <div class="store-item">
+                                <img src="${product.imageUrl}" alt="${product.name}">
+                                <h3>${product.name}</h3>
+                                <p>${product.description}</p>
+                                <button class="snipcart-add-item"
+                                        data-item-id="${doc.id}"
+                                        data-item-name="${product.name}"
+                                        data-item-price="${product.price}"
+                                        data-item-url="https://imobracingonline.com/"
+                                        data-item-description="${product.description}">Add to Cart</button>
+                            </div>
+                        `;
+                    });
+                } catch (error) {
+                    console.error('Error loading products: ', error);
+                }
+            }
+
+            loadProducts();
+        });
+    </script>
 </body>
 </html>
