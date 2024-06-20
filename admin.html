@@ -100,13 +100,15 @@
                 body: JSON.stringify(payload)
             });
 
-            const data = await response.text(); // Use response.text() to capture raw response
-            console.log('Snipcart sync raw response:', data);
+            const textData = await response.text(); // Capture raw response text
+            console.log('Snipcart sync raw response:', textData);
+
             if (!response.ok) {
-                throw new Error(`Snipcart API responded with ${response.status}: ${data}`);
+                throw new Error(`Snipcart API responded with ${response.status}: ${textData}`);
             }
+
             // Ensure JSON is parsed correctly
-            const jsonData = JSON.parse(data);
+            const jsonData = JSON.parse(textData);
             console.log('Snipcart sync parsed response:', jsonData);
         } catch (error) {
             console.error('Error syncing with Snipcart:', error);
@@ -149,10 +151,11 @@
                 }
             });
 
-            const data = await response.text(); // Use response.text() to capture raw response
-            console.log('Snipcart delete raw response:', data);
+            const textData = await response.text(); // Capture raw response text
+            console.log('Snipcart delete raw response:', textData);
+
             if (!response.ok) {
-                throw new Error(`Snipcart API responded with ${response.status}: ${data}`);
+                throw new Error(`Snipcart API responded with ${response.status}: ${textData}`);
             }
 
             alert('Product deleted successfully');
