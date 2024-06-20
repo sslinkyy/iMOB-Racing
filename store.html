@@ -57,7 +57,7 @@
             const db = firebase.firestore();
             const snipcartApiKey = CONFIG.SNIPCART_API_KEY;
             document.getElementById('snipcart').setAttribute('data-api-key', snipcartApiKey);
-            
+
             async function loadProducts() {
                 try {
                     const productsSnapshot = await db.collection('store-items').get();
@@ -71,7 +71,6 @@
                                 <img src="${product.imageUrl}" alt="${product.name}">
                                 <h3>${product.name}</h3>
                                 <p>${product.description}</p>
-                                <p>$${product.price.toFixed(2)}</p>
                                 <button class="snipcart-add-item"
                                         data-item-id="${doc.id}"
                                         data-item-name="${product.name}"
