@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Add Product</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-firestore.js"></script>
+    <script src="config.js"></script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="index.html" class="logo">iMOB Racing</a>
+            <ul class="main-nav" id="js-menu">
+                <li><a href="index.html" class="nav-links">Home</a></li>
+                <li><a href="drivers.html" class="nav-links">Drivers</a></li>
+                <li><a href="cars.html" class="nav-links">Cars</a></li>
+                <li><a href="mission.html" class="nav-links">Our Mission</a></li>
+                <li><a href="store.html" class="nav-links">Store</a></li>
+                <li><a href="index.html#contact" class="nav-links">Contact</a></li>
+                <li><a href="all_profiles.html" class="nav-links">Profiles</a></li>
+                <li><a href="prof_editor.html" class="nav-links">Edit Profile</a></li>
+                <li><a href="javascript:void(0)" class="nav-links" id="logout">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+    <h1>Add New Product</h1>
+    <form id="add-product-form">
+        <label for="product-name">Product Name:</label>
+        <input type="text" id="product-name" name="product-name" required><br>
+        <label for="product-id">Product ID:</label>
+        <input type="text" id="product-id" name="product-id" required><br>
+        <label for="product-price">Product Price:</label>
+        <input type="number" id="product-price" name="product-price" required><br>
+        <label for="product-description">Product Description:</label>
+        <textarea id="product-description" name="product-description" rows="4" required></textarea><br>
+        <label for="product-image">Product Image:</label>
+        <input type="file" id="product-image" name="product-image" accept="image/*" required><br>
+        <button type="submit">Add Product</button>
+    </form>
+
+    <script>
+        if (!firebase.apps.length) {
+            firebase.initializeApp(CONFIG.FIREBASE_CONFIG);
+        }
+
+        document.getElementById('add-product-form').addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const productName = document.getElementById('product-name').value;
+            const productId = document.getElementById('product-id').value;
+            const productPrice = document.getElementById('product-price').value;
+            const productDescription = document.getElementById('product-description').value;
+            const productImageFile = document.getElementById('product-image').files[0];
+
+            if (!productImageFile) {
+                alert('Please select a product image.');
+                return;
+            }
+
+            const storageRef = firebase.storage().ref();
+            const productImageRef = storageRef.child(`product-images/${productId}/${productImageFile.name}`);
+            await productImageRef.put(productImageFile);
+            const productImageUrl = await productImageRef.getDownloadURL();
+
+            const db = firebase.firestore();
+            await db.collection('products').doc(productId).set({
+                name: productName,
+                id: productId,
+                price: productPrice,
+                description: productDescription,
+                imageUrl: productImageUrl,
+                url: `https://imobracingonline.com/product.html?id=${productId}`
+            });
+
+            alert('Product added successfully!');
+            document.getElementById('add-product-form').reset();
+        });
+
+        function logout() {
+            firebase.auth().signOut().then(() => {
+                window.location.href = 'index.html';
+            }).catch((error) => {
+                console.error('Error signing out: ', error);
+            });
+        }
+
+        document.getElementById('logout').addEventListener('click', logout);
+    </script>
+</body>
+</html>
