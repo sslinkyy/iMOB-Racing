@@ -60,22 +60,26 @@
                 const productsSnapshot = await db.collection('products').get();
                 const storeGrid = document.getElementById('store-grid');
                 storeGrid.innerHTML = '';
-                productsSnapshot.forEach((doc) => {
-                    const product = doc.data();
-                    storeGrid.innerHTML += `
-                        <div class="store-item">
-                            <img src="${product.imageUrl}" alt="${product.name}">
-                            <h3>${product.name}</h3>
-                            <p>${product.description}</p>
-                            <button class="snipcart-add-item"
-                                    data-item-id="${doc.id}"
-                                    data-item-name="${product.name}"
-                                    data-item-price="${product.price}"
-                                    data-item-url="https://imobracingonline.com/"
-                                    data-item-description="${product.description}">Add to Cart</button>
-                        </div>
-                    `;
-                });
+                if (!productsSnapshot.empty) {
+                    productsSnapshot.forEach((doc) => {
+                        const product = doc.data();
+                        storeGrid.innerHTML += `
+                            <div class="store-item">
+                                <img src="${product.imageUrl}" alt="${product.name}">
+                                <h3>${product.name}</h3>
+                                <p>${product.description}</p>
+                                <button class="snipcart-add-item"
+                                        data-item-id="${doc.id}"
+                                        data-item-name="${product.name}"
+                                        data-item-price="${product.price}"
+                                        data-item-url="https://imobracingonline.com/"
+                                        data-item-description="${product.description}">Add to Cart</button>
+                            </div>
+                        `;
+                    });
+                } else {
+                    storeGrid.innerHTML = '<p>No products found.</p>';
+                }
             } catch (error) {
                 console.error('Error loading products: ', error);
                 alert('Error loading products: ' + error.message);
@@ -86,3 +90,5 @@
     </script>
 </body>
 </html>
+
+   
