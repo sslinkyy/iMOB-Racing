@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Admin - iMOB Racing Store</title>
     <link rel="stylesheet" href="styles.css">
-    <script src="config.js"></script> <!-- Ensure config.js is loaded first -->
+    <script src="config.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-firestore.js"></script>
@@ -46,14 +46,13 @@
 
     const db = firebase.firestore();
     const storage = firebase.storage();
-    const SNIPCART_SECRET_KEY = 'ST_ZWIwYzA1ZDgtNzEwNS00YTc5LTk4YjUtMzQ2YmQyOGUxODhiNjM4NTQ0NDU5MzE2NzIyODc3';
 
     document.getElementById('add-product-form').addEventListener('submit', async (e) => {
         e.preventDefault();
 
         const name = document.getElementById('product-name').value;
         const description = document.getElementById('product-description').value;
-        const price = parseFloat(document.getElementById('product-price').value);
+        const price = document.getElementById('product-price').value;
         const imageFile = document.getElementById('product-image').files[0];
 
         try {
@@ -64,12 +63,10 @@
             const productRef = await db.collection('store-items').add({
                 name,
                 description,
-                price,
+                price: parseFloat(price),
                 imageUrl
             });
 
-            // Synchronize with Snipcart
-            await syncWithSnipcart(productRef.id, name, description, price, imageUrl);
             alert('Product added successfully');
             loadProducts();
         } catch (error) {
@@ -77,44 +74,6 @@
             alert('Error adding product: ' + error.message);
         }
     });
-
-    async function syncWithSnipcart(id, name, description, price, imageUrl) {
-        const payload = {
-            id,
-            name,
-            url: 'https://imobracingonline.com/', // URL to the store or product
-            price,
-            description,
-            image: imageUrl
-        };
-
-        console.log('Payload to Snipcart:', JSON.stringify(payload));
-
-        try {
-            const response = await fetch('https://app.snipcart.com/api/products', {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Basic ${btoa(SNIPCART_SECRET_KEY + ':')}`,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(payload)
-            });
-
-            const textData = await response.text(); // Capture raw response text
-            console.log('Snipcart sync raw response:', textData);
-
-            if (!response.ok) {
-                throw new Error(`Snipcart API responded with ${response.status}: ${textData}`);
-            }
-
-            // Ensure JSON is parsed correctly
-            const jsonData = JSON.parse(textData);
-            console.log('Snipcart sync parsed response:', jsonData);
-        } catch (error) {
-            console.error('Error syncing with Snipcart:', error);
-            throw error;
-        }
-    }
 
     async function loadProducts() {
         try {
@@ -142,22 +101,6 @@
     async function deleteProduct(productId) {
         try {
             await db.collection('store-items').doc(productId).delete();
-            
-            // Synchronize deletion with Snipcart
-            const response = await fetch(`https://app.snipcart.com/api/products/${productId}`, {
-                method: 'DELETE',
-                headers: {
-                    'Authorization': `Basic ${btoa(SNIPCART_SECRET_KEY + ':')}`
-                }
-            });
-
-            const textData = await response.text(); // Capture raw response text
-            console.log('Snipcart delete raw response:', textData);
-
-            if (!response.ok) {
-                throw new Error(`Snipcart API responded with ${response.status}: ${textData}`);
-            }
-
             alert('Product deleted successfully');
             loadProducts();
         } catch (error) {
