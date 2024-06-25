@@ -7,11 +7,13 @@
     <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-storage.js"></script>
     <script src="config.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             firebase.initializeApp(CONFIG.FIREBASE_CONFIG);
             const db = firebase.firestore();
+            const storage = firebase.storage();
 
             async function loadProducts() {
                 try {
@@ -26,6 +28,7 @@
                                 <h3>${product.name}</h3>
                                 <p>${product.description}</p>
                                 <p>Price: ${product.price}</p>
+                                <img src="${product.imageUrl}" alt="${product.name}" style="width: 100px; height: auto;">
                                 <button class="delete-button" data-product-id="${doc.id}">Delete</button>
                             </div>
                         `;
@@ -59,7 +62,17 @@
                 const name = document.getElementById('productName').value;
                 const description = document.getElementById('productDescription').value;
                 const price = document.getElementById('productPrice').value;
-                const imageUrl = document.getElementById('productImageUrl').value;
+                const imageUrlInput = document.getElementById('productImageUrl').value;
+                const imageFile = document.getElementById('productImageFile').files[0];
+
+                let imageUrl = imageUrlInput;
+
+                if (imageFile) {
+                    const storageRef = storage.ref();
+                    const fileRef = storageRef.child(`store-images/${imageFile.name}`);
+                    await fileRef.put(imageFile);
+                    imageUrl = await fileRef.getDownloadURL();
+                }
 
                 try {
                     await db.collection('store-items').add({
@@ -95,7 +108,8 @@
         <input type="text" id="productName" placeholder="Product Name" required>
         <input type="text" id="productDescription" placeholder="Product Description" required>
         <input type="number" id="productPrice" placeholder="Product Price" required>
-        <input type="text" id="productImageUrl" placeholder="Product Image URL" required>
+        <input type="text" id="productImageUrl" placeholder="Product Image URL (optional)">
+        <input type="file" id="productImageFile" accept="image/*">
         <button type="submit">Add Product</button>
     </form>
 
