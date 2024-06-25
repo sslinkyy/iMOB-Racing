@@ -75,7 +75,7 @@
                 }
 
                 try {
-                    await db.collection('store-items').add({
+                    const docRef = await db.collection('store-items').add({
                         name,
                         description,
                         price: parseFloat(price),
