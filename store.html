@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="https://cdn.snipcart.com/themes/v3.2.0/default/snipcart.css" />
     <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-firestore.js"></script>
+    <script src="https://cdn.snipcart.com/themes/v3.2.0/default/snipcart.js"></script>
     <script src="config.js"></script>
 </head>
 <body>
@@ -42,56 +43,53 @@
         <p>&copy; 2023 iMOB Racing. All rights reserved.</p>
     </footer>
 
-    <script async src="https://cdn.snipcart.com/themes/v3.2.0/default/snipcart.js"></script>
     <div hidden id="snipcart" data-api-key=""></div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            firebase.initializeApp(CONFIG.FIREBASE_CONFIG);
+            const db = firebase.firestore();
+            const snipcartApiKey = CONFIG.SNIPCART_API_KEY;
+            document.getElementById('snipcart').setAttribute('data-api-key', snipcartApiKey);
 
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        firebase.initializeApp(CONFIG.FIREBASE_CONFIG);
-        const db = firebase.firestore();
-        const snipcartApiKey = CONFIG.SNIPCART_API_KEY;
-        document.getElementById('snipcart').setAttribute('data-api-key', snipcartApiKey);
+            async function loadProducts() {
+                try {
+                    const productsSnapshot = await db.collection('store-items').get();
+                    const storeGrid = document.getElementById('store-grid');
+                    storeGrid.innerHTML = '';
 
-        async function loadProducts() {
-            try {
-                const productsSnapshot = await db.collection('store-items').get();
-                const storeGrid = document.getElementById('store-grid');
-                storeGrid.innerHTML = '';
-
-                productsSnapshot.forEach((doc) => {
-                    const product = doc.data();
-                    storeGrid.innerHTML += `
-                        <div class="store-item">
-                            <img src="${product.imageUrl}" alt="${product.name}">
-                            <h3>${product.name}</h3>
-                            <p>${product.description}</p>
-                            <button class="snipcart-add-item"
-                                    data-item-id="${doc.id}"
-                                    data-item-name="${product.name}"
-                                    data-item-price="${product.price}"
-                                    data-item-url="https://imobracingonline.com/store.html"
-                                    data-item-description="${product.description}">Add to Cart</button>
-                        </div>
-                    `;
-                });
-            } catch (error) {
-                console.error('Error loading products: ', error);
+                    productsSnapshot.forEach((doc) => {
+                        const product = doc.data();
+                        storeGrid.innerHTML += `
+                            <div class="store-item">
+                                <img src="${product.imageUrl}" alt="${product.name}">
+                                <h3>${product.name}</h3>
+                                <p>${product.description}</p>
+                                <button class="snipcart-add-item"
+                                        data-item-id="${doc.id}"
+                                        data-item-name="${product.name}"
+                                        data-item-price="${product.price}"
+                                        data-item-url="https://imobracingonline.com/store.html"
+                                        data-item-description="${product.description}">Add to Cart</button>
+                            </div>
+                        `;
+                    });
+                } catch (error) {
+                    console.error('Error loading products: ', error);
+                }
             }
+
+            loadProducts();
+        });
+
+        function logout() {
+            firebase.auth().signOut().then(() => {
+                window.location.href = 'index.html';
+            }).catch((error) => {
+                console.error('Error signing out: ', error);
+            });
         }
 
-        loadProducts();
-    });
-
-    function logout() {
-        firebase.auth().signOut().then(() => {
-            window.location.href = 'index.html';
-        }).catch((error) => {
-            console.error('Error signing out: ', error);
-        });
-    }
-
-    document.getElementById('logout').addEventListener('click', logout);
-</script>
-
+        document.getElementById('logout').addEventListener('click', logout);
+    </script>
 </body>
 </html>
