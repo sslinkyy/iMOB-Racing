@@ -38,22 +38,16 @@
             <a href="https://www.facebook.com/iMobRacing" target="_blank"><i class="fab fa-facebook"></i></a>
             <a href="https://twitter.com/iMobRacing" target="_blank"><i class="fab fa-twitter"></i></a>
             <a href="https://instagram.com/iMobRacing" target="_blank"><i class="fab fa-instagram"></i></a>
-            <a href="https://youtube.com/iMobRacing" target="_blank"><i class="fab fa-youtube"></i></a>
         </div>
-        <p>&copy; 2024 iMOB Racing. All rights reserved.</p>
-        <p>Contact: info@imobracingonline.com | Phone: (530) 420-5850</p>
+        <p>&copy; 2023 iMOB Racing. All rights reserved.</p>
     </footer>
 
-    <!-- Snipcart integration -->
-    <script async src="https://cdn.snipcart.com/themes/v3.2.0/default/snipcart.js"></script>
-    <div hidden id="snipcart" data-api-key=""></div>
+    <div hidden id="snipcart" data-api-key="YOUR_SNIPCART_API_KEY"></div>
+    <script src="https://cdn.snipcart.com/themes/v3.2.0/default/snipcart.js"></script>
 
     <script>
-        document.addEventListener('DOMContentLoaded', async () => {
-            if (!firebase.apps.length) {
-                firebase.initializeApp(CONFIG.FIREBASE_CONFIG);
-            }
-
+        document.addEventListener('DOMContentLoaded', function () {
+            firebase.initializeApp(CONFIG.FIREBASE_CONFIG);
             const db = firebase.firestore();
             const snipcartApiKey = CONFIG.SNIPCART_API_KEY;
             document.getElementById('snipcart').setAttribute('data-api-key', snipcartApiKey);
@@ -75,7 +69,7 @@
                                         data-item-id="${doc.id}"
                                         data-item-name="${product.name}"
                                         data-item-price="${product.price}"
-                                        data-item-url="https://imobracingonline.com/"
+                                        data-item-url="https://imobracingonline.com/store.html"
                                         data-item-description="${product.description}">Add to Cart</button>
                             </div>
                         `;
