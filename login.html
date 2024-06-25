@@ -31,11 +31,16 @@
     <button id="loginButton">Login</button>
     <button id="registerButton">Register</button>
     <button id="googleLoginButton">Login with Google</button>
+    <div id="feedback" style="color: red; margin-top: 10px;"></div>
 
     <script>
         document.getElementById('loginButton').addEventListener('click', login);
         document.getElementById('registerButton').addEventListener('click', register);
         document.getElementById('googleLoginButton').addEventListener('click', loginWithGoogle);
+
+        function displayFeedback(message) {
+            document.getElementById('feedback').innerText = message;
+        }
 
         function login() {
             var email = document.getElementById('email').value;
@@ -46,6 +51,7 @@
                 })
                 .catch((error) => {
                     console.error('Error logging in: ', error);
+                    displayFeedback('Error logging in: ' + error.message);
                 });
         }
 
@@ -58,6 +64,7 @@
                 })
                 .catch((error) => {
                     console.error('Error registering: ', error);
+                    displayFeedback('Error registering: ' + error.message);
                 });
         }
 
@@ -69,6 +76,7 @@
                 })
                 .catch((error) => {
                     console.error('Error logging in with Google: ', error);
+                    displayFeedback('Error logging in with Google: ' + error.message);
                 });
         }
     </script>
