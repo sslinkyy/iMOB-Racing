@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="https://cdn.snipcart.com/themes/v3.2.0/default/snipcart.css" />
     <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-firestore.js"></script>
-    <script src="https://cdn.snipcart.com/themes/v3.2.0/default/snipcart.js"></script>
     <script src="config.js"></script>
 </head>
 <body>
@@ -42,14 +41,13 @@
         </div>
         <p>&copy; 2023 iMOB Racing. All rights reserved.</p>
     </footer>
- <script async src="https://cdn.snipcart.com/themes/v3.2.0/default/snipcart.js"></script>
-    <div hidden id="snipcart" data-api-key=""></div>
+
+    <div hidden id="snipcart" data-api-key="YOUR_SNIPCART_API_KEY"></div>
+    <script src="https://cdn.snipcart.com/themes/v3.2.0/default/snipcart.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             firebase.initializeApp(CONFIG.FIREBASE_CONFIG);
             const db = firebase.firestore();
-            const snipcartApiKey = CONFIG.SNIPCART_API_KEY;
-            document.getElementById('snipcart').setAttribute('data-api-key', snipcartApiKey);
 
             async function loadProducts() {
                 try {
