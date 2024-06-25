@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="styles.css">
     <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-auth.js"></script>
     <script src="config.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -53,12 +54,51 @@
                 }
             }
 
-            loadProducts();
+            document.getElementById('addProductForm').addEventListener('submit', async function (e) {
+                e.preventDefault();
+                const name = document.getElementById('productName').value;
+                const description = document.getElementById('productDescription').value;
+                const price = document.getElementById('productPrice').value;
+                const imageUrl = document.getElementById('productImageUrl').value;
+
+                try {
+                    await db.collection('store-items').add({
+                        name,
+                        description,
+                        price: parseFloat(price),
+                        imageUrl
+                    });
+                    alert('Product added successfully');
+                    loadProducts();
+                } catch (error) {
+                    console.error('Error adding product:', error);
+                    alert('Error adding product: ' + error.message);
+                }
+            });
+
+            firebase.auth().onAuthStateChanged((user) => {
+                if (user) {
+                    loadProducts();
+                } else {
+                    // User is signed out
+                    window.location.href = 'login.html';
+                }
+            });
         });
     </script>
 </head>
 <body>
     <h1>Admin Panel</h1>
+
+    <form id="addProductForm">
+        <h2>Add New Product</h2>
+        <input type="text" id="productName" placeholder="Product Name" required>
+        <input type="text" id="productDescription" placeholder="Product Description" required>
+        <input type="number" id="productPrice" placeholder="Product Price" required>
+        <input type="text" id="productImageUrl" placeholder="Product Image URL" required>
+        <button type="submit">Add Product</button>
+    </form>
+
     <div id="admin-grid" class="admin-grid">
         <!-- Products will be dynamically added here -->
     </div>
