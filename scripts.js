@@ -1,22 +1,26 @@
 document.addEventListener('DOMContentLoaded', () => {
     const loadingSpinner = document.getElementById('loading-spinner');
-    window.addEventListener('load', () => {
-        loadingSpinner.style.display = 'none';
-    });
+    if (loadingSpinner) {
+        window.addEventListener('load', () => {
+            loadingSpinner.style.display = 'none';
+        });
+    }
 
     const navToggle = document.getElementById('js-navbar-toggle');
     const menu = document.getElementById('js-menu');
 
-    navToggle.addEventListener('click', () => {
-        menu.classList.toggle('active');
-    });
+    if (navToggle) {
+        navToggle.addEventListener('click', () => {
+            menu.classList.toggle('active');
+        });
+    }
 
     const navLinks = document.querySelectorAll('.navbar a');
     const sections = document.querySelectorAll('section');
 
     // Smooth scrolling for navigation links
     navLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
+        link.addEventListener('click', function (e) {
             if (this.getAttribute('href').startsWith('#')) {
                 e.preventDefault();
                 const targetId = this.getAttribute('href').substring(1);
@@ -56,7 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Fetch YouTube videos
     function fetchYouTubeVideos() {
-        $.get(`https://www.googleapis.com/youtube/v3/search?key=${API_KEY}&channelId=${CHANNEL_ID}&part=snippet,id&order=date&maxResults=${MAX_RESULTS}`, function(data) {
+        $.get(`https://www.googleapis.com/youtube/v3/search?key=${API_KEY}&channelId=${CHANNEL_ID}&part=snippet,id&order=date&maxResults=${MAX_RESULTS}`, function (data) {
             let videoItems = '';
             data.items.forEach(item => {
                 if (item.id.kind === "youtube#video") {
@@ -119,7 +123,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 {
                     breakpoint: 768,
                     settings: {
-                        slidesToShow: 1
+                        slidesToShow: 1,
+                        centerMode: true,
+                        centerPadding: '20px'
                     }
                 }
             ]
@@ -132,7 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
         this.page.identifier = CONFIG.DISQUS_PAGE_IDENTIFIER;
     };
 
-    (function() {
+    (function () {
         const d = document, s = d.createElement('script');
         s.src = `https://${CONFIG.DISQUS_SHORTNAME}.disqus.com/embed.js`;
         s.setAttribute('data-timestamp', +new Date());
@@ -141,7 +147,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Load Google Calendar
     const googleCalendarSrc = `https://calendar.google.com/calendar/embed?src=${CONFIG.GOOGLE_CALENDAR_ID}&ctz=America%2FLos_Angeles`;
-    document.getElementById('google-calendar').src = googleCalendarSrc;
+    const calendarElement = document.getElementById('google-calendar');
+    if (calendarElement) {
+        calendarElement.src = googleCalendarSrc;
+    }
 
     // Initialize AOS
     AOS.init();
@@ -190,24 +199,30 @@ document.addEventListener('DOMContentLoaded', () => {
             behavior: 'smooth'
         });
     });
-});
 
-function initializeTestimonialsCarousel() {
-    $('.testimonials-carousel').slick({
-        infinite: true,
-        slidesToShow: 2,
-        slidesToScroll: 1,
-        autoplay: true,
-        autoplaySpeed: 3000,
-        arrows: false,
-        dots: true,
-        responsive: [
-            {
-                breakpoint: 768,
-                settings: {
-                    slidesToShow: 1
+    function initializeTestimonialsCarousel() {
+        $('.testimonials-carousel').slick({
+            infinite: true,
+            slidesToShow: 2,
+            slidesToScroll: 1,
+            autoplay: true,
+            autoplaySpeed: 3000,
+            arrows: false,
+            dots: true,
+            responsive: [
+                {
+                    breakpoint: 768,
+                    settings: {
+                        slidesToShow: 1
+                    }
                 }
-            }
-        ]
-    });
-}
+            ]
+        });
+    }
+
+    // Initialize Snipcart API key
+    const snipcart = document.getElementById('snipcart');
+    if (snipcart) {
+        snipcart.setAttribute('data-api-key', CONFIG.SNIPCART_API_KEY);
+    }
+});

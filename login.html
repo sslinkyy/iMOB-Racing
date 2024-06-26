@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-auth.js"></script>
+    <script src="config.js"></script>
+    <script>
+        firebase.initializeApp(CONFIG.FIREBASE_CONFIG);
+    </script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="index.html" class="logo">iMOB Racing</a>
+            <ul class="main-nav" id="js-menu">
+                <li><a href="index.html" class="nav-links">Home</a></li>
+                <li><a href="drivers.html" class="nav-links">Drivers</a></li>
+                <li><a href="cars.html" class="nav-links">Cars</a></li>
+                <li><a href="mission.html" class="nav-links">Our Mission</a></li>
+                <li><a href="index.html#contact" class="nav-links">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+    <h1>Login</h1>
+    <input type="email" id="email" placeholder="Email">
+    <input type="password" id="password" placeholder="Password">
+    <button id="loginButton">Login</button>
+    <button id="registerButton">Register</button>
+    <button id="googleLoginButton">Login with Google</button>
+    <div id="feedback" style="color: red; margin-top: 10px;"></div>
+
+    <script>
+        document.getElementById('loginButton').addEventListener('click', login);
+        document.getElementById('registerButton').addEventListener('click', register);
+        document.getElementById('googleLoginButton').addEventListener('click', loginWithGoogle);
+
+        function displayFeedback(message) {
+            document.getElementById('feedback').innerText = message;
+        }
+
+        function login() {
+            var email = document.getElementById('email').value;
+            var password = document.getElementById('password').value;
+            firebase.auth().signInWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    window.location.href = 'profile.html';
+                })
+                .catch((error) => {
+                    console.error('Error logging in: ', error);
+                    displayFeedback('Error logging in: ' + error.message);
+                });
+        }
+
+        function register() {
+            var email = document.getElementById('email').value;
+            var password = document.getElementById('password').value;
+            firebase.auth().createUserWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    window.location.href = 'profile.html';
+                })
+                .catch((error) => {
+                    console.error('Error registering: ', error);
+                    displayFeedback('Error registering: ' + error.message);
+                });
+        }
+
+        function loginWithGoogle() {
+            var provider = new firebase.auth.GoogleAuthProvider();
+            firebase.auth().signInWithPopup(provider)
+                .then((result) => {
+                    window.location.href = 'profile.html';
+                })
+                .catch((error) => {
+                    console.error('Error logging in with Google: ', error);
+                    displayFeedback('Error logging in with Google: ' + error.message);
+                });
+        }
+    </script>
+</body>
+</html>

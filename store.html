@@ -1,0 +1,99 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Store - IMOB Racing</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdn.snipcart.com/themes/v3.2.0/default/snipcart.css" />
+    <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-firestore.js"></script>
+    <script src="config.js"></script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="index.html" class="logo">iMOB Racing</a>
+            <ul class="main-nav" id="js-menu">
+                <li><a href="index.html" class="nav-links">Home</a></li>
+                <li><a href="drivers.html" class="nav-links">Drivers</a></li>
+                <li><a href="cars.html" class="nav-links">Cars</a></li>
+                <li><a href="mission.html" class="nav-links">Our Mission</a></li>
+                <li><a href="store.html" class="nav-links">Store</a></li>
+                <li><a href="index.html#contact" class="nav-links">Contact</a></li>
+                <li><a href="all_profiles.html" class="nav-links">Profiles</a></li>
+                <li><a href="prof_editor.html" class="nav-links">Edit Profile</a></li>
+                <li><a href="javascript:void(0)" class="nav-links" id="logout">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+    <section id="store" class="store-section">
+        <h2>Our Store</h2>
+        <div class="store-grid" id="store-grid">
+            <!-- Products will be dynamically added here -->
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="social-media">
+            <a href="https://www.facebook.com/iMobRacing" target="_blank"><i class="fab fa-facebook"></i></a>
+            <a href="https://twitter.com/iMobRacing" target="_blank"><i class="fab fa-twitter"></i></a>
+            <a href="https://instagram.com/iMobRacing" target="_blank"><i class="fab fa-instagram"></i></a>
+        </div>
+        <p>&copy; 2023 iMOB Racing. All rights reserved.</p>
+    </footer>
+
+    <div hidden id="snipcart" data-api-key="NDFkZGNlNDktMjE2YS00MmUyLTk4ZmYtMjY5YWE2OWYwOTI2NjM4NTQxODI3NjYwMTI3MDQ5"></div>
+    <script src="https://cdn.snipcart.com/themes/v3.2.0/default/snipcart.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            firebase.initializeApp(CONFIG.FIREBASE_CONFIG);
+            const db = firebase.firestore();
+
+            async function loadProducts() {
+                try {
+                    const productsSnapshot = await db.collection('store-items').get();
+                    const storeGrid = document.getElementById('store-grid');
+                    storeGrid.innerHTML = '';
+
+                    productsSnapshot.forEach((doc) => {
+                        const product = doc.data();
+                        storeGrid.innerHTML += `
+                            <div class="store-item">
+                                <img src="${product.imageUrl}" alt="${product.name}">
+                                <h3>${product.name}</h3>
+                                <p>${product.description}</p>
+                                <button class="snipcart-add-item"
+                                        data-item-id="${doc.id}"
+                                        data-item-name="${product.name}"
+                                        data-item-price="${product.price}"
+                                        data-item-url="https://imobracingonline.com/store.html"
+                                        data-item-description="${product.description}">Add to Cart</button>
+                            </div>
+                        `;
+                    });
+
+                    document.addEventListener('snipcart.ready', () => {
+                        window.Snipcart.api.cart.refresh();
+                    });
+                } catch (error) {
+                    console.error('Error loading products: ', error);
+                }
+            }
+
+            loadProducts();
+        });
+
+        function logout() {
+            firebase.auth().signOut().then(() => {
+                window.location.href = 'index.html';
+            }).catch((error) => {
+                console.error('Error signing out: ', error);
+            });
+        }
+
+        document.getElementById('logout').addEventListener('click', logout);
+    </script>
+</body>
+</html>

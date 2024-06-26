@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Panel - IMOB Racing</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-storage.js"></script>
+    <script src="config.js"></script>
+</head>
+<body>
+    <h1>Admin Panel</h1>
+
+    <form id="addProductForm">
+        <h2>Add New Product</h2>
+        <input type="text" id="productName" placeholder="Product Name" required>
+        <input type="text" id="productDescription" placeholder="Product Description" required>
+        <input type="number" id="productPrice" placeholder="Product Price" required>
+        <input type="text" id="productImageUrl" placeholder="Product Image URL (optional)">
+        <input type="file" id="productImageFile" accept="image/*">
+        <button type="submit">Add Product</button>
+    </form>
+
+    <div id="admin-grid" class="admin-grid">
+        <!-- Products will be dynamically added here -->
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            firebase.initializeApp(CONFIG.FIREBASE_CONFIG);
+            const db = firebase.firestore();
+            const storage = firebase.storage();
+
+            async function loadProducts() {
+                try {
+                    const productsSnapshot = await db.collection('store-items').get();
+                    const adminGrid = document.getElementById('admin-grid');
+                    adminGrid.innerHTML = '';
+
+                    productsSnapshot.forEach((doc) => {
+                        const product = doc.data();
+                        adminGrid.innerHTML += `
+                            <div class="admin-item">
+                                <h3>${product.name}</h3>
+                                <p>${product.description}</p>
+                                <p>Price: ${product.price}</p>
+                                <img src="${product.imageUrl}" alt="${product.name}" style="width: 100px; height: auto;">
+                                <button class="delete-button" data-product-id="${doc.id}">Delete</button>
+                            </div>
+                        `;
+                    });
+
+                    document.querySelectorAll('.delete-button').forEach(button => {
+                        button.addEventListener('click', function () {
+                            const productId = this.dataset.productId;
+                            deleteProduct(productId);
+                        });
+                    });
+                } catch (error) {
+                    console.error('Error loading products:', error);
+                }
+            }
+
+            async function deleteProduct(productId) {
+                try {
+                    await db.collection('store-items').doc(productId).delete();
+                    console.log('Product deleted successfully');
+                    alert('Product deleted successfully');
+                    loadProducts(); // Refresh the product list
+                } catch (error) {
+                    console.error('Error deleting product:', error);
+                    alert('Error deleting product: ' + error.message);
+                }
+            }
+
+            document.getElementById('addProductForm').addEventListener('submit', async function (e) {
+                e.preventDefault();
+                const name = document.getElementById('productName').value;
+                const description = document.getElementById('productDescription').value;
+                const price = document.getElementById('productPrice').value;
+                const imageUrlInput = document.getElementById('productImageUrl').value;
+                const imageFile = document.getElementById('productImageFile').files[0];
+
+                let imageUrl = imageUrlInput;
+
+                if (imageFile) {
+                    const storageRef = storage.ref();
+                    const fileRef = storageRef.child(`store-images/${imageFile.name}`);
+                    await fileRef.put(imageFile);
+                    imageUrl = await fileRef.getDownloadURL();
+                }
+
+                try {
+                    await db.collection('store-items').add({
+                        name,
+                        description,
+                        price: parseFloat(price),
+                        imageUrl
+                    });
+                    alert('Product added successfully');
+                    loadProducts();
+                } catch (error) {
+                    console.error('Error adding product:', error);
+                    alert('Error adding product: ' + error.message);
+                }
+            });
+
+            firebase.auth().onAuthStateChanged((user) => {
+                if (user) {
+                    loadProducts();
+                } else {
+                    // User is signed out
+                    window.location.href = 'login.html';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
