@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://cdn.snipcart.com/themes/v3.2.0/default/snipcart.css" />
     <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-firestore.js"></script>
-    <script src="https://cdn.snipcart.com/themes/v3.2.0/default/snipcart.js"></script>
+    <script src="https://cdn.snipcart.com/themes/v3.2.0/default/snipcart.js" async></script>
     <script src="config.js"></script>
 </head>
 <body>
@@ -43,7 +43,6 @@
         <p>&copy; 2023 iMOB Racing. All rights reserved.</p>
     </footer>
 
-    <script async src="https://cdn.snipcart.com/themes/v3.2.0/default/snipcart.js"></script>
     <div hidden id="snipcart" data-api-key="NDFkZGNlNDktMjE2YS00MmUyLTk4ZmYtMjY5YWE2OWYwOTI2NjM4NTQxODI3NjYwMTI3MDQ5"></div>
 
     <script>
@@ -74,10 +73,9 @@
                         `;
                     });
 
-                    // Reload Snipcart to recognize new items
-                    if (window.Snipcart) {
+                    document.addEventListener('snipcart.ready', () => {
                         window.Snipcart.api.cart.refresh();
-                    }
+                    });
                 } catch (error) {
                     console.error('Error loading products: ', error);
                 }
