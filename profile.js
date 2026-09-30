@@ -38,6 +38,7 @@
   if(P.$("editor-panel")){P.$("editor-panel").hidden=!own();P.$("media-panel").hidden=!own();}
   if(!uid){P.feedback('Log in to create and edit your profile.');P.$('member-profile').hidden=true;return;}
   if(!validUID(uid)){P.feedback('This profile address is invalid.',true);return;}
+  P.feedback("Loading profile…");
   try {
    const result=await P.db.collection('memberProfiles').doc(uid).get();
    if(token!==sessionToken)return;
@@ -51,7 +52,7 @@
      }
     }catch{/* An absent or denied legacy record does not block new profiles. */}
    }else {P.feedback('This member has not published a profile yet.');P.$('member-profile').hidden=true;return;}
-   renderProfile();await loadMedia(true);
+   renderProfile();await loadMedia(true);P.feedback("");
   }catch{P.feedback('Profiles could not load. Check your connection or Firebase setup.',true);}
  });
  P.$('more-media').addEventListener('click',event=>P.run(event.currentTarget,()=>loadMedia()));

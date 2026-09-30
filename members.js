@@ -12,5 +12,6 @@
   cursor=result.docs.at(-1)||null;P.$('more-members').hidden=result.size<24;
   if(!list.children.length)list.append(P.node('p','No member profiles published yet. Log in to add yours.'));
  };
- P.authReady.then(()=>P.run(null,load));P.$('more-members').addEventListener('click',e=>P.run(e.currentTarget,load));
+ P.feedback("Loading members…");
+ P.authReady.then(()=>P.run(null,async()=>{await load();P.feedback("");}));P.$('more-members').addEventListener('click',e=>P.run(e.currentTarget,load));
 })();
