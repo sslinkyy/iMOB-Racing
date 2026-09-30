@@ -1,228 +1,81 @@
+/* Shared enhancements: public content remains visible when services fail. */
+document.documentElement.classList.add('js');
 document.addEventListener('DOMContentLoaded', () => {
-    const loadingSpinner = document.getElementById('loading-spinner');
-    if (loadingSpinner) {
-        window.addEventListener('load', () => {
-            loadingSpinner.style.display = 'none';
-        });
-    }
-
-    const navToggle = document.getElementById('js-navbar-toggle');
     const menu = document.getElementById('js-menu');
-
-    if (navToggle) {
-        navToggle.addEventListener('click', () => {
-            menu.classList.toggle('active');
+    const toggle = document.getElementById('js-navbar-toggle');
+    if (toggle && menu) {
+        toggle.addEventListener('click', () => {
+            const expanded = menu.classList.toggle('active');
+            toggle.setAttribute('aria-expanded', String(expanded));
         });
-    }
-
-    const navLinks = document.querySelectorAll('.navbar a');
-    const sections = document.querySelectorAll('section');
-
-    // Smooth scrolling for navigation links
-    navLinks.forEach(link => {
-        link.addEventListener('click', function (e) {
-            if (this.getAttribute('href').startsWith('#')) {
-                e.preventDefault();
-                const targetId = this.getAttribute('href').substring(1);
-                const targetSection = document.getElementById(targetId);
-
-                window.scrollTo({
-                    top: targetSection.offsetTop - document.querySelector('.navbar').offsetHeight,
-                    behavior: 'smooth'
-                });
-
-                // Close the menu on mobile after clicking a link
-                if (menu.classList.contains('active')) {
-                    menu.classList.remove('active');
-                }
+        menu.addEventListener('click', event => {
+            if (event.target.closest('a')) {
+                menu.classList.remove('active');
+                toggle.setAttribute('aria-expanded', 'false');
             }
         });
-    });
+    }
+    const spinner = document.getElementById('loading-spinner');
+    if (spinner) spinner.remove();
+    const year = document.getElementById('year');
+    if (year) year.textContent = new Date().getFullYear();
+    if (typeof AOS !== 'undefined') AOS.init();
 
-    // Intersection Observer for fading in sections
-    const observer = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.style.opacity = 1;
+    // Only load videos on a page with a destination. External failures leave
+    // the permanent channel link and featured footage available.
+    const videoList = document.getElementById('video-list');
+    if (videoList && typeof CONFIG !== 'undefined' && CONFIG.YOUTUBE_API_KEY) {
+        const params = new URLSearchParams({
+            key: CONFIG.YOUTUBE_API_KEY, channelId: CONFIG.YOUTUBE_CHANNEL_ID,
+            part: 'snippet', order: 'date', maxResults: '3', type: 'video'
+        });
+        fetch(`https://www.googleapis.com/youtube/v3/search?${params}`, {
+            signal: AbortSignal.timeout(8000)
+        }).then(response => {
+            if (!response.ok) throw new Error('Video service unavailable');
+            return response.json();
+        }).then(data => {
+            for (const item of data.items || []) {
+                if (!/^[\w-]{11}$/.test(item.id?.videoId || '')) continue;
+                const link = document.createElement('a');
+                link.href = `https://www.youtube.com/watch?v=${item.id.videoId}`;
+                link.target = '_blank'; link.rel = 'noopener';
+                const date = new Date(item.snippet?.publishedAt);
+                if (!Number.isNaN(date.getTime())) {
+                    const time = document.createElement('time');
+                    time.dateTime = date.toISOString();
+                    time.textContent = date.toLocaleDateString(undefined, {
+                        month: 'short', day: 'numeric', year: 'numeric'
+                    });
+                    link.append(time);
+                }
+                const title = document.createElement('h4');
+                title.textContent = item.snippet?.title || 'Watch the video';
+                link.append(title); videoList.append(link);
             }
-        });
-    }, { threshold: 0.1 });
-
-    sections.forEach(section => {
-        section.style.opacity = 0;
-        observer.observe(section);
-    });
-
-    // YouTube Data API Key
-    const API_KEY = CONFIG.YOUTUBE_API_KEY;
-    const CHANNEL_ID = CONFIG.YOUTUBE_CHANNEL_ID;
-    const MAX_RESULTS = 10;
-
-    // Fetch YouTube videos
-    function fetchYouTubeVideos() {
-        $.get(`https://www.googleapis.com/youtube/v3/search?key=${API_KEY}&channelId=${CHANNEL_ID}&part=snippet,id&order=date&maxResults=${MAX_RESULTS}`, function (data) {
-            let videoItems = '';
-            data.items.forEach(item => {
-                if (item.id.kind === "youtube#video") {
-                    videoItems += `
-                        <div class="carousel-item">
-                            <iframe src="https://www.youtube.com/embed/${item.id.videoId}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                        </div>
-                    `;
-                }
-            });
-            $('.media-carousel').html(videoItems);
-            initializeCarousel();
+            if (videoList.children.length) document.getElementById('latest-videos').hidden = false;
+        }).catch(() => { /* Keep permanent fallback links visible. */ });
+    }
+    // Discussion is optional and loads only when explicitly opened.
+    const thread = document.getElementById('disqus_thread');
+    const discussion = thread?.closest('details');
+    if (discussion && typeof CONFIG !== 'undefined') {
+        discussion.addEventListener('toggle', () => {
+            if (!discussion.open || thread.dataset.loaded) return;
+            thread.dataset.loaded = 'true';
+            window.disqus_config = function () {
+                this.page.url = CONFIG.DISQUS_PAGE_URL;
+                this.page.identifier = CONFIG.DISQUS_PAGE_IDENTIFIER;
+            };
+            const script = document.createElement('script');
+            script.src = `https://${CONFIG.DISQUS_SHORTNAME}.disqus.com/embed.js`;
+            script.async = true; document.body.append(script);
         });
     }
-
-    // Initialize Slick carousel
-    function initializeCarousel() {
-        $('.media-carousel').slick({
-            infinite: true,
-            slidesToShow: 5,
-            slidesToScroll: 1,
-            autoplay: true,
-            autoplaySpeed: 2000,
-            arrows: true,
-            dots: true,
-            responsive: [
-                {
-                    breakpoint: 1024,
-                    settings: {
-                        slidesToShow: 3
-                    }
-                },
-                {
-                    breakpoint: 768,
-                    settings: {
-                        slidesToShow: 2
-                    }
-                },
-                {
-                    breakpoint: 480,
-                    settings: {
-                        slidesToShow: 1
-                    }
-                }
-            ]
-        });
-    }
-
-    // Initialize Spotlight carousel
-    function initializeSpotlightCarousel() {
-        $('.spotlight-carousel').slick({
-            infinite: true,
-            slidesToShow: 2,
-            slidesToScroll: 1,
-            autoplay: true,
-            autoplaySpeed: 3000,
-            arrows: true,
-            dots: true,
-            responsive: [
-                {
-                    breakpoint: 768,
-                    settings: {
-                        slidesToShow: 1,
-                        centerMode: true,
-                        centerPadding: '20px'
-                    }
-                }
-            ]
-        });
-    }
-
-    // Disqus configuration
-    const disqus_config = function () {
-        this.page.url = CONFIG.DISQUS_PAGE_URL;
-        this.page.identifier = CONFIG.DISQUS_PAGE_IDENTIFIER;
-    };
-
-    (function () {
-        const d = document, s = d.createElement('script');
-        s.src = `https://${CONFIG.DISQUS_SHORTNAME}.disqus.com/embed.js`;
-        s.setAttribute('data-timestamp', +new Date());
-        (d.head || d.body).appendChild(s);
-    })();
-
-    // Load Google Calendar
-    const googleCalendarSrc = `https://calendar.google.com/calendar/embed?src=${CONFIG.GOOGLE_CALENDAR_ID}&ctz=America%2FLos_Angeles`;
-    const calendarElement = document.getElementById('google-calendar');
-    if (calendarElement) {
-        calendarElement.src = googleCalendarSrc;
-    }
-
-    // Initialize AOS
-    AOS.init();
-
-    // Initialize the media carousel
-    fetchYouTubeVideos();
-    initializeCarousel();
-
-    // Initialize Spotlight carousel
-    initializeSpotlightCarousel();
-
-    // Initialize testimonials carousel
-    initializeTestimonialsCarousel();
-
-    // Lazy load images
-    const lazyImages = document.querySelectorAll('img.lazy');
-    const lazyObserver = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const img = entry.target;
-                img.src = img.dataset.src;
-                img.classList.remove('lazy');
-                lazyObserver.unobserve(img);
-            }
-        });
-    });
-
-    lazyImages.forEach(img => {
-        lazyObserver.observe(img);
-    });
-
     const backToTop = document.querySelector('.back-to-top');
-
-    window.addEventListener('scroll', () => {
-        if (window.scrollY > 300) {
-            backToTop.style.display = 'block';
-        } else {
-            backToTop.style.display = 'none';
-        }
-    });
-
-    backToTop.addEventListener('click', (e) => {
-        e.preventDefault();
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-        });
-    });
-
-    function initializeTestimonialsCarousel() {
-        $('.testimonials-carousel').slick({
-            infinite: true,
-            slidesToShow: 2,
-            slidesToScroll: 1,
-            autoplay: true,
-            autoplaySpeed: 3000,
-            arrows: false,
-            dots: true,
-            responsive: [
-                {
-                    breakpoint: 768,
-                    settings: {
-                        slidesToShow: 1
-                    }
-                }
-            ]
-        });
-    }
-
-    // Initialize Snipcart API key
+    if (backToTop) window.addEventListener('scroll', () => {
+        backToTop.style.display = window.scrollY > 300 ? 'block' : 'none';
+    }, { passive: true });
     const snipcart = document.getElementById('snipcart');
-    if (snipcart) {
-        snipcart.setAttribute('data-api-key', CONFIG.SNIPCART_API_KEY);
-    }
+    if (snipcart && typeof CONFIG !== 'undefined') snipcart.dataset.apiKey = CONFIG.SNIPCART_API_KEY;
 });

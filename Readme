@@ -6,3 +6,26 @@ squarespace domains
 Disqus API
 snipcart API
 youtube API
+
+Homepage redesign (September 2026)
+---------------------------------
+The homepage now focuses on team activity, footage and the crew. It uses
+home.css, leaving the existing account/store styles in styles.css intact.
+No build step is required. Netlify can publish the repository root.
+
+Latest video cards use the existing YouTube configuration; if the API fails,
+the featured video and permanent channel/social links remain available.
+Calendar, poll and discussion are retained as expandable sections.
+Netlify contact form processing must be verified on a Netlify preview; it
+cannot be exercised with a file preview or GitHub Pages.
+
+Before publishing:
+- Confirm the current team roster/roles and the featured YouTube video.
+- Add actual car names, photos and build details to cars.html; its original
+  placeholder entries are still present. Driver photos also need replacement.
+- Confirm Netlify's production branch and enable a deploy preview for review.
+- Rotate/revoke the former Snipcart secret key; removing it from config.js
+  does not remove it from Git history or previously deployed copies.
+- Verify Firebase sign-in, store checkout, calendar, poll and discussion with
+  their real service accounts. Homepage no longer initializes Firebase or
+  touches login controls before they exist; member login remains accessible.
