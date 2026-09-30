@@ -1,0 +1,94 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() { return request.auth != null; }
+    function self(uid) { return signedIn() && request.auth.uid == uid; }
+    function admin() {
+      return signedIn() && exists(/databases/$(database)/documents/roles/$(request.auth.uid))
+        && get(/databases/$(database)/documents/roles/$(request.auth.uid)).data.admin == true;
+    }
+    function text(value, max) { return value is string && value.size() <= max; }
+    function url(value) { return text(value, 2048) && (value == '' || value.matches('https://.*')); }
+    match /roles/{uid} {
+      allow get: if self(uid) || admin();
+      allow list: if admin();
+      // First owner is created in the Firebase console, never through this app.
+      allow create: if admin() && !self(uid)
+        && request.resource.data.keys().hasOnly(['admin', 'owner'])
+        && request.resource.data.admin is bool && request.resource.data.owner == false;
+      allow update: if admin() && !self(uid) && resource.data.owner == false
+        && request.resource.data.keys().hasOnly(['admin', 'owner'])
+        && request.resource.data.admin is bool && request.resource.data.owner == false;
+      allow delete: if false;
+    }
+    match /members/{uid} {
+      allow get: if self(uid) || admin();
+      allow list: if admin();
+      allow create, update: if self(uid)
+        && request.resource.data.keys().hasOnly(['email', 'updatedAt'])
+        && request.resource.data.email == request.auth.token.email
+        && request.resource.data.updatedAt == request.time;
+      allow delete: if false;
+    }
+    match /memberProfiles/{uid} {
+      allow read: if true;
+      allow create, update: if self(uid)
+        && request.resource.data.keys().hasOnly(['displayName', 'bio', 'avatarUrl', 'updatedAt'])
+        && text(request.resource.data.displayName, 80) && request.resource.data.displayName.size() > 0
+        && text(request.resource.data.bio, 5000) && url(request.resource.data.avatarUrl)
+        && request.resource.data.updatedAt == request.time;
+      allow delete: if self(uid) || admin();
+      match /media/{mediaId} {
+        allow read: if true;
+        allow create: if self(uid)
+          && exists(/databases/$(database)/documents/memberProfiles/$(uid))
+          && request.resource.data.keys().hasOnly(['kind', 'title', 'caption', 'url', 'path', 'createdAt'])
+          && request.resource.data.kind in ['photo', 'link']
+          && text(request.resource.data.title, 120) && text(request.resource.data.caption, 300)
+          && url(request.resource.data.url) && request.resource.data.url.size() > 0
+          && text(request.resource.data.path, 300)
+          && (request.resource.data.kind == 'link' && request.resource.data.path == ''
+            || request.resource.data.kind == 'photo' && request.resource.data.path.matches('member-media/' + uid + '/[^/]+'))
+          && request.resource.data.createdAt == request.time;
+        allow update: if false;
+        allow delete: if self(uid) || admin();
+      }
+    }
+    match /siteContent/home {
+      allow read: if true;
+      allow create, update: if admin()
+        && request.resource.data.keys().hasOnly(['intro', 'title', 'videoUrl', 'imageUrl', 'updatedAt'])
+        && text(request.resource.data.intro, 1000) && text(request.resource.data.title, 120)
+        && url(request.resource.data.videoUrl) && url(request.resource.data.imageUrl)
+        && request.resource.data.updatedAt == request.time;
+      allow delete: if admin();
+    }
+    match /showcase/{id} {
+      allow read: if resource.data.published == true || admin();
+      allow create, update: if admin()
+        && request.resource.data.keys().hasOnly(['title', 'body', 'url', 'imageUrl', 'published', 'createdAt', 'updatedAt'])
+        && text(request.resource.data.title, 120) && request.resource.data.title.size() > 0
+        && text(request.resource.data.body, 3000) && url(request.resource.data.url) && url(request.resource.data.imageUrl)
+        && request.resource.data.published is bool
+        && request.resource.data.updatedAt == request.time
+        && (resource == null && request.resource.data.createdAt == request.time
+          || resource != null && request.resource.data.createdAt == resource.data.createdAt);
+      allow delete: if admin();
+    }
+    match /store-items/{id} {
+      allow read: if true;
+      allow create, update: if admin()
+        && request.resource.data.keys().hasOnly(['name', 'description', 'price', 'imageUrl'])
+        && text(request.resource.data.name, 120) && request.resource.data.name.size() > 0
+        && text(request.resource.data.description, 3000) && url(request.resource.data.imageUrl)
+        && request.resource.data.price is number && request.resource.data.price > 0 && request.resource.data.price <= 100000;
+      allow delete: if admin();
+    }
+    // Legacy records can only be read by their owner for profile migration.
+    // Old editors cannot bypass the new permission model.
+    match /profiles/{uid} { allow get: if self(uid) || admin(); allow list: if admin(); allow write: if false; }
+    match /users/{uid} { allow get: if self(uid) || admin(); allow list: if admin(); allow write: if false; }
+    match /publicProfiles/{uid} { allow read, write: if false; }
+    match /{document=**} { allow read, write: if false; }
+  }
+}

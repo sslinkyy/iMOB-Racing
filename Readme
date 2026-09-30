@@ -6,3 +6,46 @@ squarespace domains
 Disqus API
 snipcart API
 youtube API
+
+Homepage redesign (September 2026)
+---------------------------------
+The homepage now focuses on team activity, footage and the crew. It uses
+home.css, leaving the existing account/store styles in styles.css intact.
+No build step is required. Netlify can publish the repository root.
+
+Latest video cards use the existing YouTube configuration; if the API fails,
+the featured video and permanent channel/social links remain available.
+Calendar, poll and discussion are retained as expandable sections.
+Netlify contact form processing must be verified on a Netlify preview; it
+cannot be exercised with a file preview or GitHub Pages.
+
+Before publishing:
+- Confirm the current team roster/roles and the featured YouTube video.
+- Add actual car names, photos and build details to cars.html; its original
+  placeholder entries are still present. Driver photos also need replacement.
+- Confirm Netlify's production branch and enable a deploy preview for review.
+- Rotate/revoke the former Snipcart secret key; removing it from config.js
+  does not remove it from Git history or previously deployed copies.
+- Verify Firebase sign-in, store checkout, calendar, poll and discussion with
+  their real service accounts. Homepage no longer initializes Firebase or
+  touches login controls before they exist; member login remains accessible.
+
+Members and admins (September 2026)
+----------------------------------
+See MEMBER_ADMIN_SETUP.md for Firebase setup, owner assignment and data paths.
+The new portal uses portal.js / portal.css; existing profile/editor addresses
+remain supported. Admins can manage homepage media, updates, member roles,
+member media and store products. Videos are HTTPS links or YouTube embeds.
+
+Verified locally:
+- Firebase Firestore/Storage emulator permission suite in tests/permissions.cjs.
+- Profile/avatar retention and content/link safety in tests/frontend.cjs.
+- JavaScript syntax, page links, unique IDs and whitespace checks.
+
+To reproduce from the repository root:
+  npm install --prefix tests --no-audit --no-fund
+  NODE_PATH=tests/node_modules node tests/frontend.cjs
+  NODE_PATH=tests/node_modules tests/node_modules/.bin/firebase emulators:exec --project demo-imob-rules --only firestore,storage 'node tests/permissions.cjs'
+
+Backend setup and real-account/browser verification remain required before
+production. Publishing the Netlify preview does not publish Firebase rules.
