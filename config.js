@@ -8,12 +8,13 @@ const CONFIG = {
     DISQUS_PAGE_IDENTIFIER: 'imobracing-forums',
     GOOGLE_CALENDAR_ID: 'imobracing%40gmail.com',
     FIREBASE_CONFIG: {
-        apiKey: "AIzaSyA0U-py8sgjtMkX0vD9ySsi2XGtUUEGZhg",
+        apiKey: "AIzaSyBD_lXoRYc9N6__JAovHojP0yTonJZuhUs",
         authDomain: "imob-racing-website.firebaseapp.com",
         projectId: "imob-racing-website",
         storageBucket: "imob-racing-website.appspot.com",
         messagingSenderId: "580908835958",
-        appId: "1:580908835958:web:a7bb3f6a4b52d8f8c28c1a"
+        appId: "1:580908835958:web:c8bcbf2ac3f82d1b6deb57",
+        measurementId: "G-TK4NZJMM83"
     },
     GOOGLE_CLIENT_ID: '580908835958-labitokmi7ivmvm0ha1muth5a45smnni.apps.googleusercontent.com',
     SNIPCART_API_KEY: 'NDFkZGNlNDktMjE2YS00MmUyLTk4ZmYtMjY5YWE2OWYwOTI2NjM4NTQxODI3NjYwMTI3MDQ5',
